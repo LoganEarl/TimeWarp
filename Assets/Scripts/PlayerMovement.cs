@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public int playerNumber = 1;
     public float turnSpeed = 20f;
     public float moveSpeed = 20f;
     Vector3 movement;
@@ -18,8 +19,8 @@ public class PlayerMovement : MonoBehaviour
     }
 
     void FixedUpdate() {
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
+        float horizontal = Input.GetAxis("Horizontal" + playerNumber);
+        float vertical = Input.GetAxis("Vertical" + playerNumber);
 
         movement.Set(horizontal, 0f, vertical);
         movement.Normalize();
