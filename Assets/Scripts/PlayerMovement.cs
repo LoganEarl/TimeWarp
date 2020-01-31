@@ -12,14 +12,12 @@ public class PlayerMovement : MonoBehaviour
     Animator animator;
     Rigidbody rgbd;
 
-    void Start()
-    {
+    void Start() {
         animator = GetComponent<Animator>();
         rgbd = GetComponent<Rigidbody>();
     }
 
-    void FixedUpdate()
-    {
+    void FixedUpdate() {
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
@@ -36,8 +34,7 @@ public class PlayerMovement : MonoBehaviour
         rotation = Quaternion.LookRotation(desiredForward);
     }
 
-    void OnAnimatorMove()
-    {
+    void OnAnimatorMove() {
         rgbd.MovePosition(rgbd.position + movement * moveSpeed);
         rgbd.MoveRotation(rotation);
     }
