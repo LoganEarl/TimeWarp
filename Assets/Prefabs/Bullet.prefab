@@ -127,5 +127,5 @@ MonoBehaviour:
     m_Bits: 0
   bounceSound: {fileID: 0}
   bulletDmg: 1
-  bouncesLeft: 2
-  maxLifeTime: 2
+  bouncesLeft: 4
+  maxLifeTime: 6
