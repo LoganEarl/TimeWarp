@@ -7,7 +7,7 @@ public class PlayerShooting : MonoBehaviour
     public int playerNumber = 1;
     public Rigidbody bullet;
     public Transform fireTransform;
-    public float bulletSpeed = 40f;
+    public float bulletSpeed = 650f;
 
     private string fireButton;
 
