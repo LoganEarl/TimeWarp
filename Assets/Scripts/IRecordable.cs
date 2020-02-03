@@ -1,9 +1,19 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using UnityEngine;
 
 interface IRecordable
 {
+    PlayerSnapshot GetSnapshot();
+    void SetSnapshot(PlayerSnapshot playerSnapshot);
+    void SetUseSnapshots(bool useSnapshots);
+}
+
+public class PlayerSnapshot
+{
+    public Vector3 Transformation { get; }
+    public Vector3 Force { get; }
+    //eventually have endpoints for actions taken.
+    public PlayerSnapshot(Vector3 transformation, Vector3 force) =>
+        (Transformation, Force) = (transformation, force);
 }

@@ -10,8 +10,7 @@ public class TestInitializer : MonoBehaviour
     private void Awake()
     {
         pm = GetComponent<PlanManager>();
-        pm.Setup(2, new TestLevelConfig());
-   
+        pm.Setup(1, new TestLevelConfig());
     }
 
     private void Start()
