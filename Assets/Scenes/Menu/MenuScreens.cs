@@ -41,7 +41,6 @@ public class MenuScreens : MonoBehaviour {
      */
     public void GoToLoadScene(string sceneName)
     {
-        //Scene toLoad = SceneManager.GetSceneByName(sceneName);
         SceneManager.LoadScene(sceneName);
     }
 
