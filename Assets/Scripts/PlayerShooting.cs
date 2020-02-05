@@ -16,14 +16,14 @@ public class PlayerShooting : MonoBehaviour
     }
     
     void FixedUpdate() {
-
         if (Input.GetButtonDown(fireButton)) Shoot();
-
     }
 
     private void Shoot() {
         Rigidbody bulletInstance = Instantiate(bullet, fireTransform.position, fireTransform.rotation) as Rigidbody;
 
+        bulletInstance.GetComponent<Bullet>().playerNumber = playerNumber;
+        
         bulletInstance.velocity = bulletSpeed * fireTransform.forward;
     }
 }

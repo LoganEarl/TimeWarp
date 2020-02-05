@@ -35,6 +35,12 @@ public class PlayerMovement : MonoBehaviour
         rotation = Quaternion.LookRotation(desiredForward);
     }
 
+    private void OnTriggerEnter(Collider other) {
+        if (other.tag == "Wall") {
+            rgbd.MovePosition(new Vector3());
+        }
+    }
+
     void OnAnimatorMove() {
         rgbd.MovePosition(rgbd.position + movement * moveSpeed);
         rgbd.MoveRotation(rotation);

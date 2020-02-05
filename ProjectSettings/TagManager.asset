@@ -7,7 +7,7 @@ TagManager:
   - Bullet
   - Wall
   - Player1
-  - Player2
+  - Player0
   layers:
   - Default
   - TransparentFX
@@ -17,11 +17,11 @@ TagManager:
   - UI
   - 
   - 
-  - Player1Layer
-  - Player2Layer
-  - 
-  - 
-  - 
+  - BlockingLayer
+  - Player0
+  - Player1
+  - Player2
+  - Player3
   - 
   - 
   - 

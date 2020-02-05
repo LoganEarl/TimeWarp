@@ -4,43 +4,36 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    public LayerMask playerMask;
+    public int playerNumber;
     public AudioSource bounceSound;
-    public float bulletDmg = 1;
-    public float bouncesLeft = 4;
+    public int bulletDmg = 1;
+    public float bouncesLeft = 400;
     public float maxLifeTime = 10f;
+
+    private float prevMag = 650f;
 
     void Start() {
         Destroy(gameObject, maxLifeTime);
     }
 
-    private void OnTriggerEnter(Collider other) {
+    private void OnCollisionEnter(Collision collision) {
         Rigidbody bulletInstance = GetComponent<Rigidbody>();
+        Collider other = collision.collider;
 
-        if (other.tag == "Player" || bouncesLeft == 0)
+        if (other.tag == "Player" + playerNumber)
+            bulletInstance.isKinematic = false;
+
+        if (other.tag == "Wall" && bouncesLeft != 0) bouncesLeft--;
+        else if (other.tag == "Wall") Destroy(gameObject, 0f);
+        else if (other.tag != "Player" + playerNumber) {
+            other.GetComponent<PlayerHealth>().TakeDamage(bulletDmg);
             Destroy(gameObject, 0f);
-        else if (other.tag == "Wall") {
-            Vector3 tempVector,
-                otherPos = other.gameObject.transform.position,
-                otherScale = other.gameObject.transform.lossyScale,
-                thisPos = gameObject.transform.position,
-                thisScale = gameObject.transform.lossyScale;
-
-            float tempX = otherPos.x / otherScale.x - thisPos.x / thisScale.x;
-            float tempZ = otherPos.z / otherScale.z - thisPos.z / thisScale.z;
-
-            if (Mathf.Abs(tempX) > Mathf.Abs(tempZ)) {
-                tempVector = bulletInstance.velocity;
-                tempVector.x = -tempVector.x;
-                bulletInstance.velocity = tempVector;
-            }
-            else {
-                tempVector = bulletInstance.velocity;
-                tempVector.z = -tempVector.z;
-                bulletInstance.velocity = tempVector;
-            }
-
-            bouncesLeft--;
         }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.collider.tag == "Player" + playerNumber)
+            GetComponent<Rigidbody>().isKinematic = false;
     }
 }
