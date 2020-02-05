@@ -41,6 +41,7 @@ public class PlanManager : MonoBehaviour, IGameMode
     private void Awake()
     {
         DontDestroyOnLoad(this);
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void FixedUpdate()
@@ -86,11 +87,16 @@ public class PlanManager : MonoBehaviour, IGameMode
     public void Begin()
     {
         if (levelConfig != null)
+            SceneManager.SetActiveScene(SceneManager.GetSceneByName(levelConfig.GetSceneName()));
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if(levelConfig != null && scene.name.Equals(levelConfig.GetSceneName()))
         {
             begun = true;
             NextMatch();
-            SceneManager.SetActiveScene(SceneManager.GetSceneByName(levelConfig.GetSceneName()));
-        }
+        }   
     }
 
     private void UnloadPlayers()
