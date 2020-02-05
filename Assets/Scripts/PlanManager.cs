@@ -79,7 +79,6 @@ public class PlanManager : MonoBehaviour, IGameMode
     {
         this.levelConfig = levelConfig;
         this.numPlayers = numPlayers;
-        SceneManager.LoadScene(levelConfig.GetSceneName(), LoadSceneMode.Single);
         playerControllers = new List<PlayerController>[numPlayers];
         playerRecordings = new List<List<PlayerSnapshot>>[numPlayers];
     }
@@ -87,7 +86,7 @@ public class PlanManager : MonoBehaviour, IGameMode
     public void Begin()
     {
         if (levelConfig != null)
-            SceneManager.SetActiveScene(SceneManager.GetSceneByName(levelConfig.GetSceneName()));
+            SceneManager.LoadScene(levelConfig.GetSceneName(), LoadSceneMode.Single);
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -95,6 +94,7 @@ public class PlanManager : MonoBehaviour, IGameMode
         if(levelConfig != null && scene.name.Equals(levelConfig.GetSceneName()))
         {
             begun = true;
+            SceneManager.SetActiveScene(SceneManager.GetSceneByName(levelConfig.GetSceneName()));
             NextMatch();
         }   
     }
