@@ -7,8 +7,8 @@ using UnityEngine.SceneManagement;
  * This class focuses on transitioning between scenes of the game.
  */
  
-public class MenuScreens : MonoBehaviour {
-
+public class MenuScreens : MonoBehaviour
+{
     /* @GoNextGameScene()
      * 
      * This function loads to the next game scene based on build index.
