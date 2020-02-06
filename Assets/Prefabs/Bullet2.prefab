@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 276656529450628026}
   - component: {fileID: 1748223442184543226}
   m_Layer: 12
-  m_Name: Player4
+  m_Name: Player3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -54,8 +54,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1081534500473202127}
   - component: {fileID: 6627237065720744449}
-  m_Layer: 8
-  m_Name: Player1
+  m_Layer: 9
+  m_Name: Player0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -98,8 +98,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8413105959743365175}
   - component: {fileID: 4311319599469169914}
-  m_Layer: 9
-  m_Name: Player2
+  m_Layer: 10
+  m_Name: Player1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -146,8 +146,8 @@ GameObject:
   - component: {fileID: 6678790619593773595}
   - component: {fileID: 5265529058738124019}
   - component: {fileID: 571005679292267340}
-  m_Layer: 10
-  m_Name: Bullet3
+  m_Layer: 8
+  m_Name: Bullet2
   m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
