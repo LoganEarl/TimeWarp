@@ -17,6 +17,12 @@ public class LobbyDriver : MonoBehaviour {
 
     public PlanManager planGameMode;
 
+    // Added this in to make start button uninteractable at the beginning
+    public void Start()
+    {
+        startButton.interactable = false;
+    }
+    
     public void SelectTestLevel()
     {
         selectedLevel = new TestLevelConfig();
