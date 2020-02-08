@@ -48,8 +48,6 @@ public class PlayerMovement : MonoBehaviour
             animator.SetInteger("WalkingAngle", animDirection);
         }
 
-        Debug.Log(isIdle + ", animDirection: " + animDirection);
-
         Vector3 aimAt = mousePosition - transform.position;
 
         Vector3 desiredLook = Vector3.RotateTowards(transform.forward, aimAt, turnSpeed * Time.deltaTime, 0f);
