@@ -1959,7 +1959,7 @@ GameObject:
   - component: {fileID: 6329694567327382759}
   - component: {fileID: 7306350250346465253}
   m_Layer: 10
-  m_Name: Player1 1
+  m_Name: Player
   m_TagString: Player1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2008,7 +2008,7 @@ MonoBehaviour:
   playerNumber: 1
   bullet: {fileID: 2718643244815117112, guid: b1230d9a4c00d824dbae22f0b48fc769, type: 3}
   fireTransform: {fileID: 3791944380663329905}
-  bulletSpeed: 6.5
+  bulletSpeed: 7.5
 --- !u!114 &3875981364681747461
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2023,8 +2023,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerNumber: 1
   turnSpeed: 20
-  moveSpeed: 0.05
+  moveSpeed: 0.1
   targetingCursor: {fileID: 0}
+  fireTransform: {fileID: 0}
 --- !u!54 &6329694567327382759
 Rigidbody:
   m_ObjectHideFlags: 0

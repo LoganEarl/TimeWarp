@@ -7,8 +7,8 @@ public class Bullet : MonoBehaviour
     public int playerNumber;
     public AudioSource bounceSound;
     public int bulletDmg = 1;
-    public float bouncesLeft = 400;
-    public float maxLifeTime = 10f;
+    public float bouncesLeft = 4f;
+    public float maxLifeTime = 1f;
 
     void Start() {
         Destroy(gameObject, maxLifeTime);
