@@ -5,45 +5,54 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public int playerNumber = 1;
-    public float turnSpeed = 20f, moveSpeed = 20f;
-    Vector3 movement, mousePosition;
-    Quaternion rotation = Quaternion.identity, torsoRotation = Quaternion.identity;
+    public float turnSpeed = 20f, moveSpeed = 0.05f;
+    public Transform targetingCursor, fireTransform;
+    Vector3 movement, mousePosition, aimAt;
+    Quaternion desiredRotation = Quaternion.identity, torsoRotation = Quaternion.identity;
 
     Animator animator;
-    Rigidbody rgbd, torsoRGBD;
+    Rigidbody rgbd;
 
     void Start() {
-        animator = GetComponent<Animator>();
+        animator = GetComponentInChildren<Animator>();
         rgbd = GetComponent<Rigidbody>();
-        torsoRGBD = GetComponentInChildren<Rigidbody>();
     }
 
     void FixedUpdate() {
         float horizontalMove = Input.GetAxis("Horizontal" + playerNumber);
         float verticalMove = Input.GetAxis("Vertical" + playerNumber);
 
-        mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        mousePosition.z = 2f;
-        mousePosition.y = 0;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
 
+        if (Physics.Raycast(Camera.main.transform.position, ray.direction, out hit, Mathf.Infinity))
+            mousePosition = new Vector3(hit.point.x, 0.00001f, hit.point.z);
+
+        targetingCursor.position = mousePosition;
+        //Vector3 aimAt = new Vector3(mousePosition.x, mousePosition.y, mousePosition.z + 2);
+        
         movement.Set(horizontalMove, 0f, verticalMove);
         movement.Normalize();
 
         bool hasHorizontalInput = !Mathf.Approximately(horizontalMove, 0f);
         bool hasVerticalInput = !Mathf.Approximately(verticalMove, 0f);
-        bool isWalking = hasHorizontalInput || hasVerticalInput;
+        bool isIdle = !(hasHorizontalInput || hasVerticalInput);
 
-        //animator.SetBool("IsWalking", isWalking);
+        animator.SetBool("IsIdle", isIdle);
+        float walkingAngle = Vector3.Angle(rgbd.velocity, transform.forward);
 
-        Vector3 desiredForward = Vector3.RotateTowards(transform.forward, movement, turnSpeed * Time.deltaTime, 0f);
-        Vector3 desiredLook = Vector3.RotateTowards(torsoRGBD.transform.forward, mousePosition, turnSpeed * Time.deltaTime, 0f);
-        rotation = Quaternion.LookRotation(desiredForward);
-        //torsoRotation = Quaternion.LookRotation(desiredForward);
+
+        if (!isIdle)  animator.SetFloat("WalkingAngle", walkingAngle);
+
+        Debug.Log("isIdle: " + isIdle + "WalkingAngle: " + walkingAngle);
+
+        Vector3 desiredLook = Vector3.RotateTowards(transform.forward, targetingCursor.position, turnSpeed * Time.deltaTime, 0f);
+        desiredLook.y = 0f;
+
+        desiredRotation = Quaternion.LookRotation(desiredLook);
 
         rgbd.MovePosition(rgbd.position + movement * moveSpeed);
-        //torsoRGBD.MovePosition(torsoRGBD.position + movement * moveSpeed);
-        rgbd.MoveRotation(rotation);
-        //torsoRGBD.MoveRotation(rotation);
+        rgbd.MoveRotation(desiredRotation);
     }
 
     void OnAnimatorMove() {
