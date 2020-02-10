@@ -7,10 +7,10 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Water
+  m_Name: Lava
   m_Shader: {fileID: -6465566751694194690, guid: 282cc0b11f640454eac6a0ed6b9f5230,
     type: 3}
-  m_ShaderKeywords: 
+  m_ShaderKeywords: _MAIN_LIGHT_SHADOWS
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -25,18 +25,20 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - Vector1_39BBEC64: 50
+    - Boolean_9987518F: 1
+    - Vector1_39BBEC64: 0
     - Vector1_43513C85: 5
-    - Vector1_50FA3C87: 5
+    - Vector1_50FA3C87: 10
     - Vector1_82B1A450: 1
-    - Vector1_9987BCB1: 0.5
-    - Vector1_A180F457: 5
-    - Vector1_D4EC7571: 5
-    - Vector1_DB56CE82: 1
-    - Vector1_F69F40A3: 1
-    - _MAIN_LIGHT_SHADOWS: 0
+    - Vector1_9987BCB1: 1
+    - Vector1_A180F457: 30
+    - Vector1_D4EC7571: 0.01
+    - Vector1_DB56CE82: 1.5
+    - Vector1_F69F40A3: 1.4
+    - _MAIN_LIGHT_SHADOWS: 1
+    - _MAIN_LIGHT_SHADOWS_OFF: 1
     - _RECEIVE_SHADOWS_OFF: 1
     m_Colors:
     - Color_2695B5BC: {r: 0, g: 0, b: 0, a: 0}
-    - Color_617E9801: {r: 0.1960784, g: 0.2941177, b: 0.627451, a: 1}
-    - Color_F3A47F7C: {r: 0, g: 0.5882353, b: 1, a: 1}
+    - Color_617E9801: {r: 0.9716981, g: 0.556574, b: 0, a: 1}
+    - Color_F3A47F7C: {r: 0.9150943, g: 0.34603995, b: 0, a: 1}
