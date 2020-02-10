@@ -7,19 +7,19 @@ public class LevelOneConfig : ILevelConfig
     private static readonly Vector3[][] playerSpawns = new Vector3[][] {
         new Vector3[]
         {
-            new Vector3(16,0,0),
-            new Vector3(16,0,-7),
-            new Vector3(16,0,7),
-            new Vector3(6,0,9),
-            new Vector3(6,0,-9)
+            new Vector3(16,1,0),
+            new Vector3(16,1,-7),
+            new Vector3(16,1,7),
+            new Vector3(6,1,9),
+            new Vector3(6,1,-9)
         },
         new Vector3[]
         {
-            new Vector3(-16,0,0),
-            new Vector3(-16,0,7),
-            new Vector3(-16,0,-7),
-            new Vector3(-6,0,-9),
-            new Vector3(-6,0,9)
+            new Vector3(-16,1,0),
+            new Vector3(-16,1,7),
+            new Vector3(-16,1,-7),
+            new Vector3(-6,1,-9),
+            new Vector3(-6,1,9)
         }
     };
 

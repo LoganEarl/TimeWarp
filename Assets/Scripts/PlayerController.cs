@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour, IRecordable
 
     //movement information
     public float turnSpeed, moveSpeed;
-    private Vector3 position, velocity, lookDirection;
+    private Vector3 position, velocity, lookDirection = new Vector3(0,0,1);
     private Quaternion desiredRotation = Quaternion.identity;
     private bool isIdle = true;
     private PlayerSnapshot snapshot;
@@ -80,10 +80,10 @@ public class PlayerController : MonoBehaviour, IRecordable
                 rigidBody.transform.position = position;
 
             Quaternion desiredRotation;
-            if (lookDirection.magnitude != 0)
+            if (lookDirection.magnitude > 0.1)
             {
                 Vector3 moddedDirection = Quaternion.AngleAxis(lookOffset, Vector3.up) * lookDirection;
-                desiredRotation = Quaternion.LookRotation(moddedDirection);
+                desiredRotation = Quaternion.LookRotation(moddedDirection, Vector3.up);
                 rigidBody.MoveRotation(desiredRotation);
                 //TODO: this does not belong here. Make a targetingCursor script to handle this
                 if (!usingSnapshots)
@@ -95,12 +95,11 @@ public class PlayerController : MonoBehaviour, IRecordable
             else if (velocity.magnitude > 0.2)
             {
                 Vector3 moddedDirection = Quaternion.AngleAxis(lookOffset, Vector3.up) * velocity;
-                desiredRotation = Quaternion.LookRotation(velocity);
+                moddedDirection.y = 0;
+                desiredRotation = Quaternion.LookRotation(moddedDirection, Vector3.up);
                 rigidBody.MoveRotation(desiredRotation);
                 if (!usingSnapshots)
-                {
                     targetingCursor.SetActive(false);
-                }
             }else if (!usingSnapshots)
                 targetingCursor.SetActive(false);
             if (firingGun)

@@ -141,13 +141,13 @@ InputManager:
     positiveButton: joystick button 2
     altNegativeButton: 
     altPositiveButton: 2
-    gravity: 1000
-    dead: 0.001
-    sensitivity: 1000
-    snap: 0
+    gravity: 3
+    dead: 0.5
+    sensitivity: 1
+    snap: 1
     invert: 0
-    type: 0
-    axis: 0
+    type: 2
+    axis: 9
     joyNum: 2
   - serializedVersion: 3
     m_Name: Jump
@@ -259,7 +259,7 @@ InputManager:
     snap: 1
     invert: 0
     type: 2
-    axis: 4
+    axis: 3
     joyNum: 2
   - serializedVersion: 3
     m_Name: AimVertical1
@@ -275,5 +275,5 @@ InputManager:
     snap: 1
     invert: 1
     type: 2
-    axis: 3
+    axis: 4
     joyNum: 2
