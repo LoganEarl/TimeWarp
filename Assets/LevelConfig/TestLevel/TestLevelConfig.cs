@@ -11,7 +11,7 @@ public class TestLevelConfig : ILevelConfig
 
     public string GetPlayerModelName(int playerNum, int matchNum)
     {
-        return "Player";
+        return "Player/Player";
     }
 
     public Vector3 GetPlayerSpawnPosition(int playerNum, int matchNum)

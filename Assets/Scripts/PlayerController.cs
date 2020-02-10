@@ -6,7 +6,6 @@ public class PlayerController : MonoBehaviour, IRecordable
 {
     //bullet information
     public float bulletSpeed = 10;
-    private string fireButton;
     private bool firingGun = false;
     private bool fired = false;
     private List<GameObject> firedBullets = new List<GameObject>();
@@ -22,6 +21,7 @@ public class PlayerController : MonoBehaviour, IRecordable
     private bool loadedCursor = false;
     private bool setupPlayer = false;
     private PlayerHealth health;
+    public float lookOffset;
 
     //movement information
     public float turnSpeed, moveSpeed;
@@ -53,6 +53,7 @@ public class PlayerController : MonoBehaviour, IRecordable
             else if (usingSnapshots)
                 Destroy(targetingCursor);
 
+            //read in the calculated values from the rigidbody
             velocity = rigidBody.velocity;
             position = rigidBody.position;
 
@@ -78,10 +79,24 @@ public class PlayerController : MonoBehaviour, IRecordable
             if (usingSnapshots)
                 rigidBody.transform.position = position;
 
-            Quaternion desiredRotation = Quaternion.LookRotation(lookDirection);
-            rigidBody.MoveRotation(desiredRotation);
-            //rigidBody.transform.rotation = desiredRotation;
-
+            Quaternion desiredRotation;
+            if (lookDirection.magnitude != 0)
+            {
+                Vector3 moddedDirection = Quaternion.AngleAxis(lookOffset, Vector3.up) * lookDirection;
+                desiredRotation = Quaternion.LookRotation(moddedDirection);
+                rigidBody.MoveRotation(desiredRotation);
+                //TODO: this does not belong here. Make a targetingCursor script to handle this
+                targetingCursor.SetActive(true);
+                targetingCursor.transform.position = rigidBody.position + lookDirection * 5 + new Vector3(0,0.01f,0);
+            }
+            else if (velocity.magnitude > 0.2)
+            {
+                Vector3 moddedDirection = Quaternion.AngleAxis(lookOffset, Vector3.up) * velocity;
+                desiredRotation = Quaternion.LookRotation(velocity);
+                rigidBody.MoveRotation(desiredRotation);
+                targetingCursor.SetActive(false);
+            }else
+                targetingCursor.SetActive(false);
             if (firingGun)
                 Shoot();
         }
@@ -91,36 +106,37 @@ public class PlayerController : MonoBehaviour, IRecordable
     {
         float horizontalMove = Input.GetAxis("Horizontal" + playerNumber);
         float verticalMove = Input.GetAxis("Vertical" + playerNumber);
-        bool hasHorizontalInput = !Mathf.Approximately(horizontalMove, 0f);
-        bool hasVerticalInput = !Mathf.Approximately(verticalMove, 0f);
+
+        bool hasHorizontalInput = !DeltaExceeds(horizontalMove, 0f, 0.02f);
+        bool hasVerticalInput = !DeltaExceeds(verticalMove, 0f, 0.02f);
         isIdle = !(hasHorizontalInput || hasVerticalInput);
 
-        Vector3 inputVector = new Vector3();
-        if (!isIdle)
-        {
-            inputVector.Set(horizontalMove, 0f, verticalMove);
-            inputVector.Normalize();
-            inputVector *= moveSpeed;
-        }
+        Vector3 inputVector = new Vector3(horizontalMove, 0f, verticalMove);
+        inputVector *= moveSpeed;
         velocity += (inputVector * Time.fixedDeltaTime);
 
-        Vector3 mousePosition = new Vector3();
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(Camera.main.transform.position, ray.direction, out RaycastHit hit, Mathf.Infinity))
-            mousePosition.Set(hit.point.x, 0.00001f, hit.point.z);
-        targetingCursor.transform.position = mousePosition;
-        Vector3 desiredLookAngle = mousePosition - transform.position;
-        lookDirection = Vector3.RotateTowards(transform.forward, desiredLookAngle, turnSpeed * Time.deltaTime, 0f);
-        lookDirection.y = 0f;
+        float horizontalAim = Input.GetAxis("AimHorizontal" + playerNumber);
+        float verticalAim = Input.GetAxis("AimVertical" + playerNumber);
 
+        lookDirection = new Vector3(horizontalAim, 0f, verticalAim);
+        if (lookDirection.magnitude < 0.03)
+            lookDirection.Set(0,0,0);
+        
         firingGun = false;
-        if (!fired && Input.GetButtonDown(fireButton))
+        float fireActivity = Input.GetAxis("Fire" + playerNumber);
+        if (!fired && fireActivity > 0f) //this works becuase of the masssive deadzone setting
         {
             fired = true;
             firingGun = true;
         }
-        else if (!Input.GetButtonDown(fireButton))
+        else if (fireActivity == 0f)
             fired = false;
+    }
+
+    private static bool DeltaExceeds(float value, float target, float delta)
+    {
+        var actualDifference = Mathf.Abs(value - target);
+        return actualDifference <= delta;
     }
 
     private void RecordedFrame()
@@ -153,7 +169,6 @@ public class PlayerController : MonoBehaviour, IRecordable
     public void SetPlayerInformation(int playerNumber, int sourceRoundNum, Vector3 initialPosition)
     {
         this.playerNumber = playerNumber;
-        this.fireButton = "Fire" + playerNumber;
 
         animator = GetComponentInChildren<Animator>();
         rigidBody = GetComponent<Rigidbody>();
@@ -177,6 +192,21 @@ public class PlayerController : MonoBehaviour, IRecordable
     public void SetUseSnapshots(bool useSnapshots)
     {
         this.usingSnapshots = useSnapshots;
+
+        SkinnedMeshRenderer secondaryRenderer = gameObject.GetComponentsInChildren<SkinnedMeshRenderer>()[0];
+        SkinnedMeshRenderer primaryRenderer = gameObject.GetComponentsInChildren<SkinnedMeshRenderer>()[1];
+        if (useSnapshots)
+        {
+            gameObject.layer = LayerMask.NameToLayer("BlockingLayer");
+            primaryRenderer.material = Resources.Load<Material>("Player/Player" + playerNumber + "Primary");
+            secondaryRenderer.material = Resources.Load<Material>("Player/Player" + playerNumber + "Secondary");
+        }
+        else
+        {
+            gameObject.layer = LayerMask.NameToLayer("Ghost");
+            primaryRenderer.material = Resources.Load<Material>("Player/Player" + playerNumber + "PrimaryGhost");
+            secondaryRenderer.material = Resources.Load<Material>("Player/Player" + playerNumber + "SecondaryGhost");
+        }
     }
 
     public void OnReset()

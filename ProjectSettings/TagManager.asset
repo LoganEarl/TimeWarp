@@ -3,7 +3,12 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: [Bullet, Wall, Player1, Player0, StartButton]
+  tags:
+  - Bullet
+  - Wall
+  - Player1
+  - Player0
+  - StartButton
   layers:
   - Default
   - TransparentFX
@@ -14,10 +19,10 @@ TagManager:
   - 
   - 
   - BlockingLayer
-  - Player0
-  - Player1
-  - Player2
-  - Player3
+  - Ghost
+  - Projectile
+  - 
+  - 
   - 
   - 
   - 

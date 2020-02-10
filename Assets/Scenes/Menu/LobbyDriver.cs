@@ -43,7 +43,7 @@ public class LobbyDriver : MonoBehaviour {
     {
         if(selectedLevel != null && selectedGameMode != null)
         {
-            selectedGameMode.Setup(1, selectedLevel);
+            selectedGameMode.Setup(2, selectedLevel);
             selectedGameMode.Begin();
         }
     }

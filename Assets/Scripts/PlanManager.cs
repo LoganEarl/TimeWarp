@@ -15,7 +15,7 @@ public class PlanManager : MonoBehaviour, IGameMode
     private PlanPlayerManager[] playerManagers = null;
     private List<GameObject> playerObjects = new List<GameObject>();
 
-    private static readonly int MAX_STEPS = 300;
+    private static readonly int MAX_STEPS = 1000;
 
     private void Awake()
     {
