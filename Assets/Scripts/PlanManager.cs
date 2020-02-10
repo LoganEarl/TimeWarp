@@ -15,7 +15,7 @@ public class PlanManager : MonoBehaviour, IGameMode
     private PlanPlayerManager[] playerManagers = null;
     private List<GameObject> playerObjects = new List<GameObject>();
 
-    private static readonly int MAX_STEPS = 360;
+    private static readonly int MAX_STEPS = 300;
 
     private void Awake()
     {
@@ -41,6 +41,9 @@ public class PlanManager : MonoBehaviour, IGameMode
         roundNumber++;
         foreach (PlanPlayerManager player in playerManagers)
             player.FinishSequence();
+        foreach (GameObject playerObject in playerObjects)
+            playerObject.GetComponent<PlayerController>().OnReset();
+
         LoadNewPlayers();
     }
 
@@ -86,10 +89,10 @@ public class PlanManager : MonoBehaviour, IGameMode
                 loadedPlayerModels[assetName] = playerPrefab;
             }
 
-            GameObject player = Instantiate(playerPrefab, levelConfig.GetPlayerSpawnPosition(curPlayer, roundNumber), Quaternion.identity);
+            GameObject player = Instantiate(playerPrefab);
             playerObjects.Add(player);
             PlayerController playerController = player.GetComponent<PlayerController>();
-            playerController.SetPlayerInformation(curPlayer, roundNumber);
+            playerController.SetPlayerInformation(curPlayer, roundNumber, levelConfig.GetPlayerSpawnPosition(curPlayer,roundNumber));
             if (!manager.RecordExistsForMatch(roundNumber))
                 manager.AppendNewRecording(playerController);
         }

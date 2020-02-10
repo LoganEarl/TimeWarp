@@ -16,6 +16,9 @@ public class TestLevelConfig : ILevelConfig
 
     public Vector3 GetPlayerSpawnPosition(int playerNum, int matchNum)
     {
-        return new Vector3(10 * playerNum,3f,3 * matchNum);
+        if(playerNum % 2 == 0)
+            return new Vector3(-5f + matchNum * 0.5f,0f, matchNum * 0.5f);
+        else
+            return new Vector3(5f - matchNum * 0.5f, 0f, matchNum * -0.5f);
     }
 }
