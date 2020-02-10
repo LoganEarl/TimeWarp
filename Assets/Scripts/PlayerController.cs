@@ -97,8 +97,11 @@ public class PlayerController : MonoBehaviour, IRecordable
                 Vector3 moddedDirection = Quaternion.AngleAxis(lookOffset, Vector3.up) * velocity;
                 desiredRotation = Quaternion.LookRotation(velocity);
                 rigidBody.MoveRotation(desiredRotation);
-                targetingCursor.SetActive(false);
-            }else
+                if (!usingSnapshots)
+                {
+                    targetingCursor.SetActive(false);
+                }
+            }else if (!usingSnapshots)
                 targetingCursor.SetActive(false);
             if (firingGun)
                 Shoot();

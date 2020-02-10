@@ -39,12 +39,16 @@ public class PlanManager : MonoBehaviour, IGameMode
     {
         stepNumber = -1;
         roundNumber++;
-        foreach (PlanPlayerManager player in playerManagers)
-            player.FinishSequence();
-        foreach (GameObject playerObject in playerObjects)
-            playerObject.GetComponent<PlayerController>().OnReset();
 
-        LoadNewPlayers();
+        if (roundNumber < levelConfig.GetMaxRounds())
+        {
+            foreach (PlanPlayerManager player in playerManagers)
+                player.FinishSequence();
+            foreach (GameObject playerObject in playerObjects)
+                playerObject.GetComponent<PlayerController>().OnReset();
+
+            LoadNewPlayers();
+        }
     }
 
     public void Setup(int numPlayers, ILevelConfig levelConfig)

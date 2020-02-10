@@ -14,6 +14,11 @@ public class TestLevelConfig : ILevelConfig
         return "Player/Player";
     }
 
+    public int GetMaxRounds()
+    {
+        return 10;
+    }
+
     public Vector3 GetPlayerSpawnPosition(int playerNum, int matchNum)
     {
         if(playerNum % 2 == 0)
