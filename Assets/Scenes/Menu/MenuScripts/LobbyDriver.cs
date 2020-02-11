@@ -17,9 +17,15 @@ public class LobbyDriver : MonoBehaviour {
 
     public PlanManager planGameMode;
 
+    // Added Start() in to make start button uninteractable at the beginning
+    public void Start()
+    {
+        startButton.interactable = false;
+    }
+    
     public void SelectTestLevel()
     {
-        selectedLevel = new LevelOneConfig();
+        selectedLevel = new TestLevelConfig();
         CheckLoadButtonAvailability();
     }
 
@@ -28,6 +34,30 @@ public class LobbyDriver : MonoBehaviour {
         selectedGameMode = planGameMode;
         CheckLoadButtonAvailability();
     }
+
+    // Added for levels and game modes not created yet
+    public void SelectTestLevelWithIndex(int level) // maybe pass in levels by an index? or by name
+    {
+        if (level == 1)
+            selectedLevel = new TestLevelConfig();
+        else if(level == 2)
+            selectedLevel = new LevelOneConfig();
+        else if(level == 3)
+            selectedLevel = null;
+
+        CheckLoadButtonAvailability();
+    }
+
+    public void SelectGameMode(string gameModeName)
+    {
+        if (gameModeName.Equals("Plan"))
+            selectedGameMode = planGameMode;
+        else
+            selectedGameMode = null;
+
+        CheckLoadButtonAvailability();
+    }
+    // End added stuff
 
     public void GoToMainMenu()
     {
