@@ -12,9 +12,7 @@ public class LobbyDriver : MonoBehaviour {
     private ILevelConfig selectedLevel = null;
     private IGameMode selectedGameMode = null;
     public Animator animator;
-
     public Button startButton;
-
     public PlanManager planGameMode;
 
     // Added Start() in to make start button uninteractable at the beginning

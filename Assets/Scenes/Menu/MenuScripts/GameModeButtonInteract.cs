@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 public class GameModeButtonInteract : MonoBehaviour, ButtonInteract {
     [SerializeField]
-    public Button[] gameModeButtons;
+    private Button[] gameModeButtons;
 
     public void ButtonClicked(Button clickedButton)
     {

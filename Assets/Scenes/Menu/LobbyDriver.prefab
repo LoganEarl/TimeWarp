@@ -48,6 +48,7 @@ MonoBehaviour:
   animator: {fileID: 7058409687327364151}
   startButton: {fileID: 0}
   planGameMode: {fileID: 7058409687327364148}
+  loader: {fileID: 0}
 --- !u!114 &7058409687327364148
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -71,7 +72,7 @@ Animator:
   m_GameObject: {fileID: 7058409687327364152}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 268dd759a524eac4295fad3406963cf3, type: 2}
+  m_Controller: {fileID: 0}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

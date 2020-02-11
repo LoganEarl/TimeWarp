@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 public class LevelSelectorButtonInteract : MonoBehaviour, ButtonInteract {
     [SerializeField]
-    public Button[] levelSelectorButtons;
+    private Button[] levelSelectorButtons;
 
     public void ButtonClicked(Button clickedButton)
     {
