@@ -23,7 +23,7 @@ public class LobbyDriver : MonoBehaviour {
     
     public void SelectTestLevel()
     {
-        selectedLevel = new LevelOneConfig();
+        selectedLevel = new TestLevelConfig();
         CheckLoadButtonAvailability();
     }
 
@@ -38,7 +38,9 @@ public class LobbyDriver : MonoBehaviour {
     {
         if (level == 1)
             selectedLevel = new TestLevelConfig();
-        else if(level == 2 || level == 3)
+        else if(level == 2)
+            selectedLevel = new LevelOneConfig();
+        else if(level == 3)
             selectedLevel = null;
 
         CheckLoadButtonAvailability();
