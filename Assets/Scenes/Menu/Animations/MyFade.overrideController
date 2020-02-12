@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: MyFade
+  m_Controller: {fileID: 9100000, guid: 0dc3b43eb8a66e0449e4daa16a397258, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 72a85e9cf2ab73b43910a16b3db92aa4, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 29b5436adbd9f824fb40d07f83d22530, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 776b59a2f4b04b14e8f669faf60c52c3, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 19d6ff021264b604a9eea50a6f840846, type: 2}
