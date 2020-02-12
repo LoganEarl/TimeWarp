@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Rock-SG-1
+  m_Name: Floor Tile
   m_Shader: {fileID: -6465566751694194690, guid: 710bdfcdc6408b44e84a7edf7a8c0598,
     type: 3}
   m_ShaderKeywords: 
@@ -24,18 +24,7 @@ Material:
         m_Texture: {fileID: 2800000, guid: 4b46ee10f3b81164cbbce965246a1c93, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - Texture2D_F35572C0:
-        m_Texture: {fileID: 2800000, guid: 3e33eebf0b6f1c043b76c736d8824733, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - Texture3D_CA8DC2A8:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     m_Floats:
-    - Vector1_289AAE7E: 0.6
     - Vector1_B96DDB3: 0.5
-    - Vector1_BD551FC0: 0
     m_Colors:
-    - Color_491CFD99: {r: 1, g: 0, b: 0, a: 0}
-    - Vector3_23D55ACB: {r: 0, g: 0, b: 0, a: 0}
+    - Color_491CFD99: {r: 0, g: 0.7525754, b: 1, a: 0}
