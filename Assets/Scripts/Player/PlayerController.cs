@@ -6,33 +6,37 @@ public class PlayerController : MonoBehaviour, IRecordable
 {
     //bullet information
     public float bulletSpeed = 10;
+
     private bool firingGun = false;
     private bool fired = false;
     private List<GameObject> firedBullets = new List<GameObject>();
 
     //player components/info
-    private Animator animator;
-    private Rigidbody rigidBody;
     public Rigidbody bullet;
     public Transform fireTransform;
-    private int playerNumber = 0;
-    private bool usingSnapshots = false;
     public GameObject targetingCursor;
+
+    private int playerNumber = 0;
+    public float lookOffset;
+    private bool usingSnapshots = false;
+    private bool aimLocked = false;
     private bool loadedCursor = false;
     private bool setupPlayer = false;
+    private Animator animator;
+    private Rigidbody rigidBody;
     private PlayerHealth health;
-    public float lookOffset;
 
     //movement information
     public float turnSpeed, moveSpeed;
-    private Vector3 position, velocity, lookDirection = new Vector3(0,0,1);
-    private Quaternion desiredRotation = Quaternion.identity;
+
     private bool isIdle = true;
-    private PlayerSnapshot snapshot;
     private int frameCounter = 0;
+    private Vector3 position, velocity, lookDirection;
+    private Quaternion desiredRotation = Quaternion.identity;
+    private PlayerSnapshot snapshot;
 
     void Start() {
-        
+        lookDirection = new Vector3(0, 0, 1);
     }
 
     void FixedUpdate() {
@@ -80,7 +84,7 @@ public class PlayerController : MonoBehaviour, IRecordable
                 rigidBody.transform.position = position;
 
             Quaternion desiredRotation;
-            if (lookDirection.magnitude > 0.1)
+            if (lookDirection.magnitude > 0.1 || aimLocked)
             {
                 Vector3 moddedDirection = Quaternion.AngleAxis(lookOffset, Vector3.up) * lookDirection;
                 desiredRotation = Quaternion.LookRotation(moddedDirection, Vector3.up);
@@ -92,7 +96,7 @@ public class PlayerController : MonoBehaviour, IRecordable
                     targetingCursor.transform.position = rigidBody.position + lookDirection * 5 + new Vector3(0, 0.01f, 0);
                 }
             }
-            else if (velocity.magnitude > 0.2)
+            else if (velocity.magnitude > 0.2 || !aimLocked)
             {
                 Vector3 moddedDirection = Quaternion.AngleAxis(lookOffset, Vector3.up) * velocity;
                 moddedDirection.y = 0;
@@ -100,7 +104,7 @@ public class PlayerController : MonoBehaviour, IRecordable
                 rigidBody.MoveRotation(desiredRotation);
                 if (!usingSnapshots)
                     targetingCursor.SetActive(false);
-            }else if (!usingSnapshots)
+            } else if (!usingSnapshots)
                 targetingCursor.SetActive(false);
             if (firingGun)
                 Shoot();
@@ -112,8 +116,8 @@ public class PlayerController : MonoBehaviour, IRecordable
         float horizontalMove = Input.GetAxis("Horizontal" + playerNumber);
         float verticalMove = Input.GetAxis("Vertical" + playerNumber);
 
-        bool hasHorizontalInput = !DeltaExceeds(horizontalMove, 0f, 0.02f);
-        bool hasVerticalInput = !DeltaExceeds(verticalMove, 0f, 0.02f);
+        bool hasHorizontalInput = DeltaExceeds(horizontalMove, 0f, 0.02f);
+        bool hasVerticalInput = DeltaExceeds(verticalMove, 0f, 0.02f);
         isIdle = !(hasHorizontalInput || hasVerticalInput);
 
         Vector3 inputVector = new Vector3(horizontalMove, 0f, verticalMove);
@@ -123,10 +127,15 @@ public class PlayerController : MonoBehaviour, IRecordable
         float horizontalAim = Input.GetAxis("AimHorizontal" + playerNumber);
         float verticalAim = Input.GetAxis("AimVertical" + playerNumber);
 
-        lookDirection = new Vector3(horizontalAim, 0f, verticalAim);
-        if (lookDirection.magnitude < 0.03)
-            lookDirection.Set(0,0,0);
-        
+        bool hasHorizontalAim = DeltaExceeds(horizontalAim, 0f, 0.02f);
+        bool hasVerticalAim = DeltaExceeds(verticalAim, 0f, 0.02f);
+
+        if (hasHorizontalAim || hasVerticalAim)
+            lookDirection = new Vector3(horizontalAim, 0f, verticalAim);
+        else if (lookDirection.magnitude < 0.03)
+            lookDirection.Set(0, 0, 0);
+
+
         firingGun = false;
         float fireActivity = Input.GetAxis("Fire" + playerNumber);
         if (!fired && fireActivity > 0f) //this works becuase of the masssive deadzone setting
@@ -136,12 +145,15 @@ public class PlayerController : MonoBehaviour, IRecordable
         }
         else if (fireActivity == 0f)
             fired = false;
+
+        if (Input.GetButtonDown("AimLock" + playerNumber))
+            aimLocked = !aimLocked;
     }
 
     private static bool DeltaExceeds(float value, float target, float delta)
     {
         var actualDifference = Mathf.Abs(value - target);
-        return actualDifference <= delta;
+        return actualDifference > delta;
     }
 
     private void RecordedFrame()

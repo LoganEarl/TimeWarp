@@ -7,11 +7,11 @@ public class LevelOneConfig : ILevelConfig
     private static readonly Vector3[][] playerSpawns = new Vector3[][] {
         new Vector3[]
         {
-            new Vector3(16,1,0),
-            new Vector3(16,1,-7),
-            new Vector3(16,1,7),
-            new Vector3(6,1,9),
-            new Vector3(6,1,-9)
+            new Vector3(16,.1f,0),
+            new Vector3(16,.1f,-7),
+            new Vector3(16,.1f,7),
+            new Vector3(6,.1f,9),
+            new Vector3(6,.1f,-9)
         },
         new Vector3[]
         {
