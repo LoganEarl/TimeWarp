@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour, IRecordable
     public Transform fireTransform;
     public GameObject targetingCursor;
 
-    private int playerNumber = 0;
+    public int playerNumber = 0;
     public float lookOffset;
     private bool usingSnapshots = false;
     private bool aimLocked = false;
@@ -84,7 +84,8 @@ public class PlayerController : MonoBehaviour, IRecordable
                 rigidBody.transform.position = position;
 
             Quaternion desiredRotation;
-            if (lookDirection.magnitude > 0.1 || aimLocked)
+
+            if (lookDirection.magnitude > 0.1)
             {
                 Vector3 moddedDirection = Quaternion.AngleAxis(lookOffset, Vector3.up) * lookDirection;
                 desiredRotation = Quaternion.LookRotation(moddedDirection, Vector3.up);
@@ -96,7 +97,7 @@ public class PlayerController : MonoBehaviour, IRecordable
                     targetingCursor.transform.position = rigidBody.position + lookDirection * 5 + new Vector3(0, 0.01f, 0);
                 }
             }
-            else if (velocity.magnitude > 0.2 || !aimLocked)
+            else if (velocity.magnitude > 0.2)
             {
                 Vector3 moddedDirection = Quaternion.AngleAxis(lookOffset, Vector3.up) * velocity;
                 moddedDirection.y = 0;
@@ -130,7 +131,7 @@ public class PlayerController : MonoBehaviour, IRecordable
         bool hasHorizontalAim = DeltaExceeds(horizontalAim, 0f, 0.02f);
         bool hasVerticalAim = DeltaExceeds(verticalAim, 0f, 0.02f);
 
-        if (hasHorizontalAim || hasVerticalAim)
+        if ((hasHorizontalAim || hasVerticalAim) && !aimLocked)
             lookDirection = new Vector3(horizontalAim, 0f, verticalAim);
         else if (lookDirection.magnitude < 0.03)
             lookDirection.Set(0, 0, 0);
@@ -190,6 +191,11 @@ public class PlayerController : MonoBehaviour, IRecordable
         animator = GetComponentInChildren<Animator>();
         rigidBody = GetComponent<Rigidbody>();
         health = GetComponent<PlayerHealth>();
+        gameObject.tag = "player" + playerNumber;
+
+        Collider[] setColliderTags = GetComponentsInChildren<Collider>();
+        foreach (Collider collider in setColliderTags)
+            collider.gameObject.tag = "player" + playerNumber;
 
         rigidBody.MovePosition(initialPosition);
 

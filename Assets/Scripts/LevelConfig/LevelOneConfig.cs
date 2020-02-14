@@ -35,7 +35,10 @@ public class LevelOneConfig : ILevelConfig
 
     public string GetPlayerModelName(int playerNum, int matchNum)
     {
-        return "Prefabs/Player";
+        //if (matchNum == -1)
+            return "Prefabs/Player";
+
+        //return "Player" + playerNum;
     }
 
     public Vector3 GetPlayerSpawnPosition(int playerNum, int matchNum)

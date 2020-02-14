@@ -55,6 +55,7 @@ public class PlanManager : MonoBehaviour, IGameMode
     {
         this.levelConfig = levelConfig;
         this.numPlayers = numPlayers;
+
         playerManagers = new PlanPlayerManager[numPlayers];
         for (int i = 0; i < numPlayers; i++)
             playerManagers[i] = new PlanPlayerManager(10);
@@ -85,6 +86,7 @@ public class PlanManager : MonoBehaviour, IGameMode
 
             string assetName = levelConfig.GetPlayerModelName(curPlayer, roundNumber);
             GameObject playerPrefab;
+
             if (loadedPlayerModels.ContainsKey(assetName))
                 playerPrefab = loadedPlayerModels[assetName];
             else
@@ -97,6 +99,7 @@ public class PlanManager : MonoBehaviour, IGameMode
             playerObjects.Add(player);
             PlayerController playerController = player.GetComponent<PlayerController>();
             playerController.SetPlayerInformation(curPlayer, roundNumber, levelConfig.GetPlayerSpawnPosition(curPlayer,roundNumber));
+
             if (!manager.RecordExistsForMatch(roundNumber))
                 manager.AppendNewRecording(playerController);
         }
@@ -129,9 +132,7 @@ public class PlanManager : MonoBehaviour, IGameMode
         internal void FinishSequence()
         {
             foreach (MatchRecordingManager recording in playerRecordings)
-            {
                 recording.Finish();
-            }
         }
 
         internal bool RecordExistsForMatch(int matchNum)

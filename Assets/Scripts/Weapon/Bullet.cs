@@ -20,7 +20,7 @@ public class Bullet : MonoBehaviour
 
         if (other.tag == "Wall" && bouncesLeft != 0) bouncesLeft--;
         else if (other.tag == "Wall") Destroy(gameObject);
-        else if (other.tag.StartsWith("Player") /*&& other.tag != "Player" + playerNumber*/) {
+        else if (other.tag.StartsWith("Player") && other.tag != "Player" + playerNumber) {
             other.GetComponent<PlayerHealth>().DoDamage(bulletDmg);
             Destroy(gameObject);
         }
