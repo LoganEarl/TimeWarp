@@ -23,10 +23,8 @@ TagManager:
   - BlockingLayer
   - Ghost
   - Projectile
-  - 
-  - 
-  - 
-  - 
+  - Player0
+  - Player1
   - 
   - 
   - 

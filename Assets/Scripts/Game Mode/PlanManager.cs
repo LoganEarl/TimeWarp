@@ -99,6 +99,7 @@ public class PlanManager : MonoBehaviour, IGameMode
             playerObjects.Add(player);
             PlayerController playerController = player.GetComponent<PlayerController>();
             playerController.SetPlayerInformation(curPlayer, roundNumber, levelConfig.GetPlayerSpawnPosition(curPlayer,roundNumber));
+            Debug.Log("tag: " + player.tag);
 
             if (!manager.RecordExistsForMatch(roundNumber))
                 manager.AppendNewRecording(playerController);

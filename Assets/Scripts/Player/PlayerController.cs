@@ -191,11 +191,10 @@ public class PlayerController : MonoBehaviour, IRecordable
         animator = GetComponentInChildren<Animator>();
         rigidBody = GetComponent<Rigidbody>();
         health = GetComponent<PlayerHealth>();
-        gameObject.tag = "player" + playerNumber;
 
         Collider[] setColliderTags = GetComponentsInChildren<Collider>();
         foreach (Collider collider in setColliderTags)
-            collider.gameObject.tag = "player" + playerNumber;
+            collider.gameObject.tag = "Player" + playerNumber;
 
         rigidBody.MovePosition(initialPosition);
 

@@ -19,8 +19,8 @@ public class Bullet : MonoBehaviour
         Collider other = collision.collider;
 
         if (other.tag == "Wall" && bouncesLeft != 0) bouncesLeft--;
-        else if (other.tag == "Wall") Destroy(gameObject);
-        else if (other.tag.StartsWith("Player") && other.tag != "Player" + playerNumber) {
+        else if (other.tag == "Wall" || other.tag == "Player" + playerNumber) Destroy(gameObject);
+        else if (other.tag.StartsWith("Player")) {
             other.GetComponent<PlayerHealth>().DoDamage(bulletDmg);
             Destroy(gameObject);
         }
