@@ -9,7 +9,8 @@ public class PlanManager : MonoBehaviour, IGameMode
     private ILevelConfig levelConfig = null;
     public int numPlayers;
     private int stepNumber = -1;
-    private int roundNumber = -1; //starts at -1, but first match is 0. This is so NextMatch() doesnt need edge case checks
+    private int roundNumber = -1; //starts at -1, but first match is 0.
+                                  //This is so NextMatch() doesnt need edge case checks
 
     private Dictionary<string, GameObject> loadedPlayerModels = new Dictionary<string, GameObject>();
     private PlanPlayerManager[] playerManagers = null;
@@ -29,7 +30,9 @@ public class PlanManager : MonoBehaviour, IGameMode
         {
             if (stepNumber > MAX_STEPS)
                 NextMatch();
+
             stepNumber++;
+
             foreach (PlanPlayerManager player in playerManagers)
                 player.Step(stepNumber);
         }
@@ -44,6 +47,7 @@ public class PlanManager : MonoBehaviour, IGameMode
         {
             foreach (PlanPlayerManager player in playerManagers)
                 player.FinishSequence();
+
             foreach (GameObject playerObject in playerObjects)
                 playerObject.GetComponent<PlayerController>().OnReset();
 
@@ -55,6 +59,7 @@ public class PlanManager : MonoBehaviour, IGameMode
     {
         this.levelConfig = levelConfig;
         this.numPlayers = numPlayers;
+
         playerManagers = new PlanPlayerManager[numPlayers];
         for (int i = 0; i < numPlayers; i++)
             playerManagers[i] = new PlanPlayerManager(10);
@@ -64,7 +69,6 @@ public class PlanManager : MonoBehaviour, IGameMode
     {
         if (levelConfig != null)
             SceneManager.LoadScene(levelConfig.GetSceneName(), LoadSceneMode.Single);
-
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -85,6 +89,7 @@ public class PlanManager : MonoBehaviour, IGameMode
 
             string assetName = levelConfig.GetPlayerModelName(curPlayer, roundNumber);
             GameObject playerPrefab;
+
             if (loadedPlayerModels.ContainsKey(assetName))
                 playerPrefab = loadedPlayerModels[assetName];
             else
@@ -96,7 +101,12 @@ public class PlanManager : MonoBehaviour, IGameMode
             GameObject player = Instantiate(playerPrefab);
             playerObjects.Add(player);
             PlayerController playerController = player.GetComponent<PlayerController>();
-            playerController.SetPlayerInformation(curPlayer, roundNumber, levelConfig.GetPlayerSpawnPosition(curPlayer,roundNumber));
+            playerController.SetPlayerInformation(
+                curPlayer, 
+                roundNumber, 
+                levelConfig.GetPlayerSpawnPosition(curPlayer,roundNumber)
+            );
+
             if (!manager.RecordExistsForMatch(roundNumber))
                 manager.AppendNewRecording(playerController);
         }
@@ -129,9 +139,7 @@ public class PlanManager : MonoBehaviour, IGameMode
         internal void FinishSequence()
         {
             foreach (MatchRecordingManager recording in playerRecordings)
-            {
                 recording.Finish();
-            }
         }
 
         internal bool RecordExistsForMatch(int matchNum)
