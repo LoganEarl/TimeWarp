@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+/*
+ * This class operates the timer for the UI_In_Game. This will count down from
+ * 90 seconds. This will also control the round number for the game.
+ */
+
 public class Timer : MonoBehaviour {
     [SerializeField]
     private TextMeshProUGUI timerText;
@@ -10,6 +15,8 @@ public class Timer : MonoBehaviour {
     private float mainTimer;
     [SerializeField]
     private int numIterations;
+
+    public RoundNumber round;
 
     private float[] timeForIterations;
 
@@ -23,14 +30,17 @@ public class Timer : MonoBehaviour {
     public void Start()
     {
         timer = mainTimer;
-        timeForIterations = new float[numIterations];
+        timeForIterations = new float[numIterations]; // Stores time for each iteration
     }
 
     public void Update()
     {
+        // Testing
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             bothPlayersAlive = false;
+            RecordRemainingTime();
+            //PrintTimeArray();
             ResetTimer();
         }
         if (timer >= 0.0f && !doOnce && canCount && !bothPlayersAlive)
@@ -40,12 +50,6 @@ public class Timer : MonoBehaviour {
             canCount = false;
             doOnce = true;
         }
-        /*
-        if (timer >= 0.00f && timer <= 10.01f && canCount)
-        {
-            timer -= Time.deltaTime;
-            timerText.text = timer.ToString("F2");
-        }*/
         else if (timer >= 0.0f && canCount)
         {
             timer -= Time.deltaTime;
@@ -55,31 +59,47 @@ public class Timer : MonoBehaviour {
         {
             canCount = false;
             doOnce = true;
-            timerText.text = "0.00";
+            timerText.text = "0";
             timer = 0.0f;
             RecordRemainingTime();
+            //PrintTimeArray();
         }
     }
 
     private void RecordRemainingTime()
     {
         if(currentIteration < numIterations)
-            timeForIterations[currentIteration] = timer;
+            timeForIterations[currentIteration] = GetRemainingTime();
         currentIteration++;
+        round.incrementRoundNumber();
     }
 
-    public float GetTimer() { return timer; }
-
-    public float GetRemainingTime()
-    {
-        return mainTimer - GetTimer();
-    }
-
-    public void ResetTimer()
+    private void ResetTimer()
     {
         timer = mainTimer;
         canCount = true;
         doOnce = false;
         bothPlayersAlive = true;
+    }
+
+    public float GetRemainingTime()
+    {
+        return timer;
+    }
+
+    public float GetActualTime()
+    {
+        return mainTimer - GetRemainingTime();
+    }
+
+    public float[] GetTimeArray()
+    {
+        return timeForIterations;
+    }
+
+    public void PrintTimeArray()
+    {
+        foreach (float time in timeForIterations)
+            Debug.Log(time.ToString("F2"));
     }
 }

@@ -27,6 +27,7 @@ public class HealthBar : MonoBehaviour {
 
     public void Update()
     {
+        // Testing
         if (Input.GetKeyDown(KeyCode.Space))
         {
             tempHealth--;

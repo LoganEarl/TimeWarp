@@ -51,10 +51,4 @@ public class PlayerHealth : MonoBehaviour
     {
         healthBar.SetMaxHealth(Health);
     }
-
-    public void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-            DoDamage(1);
-    }
 }

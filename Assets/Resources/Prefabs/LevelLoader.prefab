@@ -250,9 +250,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca70b29724858e1468ebe214b7364de4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canvas: {fileID: 0}
   transition: {fileID: 8698975926526108261}
-  transitionTime: 1
-  button: {fileID: 0}
+  sortOrder: 2
 --- !u!1 &1572865943095748216
 GameObject:
   m_ObjectHideFlags: 0
