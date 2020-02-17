@@ -22,24 +22,34 @@ public class Timer : MonoBehaviour {
 
     public void Start()
     {
-        timerText = GetComponent<TextMeshProUGUI>();
         timer = mainTimer;
-        timeForIterations = new float[6];
+        timeForIterations = new float[numIterations];
     }
 
     public void Update()
     {
-        /*if (timer >= 0.0f && !doOnce && canCount && !bothPlayersAlive)
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            timerText.text = timer.ToString("F");
-            RecordTime();
+            bothPlayersAlive = false;
+            ResetTimer();
+        }
+        if (timer >= 0.0f && !doOnce && canCount && !bothPlayersAlive)
+        {
+            timerText.text = timer.ToString("F0");
+            RecordRemainingTime();
             canCount = false;
             doOnce = true;
-        }*/
-        if (timer >= 0.0f && canCount)
+        }
+        /*
+        if (timer >= 0.00f && timer <= 10.01f && canCount)
         {
             timer -= Time.deltaTime;
-            timerText.text = timer.ToString("F");
+            timerText.text = timer.ToString("F2");
+        }*/
+        else if (timer >= 0.0f && canCount)
+        {
+            timer -= Time.deltaTime;
+            timerText.text = timer.ToString("F0");
         }
         else if(timer <= 0.0f && !doOnce)
         {
@@ -47,13 +57,14 @@ public class Timer : MonoBehaviour {
             doOnce = true;
             timerText.text = "0.00";
             timer = 0.0f;
-            RecordTime();
+            RecordRemainingTime();
         }
     }
 
-    private void RecordTime()
+    private void RecordRemainingTime()
     {
-        timeForIterations[currentIteration] = timer;
+        if(currentIteration < numIterations)
+            timeForIterations[currentIteration] = timer;
         currentIteration++;
     }
 
@@ -62,5 +73,13 @@ public class Timer : MonoBehaviour {
     public float GetRemainingTime()
     {
         return mainTimer - GetTimer();
+    }
+
+    public void ResetTimer()
+    {
+        timer = mainTimer;
+        canCount = true;
+        doOnce = false;
+        bothPlayersAlive = true;
     }
 }

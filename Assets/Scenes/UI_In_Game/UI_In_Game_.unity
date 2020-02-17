@@ -495,7 +495,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timerText: {fileID: 212507917}
-  mainTimer: 90
+  mainTimer: 11
   numIterations: 6
 --- !u!1 &392643196
 GameObject:
