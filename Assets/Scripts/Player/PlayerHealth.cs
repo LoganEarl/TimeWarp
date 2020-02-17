@@ -7,7 +7,6 @@ public class PlayerHealth : MonoBehaviour
     public int MaxHealth { get; set; } = 1;
     private int health = 1;
     private bool dead = false;
-    public HealthBar healthBar;
 
     public int Health {
         get {
@@ -34,7 +33,6 @@ public class PlayerHealth : MonoBehaviour
     {
         if(damage > 0)
             Health -= damage;
-        healthBar.SetHealth(Health);
     }
 
     public void FullHeal()
@@ -45,16 +43,5 @@ public class PlayerHealth : MonoBehaviour
     public void Awake()
     {
         FullHeal();
-    }
-
-    public void Start()
-    {
-        healthBar.SetMaxHealth(Health);
-    }
-
-    public void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-            DoDamage(1);
     }
 }

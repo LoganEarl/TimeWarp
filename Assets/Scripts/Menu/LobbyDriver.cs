@@ -37,7 +37,6 @@ public class LobbyDriver : MonoBehaviour {
         CheckLoadButtonAvailability();
     }
 
-    // Added for levels and game modes not created yet
     public void SelectTestLevelWithIndex(int level) // maybe pass in levels by an index? or by name
     {
         if (level == 1)
@@ -59,7 +58,6 @@ public class LobbyDriver : MonoBehaviour {
 
         CheckLoadButtonAvailability();
     }
-    // End added stuff
 
     public void GoToMainMenu()
     {

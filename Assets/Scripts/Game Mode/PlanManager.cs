@@ -5,15 +5,15 @@ using UnityEngine.SceneManagement;
 
 public class PlanManager : MonoBehaviour, IGameMode
 {
+
     private bool begun = false;
     private ILevelConfig levelConfig = null;
-    private int stepNumber = -1;
+    
     
     private Dictionary<string, GameObject> loadedPlayerModels = new Dictionary<string, GameObject>();
     private PlanPlayerManager[] playerManagers = null;
     private List<GameObject> playerObjects = new List<GameObject>();
-
-    private static readonly int MAX_STEPS = 1000;
+    private PlanHUDController hudController;
 
     //================================================Public Accessors
 
@@ -21,11 +21,14 @@ public class PlanManager : MonoBehaviour, IGameMode
     {
         get
         {
-            return (MAX_STEPS - stepNumber) * Time.fixedDeltaTime;
+            return (MaxSteps - StepNumber) * Time.fixedDeltaTime;
         }
     }
 
+    public int StepNumber { get; private set; } = -1;
+    public int MaxSteps { get; private set; } = 1000;
     public int NumPlayers { get; private set; }
+    public int MaxRounds { get; private set; } = 1;
     public int RoundNumber { get; private set; } = -1;      //starts at -1, but first match is 0.
                                                             //This is so NextMatch() doesnt need edge case checks
     public int ShotsRemaining(int playerNumber)
@@ -39,7 +42,14 @@ public class PlanManager : MonoBehaviour, IGameMode
     {
         if (playerNumber < 0 || playerNumber >= playerManagers.Length)
             return 0;
-        return playerManagers[playerNumber].ProjectedProjectilesRemaining(stepNumber);
+        return playerManagers[playerNumber].ProjectedProjectilesRemaining(StepNumber);
+    }
+
+    public GameObject GetPlayerObject(int playerNum, int roundNum)
+    {
+        if (playerNum < 0 || playerNum >= NumPlayers || roundNum < 0 || roundNum > RoundNumber)
+            throw new System.Exception("Passed illegal playernum or roundNumber to getPlayerObject");
+        return playerManagers[playerNum].GetPlayerObject(roundNum);
     }
 
     //================================================Unity Callback Methods
@@ -53,13 +63,13 @@ public class PlanManager : MonoBehaviour, IGameMode
     {
         if (begun)
         {
-            if (stepNumber > MAX_STEPS)
+            if (StepNumber > MaxSteps)
                 NextMatch();
 
-            stepNumber++;
+            StepNumber++;
 
             foreach (PlanPlayerManager player in playerManagers)
-                player.Step(stepNumber);
+                player.Step(StepNumber);
         }
     }
 
@@ -69,7 +79,9 @@ public class PlanManager : MonoBehaviour, IGameMode
         {
             begun = true;
             SceneManager.SetActiveScene(SceneManager.GetSceneByName(levelConfig.GetSceneName()));
+            LoadHUD();
             NextMatch();
+           
         }
     }
 
@@ -78,6 +90,7 @@ public class PlanManager : MonoBehaviour, IGameMode
     {
         this.levelConfig = levelConfig;
         this.NumPlayers = numPlayers;
+        this.MaxRounds = levelConfig.GetMaxRounds();
 
         playerManagers = new PlanPlayerManager[numPlayers];
         for (int i = 0; i < numPlayers; i++)
@@ -93,7 +106,7 @@ public class PlanManager : MonoBehaviour, IGameMode
     //================================================Private Utilities
     private void NextMatch()
     {
-        stepNumber = -1;
+        StepNumber = -1;
         RoundNumber++;
 
         if (RoundNumber < levelConfig.GetMaxRounds())
@@ -105,6 +118,7 @@ public class PlanManager : MonoBehaviour, IGameMode
                 playerObject.GetComponent<PlayerController>().OnReset();
 
             LoadNewPlayers();
+            hudController.ReloadAll();   
         }
     }
 
@@ -137,6 +151,15 @@ public class PlanManager : MonoBehaviour, IGameMode
             if (!manager.RecordExistsForMatch(RoundNumber))
                 manager.AppendNewRecording(playerController);
         }
+    }
+
+    private void LoadHUD()
+    {
+        string canvasPath = "Prefabs/HUD/UIFrame";
+        GameObject loaded = Resources.Load(canvasPath) as GameObject;
+        loaded = Instantiate(loaded);
+        hudController = loaded.GetComponent<PlanHUDController>();
+        hudController.Setup(this);
     }
 }
 

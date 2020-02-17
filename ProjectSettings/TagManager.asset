@@ -9,6 +9,7 @@ TagManager:
   - Player1
   - Player0
   - StartButton
+  - HUD
   layers:
   - Default
   - TransparentFX

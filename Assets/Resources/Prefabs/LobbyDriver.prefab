@@ -48,7 +48,6 @@ MonoBehaviour:
   animator: {fileID: 7058409687327364151}
   startButton: {fileID: 0}
   planGameMode: {fileID: 7058409687327364148}
-  loader: {fileID: 0}
 --- !u!114 &7058409687327364148
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -61,7 +60,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42df757e6f618f9459c9749139bea6cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numPlayers: 2
+  UICanvas: {fileID: 0}
 --- !u!95 &7058409687327364151
 Animator:
   serializedVersion: 3
@@ -70,7 +69,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7058409687327364152}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 0}
   m_CullingMode: 0

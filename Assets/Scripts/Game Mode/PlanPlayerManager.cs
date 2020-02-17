@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using UnityEngine;
 
 public class PlanPlayerManager
 {
@@ -21,6 +19,13 @@ public class PlanPlayerManager
         if (usage < 0)
             usage = 0;
         return usage;
+    }
+
+    public GameObject GetPlayerObject(int roundNumber)
+    {
+        if (roundNumber < 0 || roundNumber >= playerControllers.Count)
+            throw new System.Exception("Passed in illegal round number to GetPlayerObject");
+        return playerControllers[roundNumber].gameObject;
     }
 
     internal PlanPlayerManager(int availableProjectiles)

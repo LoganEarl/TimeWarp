@@ -10,27 +10,39 @@ using UnityEngine.UI;
  */
 
 public class HealthBar : MonoBehaviour {
-    [SerializeField]
-    private Slider slider;
-    private int tempHealth = 3;
+    private IGameMode attachedGameMode;
+    private int playerNumber;
+    private int roundNumber;
+    private bool setup = false;
+    private PlayerHealth playerHealth;
 
-    public void SetMaxHealth(int health)
+    public void Setup(IGameMode attachedGameMode, GameObject attachedPlayer, int playerNumber, int roundNumber)
     {
-        slider.maxValue = health;
-        slider.value = 0;
-    }
-
-    public void SetHealth(int health)
-    {
-        slider.value = (int)slider.maxValue - health;
+        this.attachedGameMode = attachedGameMode;
+        this.playerNumber = playerNumber;
+        this.roundNumber = roundNumber;
+        this.playerHealth = attachedPlayer.GetComponent<PlayerHealth>();
+        setup = true;
     }
 
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (setup)
         {
-            tempHealth--;
-            SetHealth(tempHealth);
+            if (playerHealth.Dead)
+            {
+                //TODO: change color based on damage
+            }
+            else
+            {
+                int maxSteps = attachedGameMode.MaxSteps;
+                int curStep = attachedGameMode.StepNumber;
+                float scale = curStep / (float)maxSteps * 0.8f + 0.2f;
+
+                gameObject.transform.localScale = new Vector2(scale,1);
+
+                //TODO: change color based on damage
+            }
         }
     }
 }
