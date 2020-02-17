@@ -12,9 +12,8 @@ using UnityEngine.UI;
 public class HealthBar : MonoBehaviour {
     [SerializeField]
     private Slider slider;
+    private int tempHealth = 3;
 
-    public PlayerHealth playerHealth;
-    
     public void SetMaxHealth(int health)
     {
         slider.maxValue = health;
@@ -24,5 +23,14 @@ public class HealthBar : MonoBehaviour {
     public void SetHealth(int health)
     {
         slider.value = (int)slider.maxValue - health;
+    }
+
+    public void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            tempHealth--;
+            SetHealth(tempHealth);
+        }
     }
 }
