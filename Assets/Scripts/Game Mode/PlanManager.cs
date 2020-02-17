@@ -7,22 +7,15 @@ public class PlanManager : MonoBehaviour, IGameMode
 {
     private bool begun = false;
     private ILevelConfig levelConfig = null;
-    public int NumPlayers { get; private set; }
     private int stepNumber = -1;
-    public int RoundNumber { get; private set; } = -1;      //starts at -1, but first match is 0.
-                                                            //This is so NextMatch() doesnt need edge case checks
-
+    
     private Dictionary<string, GameObject> loadedPlayerModels = new Dictionary<string, GameObject>();
     private PlanPlayerManager[] playerManagers = null;
     private List<GameObject> playerObjects = new List<GameObject>();
 
     private static readonly int MAX_STEPS = 1000;
 
-    private void Awake()
-    {
-        DontDestroyOnLoad(this);
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
+    //================================================Public Accessors
 
     public float SecondsRemaining
     {
@@ -30,6 +23,30 @@ public class PlanManager : MonoBehaviour, IGameMode
         {
             return (MAX_STEPS - stepNumber) * Time.fixedDeltaTime;
         }
+    }
+
+    public int NumPlayers { get; private set; }
+    public int RoundNumber { get; private set; } = -1;      //starts at -1, but first match is 0.
+                                                            //This is so NextMatch() doesnt need edge case checks
+    public int ShotsRemaining(int playerNumber)
+    {
+        if (playerNumber < 0 || playerNumber >= playerManagers.Length)
+            return 0;
+        return playerManagers[playerNumber].AvailableProjectiles;
+    }                                                
+
+    public int ProjectedShotsRemaining(int playerNumber)
+    {
+        if (playerNumber < 0 || playerNumber >= playerManagers.Length)
+            return 0;
+        return playerManagers[playerNumber].ProjectedProjectilesRemaining(stepNumber);
+    }
+
+    //================================================Unity Callback Methods
+    private void Awake()
+    {
+        DontDestroyOnLoad(this);
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void FixedUpdate()
@@ -43,27 +60,20 @@ public class PlanManager : MonoBehaviour, IGameMode
 
             foreach (PlanPlayerManager player in playerManagers)
                 player.Step(stepNumber);
-            Debug.Log(SecondsRemaining);
         }
     }
 
-    private void NextMatch()
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        stepNumber = -1;
-        RoundNumber++;
-
-        if (RoundNumber < levelConfig.GetMaxRounds())
+        if (levelConfig != null && scene.name.Equals(levelConfig.GetSceneName()))
         {
-            foreach (PlanPlayerManager player in playerManagers)
-                player.FinishSequence();
-
-            foreach (GameObject playerObject in playerObjects)
-                playerObject.GetComponent<PlayerController>().OnReset();
-
-            LoadNewPlayers();
+            begun = true;
+            SceneManager.SetActiveScene(SceneManager.GetSceneByName(levelConfig.GetSceneName()));
+            NextMatch();
         }
     }
 
+    //================================================Public Interface
     public void Setup(int numPlayers, ILevelConfig levelConfig)
     {
         this.levelConfig = levelConfig;
@@ -80,13 +90,21 @@ public class PlanManager : MonoBehaviour, IGameMode
             SceneManager.LoadScene(levelConfig.GetSceneName(), LoadSceneMode.Single);
     }
 
-    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    //================================================Private Utilities
+    private void NextMatch()
     {
-        if (levelConfig != null && scene.name.Equals(levelConfig.GetSceneName()))
+        stepNumber = -1;
+        RoundNumber++;
+
+        if (RoundNumber < levelConfig.GetMaxRounds())
         {
-            begun = true;
-            SceneManager.SetActiveScene(SceneManager.GetSceneByName(levelConfig.GetSceneName()));
-            NextMatch();
+            foreach (PlanPlayerManager player in playerManagers)
+                player.FinishSequence();
+
+            foreach (GameObject playerObject in playerObjects)
+                playerObject.GetComponent<PlayerController>().OnReset();
+
+            LoadNewPlayers();
         }
     }
 

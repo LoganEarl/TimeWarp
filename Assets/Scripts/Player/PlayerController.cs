@@ -6,7 +6,8 @@ public class PlayerController : MonoBehaviour, IRecordable
 {
     //bullet information
     public float bulletSpeed = 10;
-
+    public delegate bool FireEventCallback();
+    public FireEventCallback FireCallback { private get; set; } = null;
     private bool firingGun = false;
     private bool fired = false;
     private List<GameObject> firedBullets = new List<GameObject>();
@@ -107,8 +108,10 @@ public class PlayerController : MonoBehaviour, IRecordable
                     targetingCursor.SetActive(false);
             } else if (!usingSnapshots)
                 targetingCursor.SetActive(false);
-            if (firingGun)
+            if (firingGun && (FireCallback?.Invoke() ?? true))
+            {
                 Shoot();
+            }
         }
     }
 

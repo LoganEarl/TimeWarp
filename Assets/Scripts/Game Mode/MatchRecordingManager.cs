@@ -10,6 +10,7 @@ public class MatchRecordingManager
     private bool recordingComplete = false;
     private PlayerController playerController;
     private List<PlayerSnapshot> snapshots = new List<PlayerSnapshot>();
+    private List<int> fireEvents = new List<int>();
 
     internal MatchRecordingManager(PlayerController playerController)
     {
@@ -17,10 +18,27 @@ public class MatchRecordingManager
         playerController.SetUseSnapshots(false);
     }
 
-    internal void AppendNextSnapshot()
+    internal int RecordedFireEventsAfter(int stepNum)
     {
         if (!recordingComplete)
-            snapshots.Add(playerController.GetSnapshot());
+            return 0;
+        int total = 0;
+        foreach(int fireIndex in fireEvents)
+            if (fireIndex > stepNum)
+                total++;
+        
+        return total;
+    }
+
+    internal void AppendNextSnapshot(int snapshotIndex)
+    {
+        if (!recordingComplete)
+        {
+            PlayerSnapshot snapshot = playerController.GetSnapshot();
+            snapshots.Add(snapshot);
+            if (snapshot.Firing)
+                fireEvents.Add(snapshotIndex);
+        }
     }
 
     internal PlayerSnapshot UtilizeFrame(int frameNum)
