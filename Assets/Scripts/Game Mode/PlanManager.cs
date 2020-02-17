@@ -7,10 +7,10 @@ public class PlanManager : MonoBehaviour, IGameMode
 {
     private bool begun = false;
     private ILevelConfig levelConfig = null;
-    public int numPlayers;
+    public int NumPlayers { get; private set; }
     private int stepNumber = -1;
-    private int roundNumber = -1; //starts at -1, but first match is 0.
-                                  //This is so NextMatch() doesnt need edge case checks
+    public int RoundNumber { get; private set; } = -1;      //starts at -1, but first match is 0.
+                                                            //This is so NextMatch() doesnt need edge case checks
 
     private Dictionary<string, GameObject> loadedPlayerModels = new Dictionary<string, GameObject>();
     private PlanPlayerManager[] playerManagers = null;
@@ -24,6 +24,14 @@ public class PlanManager : MonoBehaviour, IGameMode
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
+    public float SecondsRemaining
+    {
+        get
+        {
+            return (MAX_STEPS - stepNumber) * Time.fixedDeltaTime;
+        }
+    }
+
     private void FixedUpdate()
     {
         if (begun)
@@ -35,15 +43,16 @@ public class PlanManager : MonoBehaviour, IGameMode
 
             foreach (PlanPlayerManager player in playerManagers)
                 player.Step(stepNumber);
+            Debug.Log(SecondsRemaining);
         }
     }
 
     private void NextMatch()
     {
         stepNumber = -1;
-        roundNumber++;
+        RoundNumber++;
 
-        if (roundNumber < levelConfig.GetMaxRounds())
+        if (RoundNumber < levelConfig.GetMaxRounds())
         {
             foreach (PlanPlayerManager player in playerManagers)
                 player.FinishSequence();
@@ -58,7 +67,7 @@ public class PlanManager : MonoBehaviour, IGameMode
     public void Setup(int numPlayers, ILevelConfig levelConfig)
     {
         this.levelConfig = levelConfig;
-        this.numPlayers = numPlayers;
+        this.NumPlayers = numPlayers;
 
         playerManagers = new PlanPlayerManager[numPlayers];
         for (int i = 0; i < numPlayers; i++)
@@ -83,11 +92,11 @@ public class PlanManager : MonoBehaviour, IGameMode
 
     private void LoadNewPlayers()
     {
-        for (int curPlayer = 0; curPlayer < numPlayers; curPlayer++)
+        for (int curPlayer = 0; curPlayer < NumPlayers; curPlayer++)
         {
             PlanPlayerManager manager = playerManagers[curPlayer];
 
-            string assetName = levelConfig.GetPlayerModelName(curPlayer, roundNumber);
+            string assetName = levelConfig.GetPlayerModelName(curPlayer, RoundNumber);
             GameObject playerPrefab;
 
             if (loadedPlayerModels.ContainsKey(assetName))
@@ -102,88 +111,13 @@ public class PlanManager : MonoBehaviour, IGameMode
             playerObjects.Add(player);
             PlayerController playerController = player.GetComponent<PlayerController>();
             playerController.SetPlayerInformation(
-                curPlayer, 
-                roundNumber, 
-                levelConfig.GetPlayerSpawnPosition(curPlayer,roundNumber)
+                curPlayer,
+                RoundNumber,
+                levelConfig.GetPlayerSpawnPosition(curPlayer, RoundNumber)
             );
 
-            if (!manager.RecordExistsForMatch(roundNumber))
+            if (!manager.RecordExistsForMatch(RoundNumber))
                 manager.AppendNewRecording(playerController);
-        }
-    }
-
-    private class PlanPlayerManager
-    {
-        private List<MatchRecordingManager> playerRecordings = new List<MatchRecordingManager>();
-        public int AvailableProjectiles { internal set; get; }
-
-        internal PlanPlayerManager(int availableProjectiles)
-        {
-            this.AvailableProjectiles = availableProjectiles;
-        }
-
-        internal void AppendNewRecording(PlayerController controller)
-        {
-            playerRecordings.Add(new MatchRecordingManager(controller));
-        }
-
-        internal void Step(int stepNumber)
-        {
-            foreach (MatchRecordingManager recording in playerRecordings)
-            {
-                recording.AppendNextSnapshot();
-                recording.UtilizeFrame(stepNumber);
-            }
-        }
-
-        internal void FinishSequence()
-        {
-            foreach (MatchRecordingManager recording in playerRecordings)
-                recording.Finish();
-        }
-
-        internal bool RecordExistsForMatch(int matchNum)
-        {
-            return playerRecordings.Count > matchNum && matchNum >= 0;
-        }
-    }
-
-    private class MatchRecordingManager
-    {
-        private bool recordingComplete = false;
-        private PlayerController playerController;
-        private List<PlayerSnapshot> snapshots = new List<PlayerSnapshot>();
-
-        internal MatchRecordingManager(PlayerController playerController)
-        {
-            this.playerController = playerController;
-            playerController.SetUseSnapshots(false);
-        }
-
-        internal void AppendNextSnapshot()
-        {
-            if (!recordingComplete)
-                snapshots.Add(playerController.GetSnapshot());
-        }
-
-        internal PlayerSnapshot UtilizeFrame(int frameNum)
-        {
-            if (recordingComplete && snapshots.Count > 0)
-            {
-                if (frameNum >= 0 && frameNum < snapshots.Count)
-                    playerController.SetSnapshot(snapshots[frameNum]);
-                else if (frameNum < 0)
-                    playerController.SetSnapshot(snapshots[0]);
-                else
-                    playerController.SetSnapshot(snapshots[snapshots.Count - 1]);
-            }
-            return null;
-        }
-
-        internal void Finish()
-        {
-            recordingComplete = true;
-            playerController.SetUseSnapshots(true);
         }
     }
 }
