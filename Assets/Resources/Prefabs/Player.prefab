@@ -759,6 +759,7 @@ Transform:
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children:
   - {fileID: 5017884691275746137}
+  - {fileID: 1726537901591723644}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
@@ -789,7 +790,10 @@ MonoBehaviour:
   bulletSpeed: 30
   bullet: {fileID: 2718643244815117112, guid: b1230d9a4c00d824dbae22f0b48fc769, type: 3}
   fireTransform: {fileID: 1051835922776050759}
+  shieldTransform: {fileID: 1726537901591723644}
   targetingCursor: {fileID: 8301478399395665889, guid: cdb24244320ba524fa199ffaa8aec6a5,
+    type: 3}
+  forceField: {fileID: 3812315075213835272, guid: d93afc24d46aa1c4092527ff414b1970,
     type: 3}
   playerNumber: 0
   lookOffset: -11
@@ -2232,6 +2236,36 @@ Transform:
   - {fileID: 1443545167058271661}
   m_Father: {fileID: 7353588660527350676}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7880102736085368330
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1726537901591723644}
+  m_Layer: 11
+  m_Name: ShieldTransform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1726537901591723644
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7880102736085368330}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 7651129370166832492}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8171407745324934970
 GameObject:

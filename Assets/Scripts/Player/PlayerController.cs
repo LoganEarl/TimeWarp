@@ -9,15 +9,18 @@ public class PlayerController : MonoBehaviour, IRecordable
 
     private bool firingGun = false;
     private bool fired = false;
-    private List<GameObject> firedBullets = new List<GameObject>();
+    private List<GameObject> roundClearingList = new List<GameObject>();
 
     //player components/info
     public Rigidbody bullet;
     public Transform fireTransform;
+    public Transform shieldTransform;
     public GameObject targetingCursor;
+    public GameObject equipment;
 
     public int playerNumber = 0;
     public float lookOffset;
+    public int equipmentLeft = 1;
     private bool usingSnapshots = false;
     private bool aimLocked = false;
     private bool loadedCursor = false;
@@ -46,7 +49,7 @@ public class PlayerController : MonoBehaviour, IRecordable
             if (frameCounter > 30)
             {
                 frameCounter = 0;
-                firedBullets.RemoveAll(bullet => bullet == null);
+                roundClearingList.RemoveAll(bullet => bullet == null);
             }
 
             if (!loadedCursor && !usingSnapshots)
@@ -107,8 +110,9 @@ public class PlayerController : MonoBehaviour, IRecordable
                     targetingCursor.SetActive(false);
             } else if (!usingSnapshots)
                 targetingCursor.SetActive(false);
-            if (firingGun)
-                Shoot();
+
+            //if (firingGun)
+            //    Shoot();
         }
     }
 
@@ -137,15 +141,22 @@ public class PlayerController : MonoBehaviour, IRecordable
             lookDirection.Set(0, 0, 0);
 
 
-        firingGun = false;
+        //firingGun = false;
         float fireActivity = Input.GetAxis("Fire" + playerNumber);
+        float equipmentActivity = Input.GetAxis("Equipment" + playerNumber);
+
         if (!fired && fireActivity > 0f) //this works becuase of the masssive deadzone setting
         {
+            Shoot();
             fired = true;
-            firingGun = true;
+            //firingGun = true;
         }
         else if (fireActivity == 0f)
             fired = false;
+
+        if (equipmentActivity > 0f && equipmentLeft != 0)
+            Equipment();
+
 
         if (Input.GetButtonDown("AimLock" + playerNumber))
             aimLocked = !aimLocked;
@@ -166,7 +177,10 @@ public class PlayerController : MonoBehaviour, IRecordable
         isIdle = snapshot.IsIdle;
     }
 
-    void OnAnimatorMove() {
+    private void Equipment()
+    {
+        GameObject shieldInstance = Instantiate(equipment, shieldTransform.position, shieldTransform.rotation) as GameObject;
+        roundClearingList.Add(shieldInstance.gameObject);
     }
 
     private void Shoot()
@@ -174,14 +188,14 @@ public class PlayerController : MonoBehaviour, IRecordable
         Rigidbody bulletInstance = Instantiate(bullet, fireTransform.position, fireTransform.rotation) as Rigidbody;
         bulletInstance.GetComponent<Bullet>().playerNumber = playerNumber;
         bulletInstance.velocity = bulletSpeed * fireTransform.forward;
-        firedBullets.Add(bulletInstance.gameObject);
+        roundClearingList.Add(bulletInstance.gameObject);
     }
 
-    private void DestroyAllBullets()
+    private void DestroyAllPlayerCreations()
     {
-        for (int i = 0; i < firedBullets.Count; i++)
-            Destroy(firedBullets[i]);
-        firedBullets.Clear();
+        for (int i = 0; i < roundClearingList.Count; i++)
+            Destroy(roundClearingList[i]);
+        roundClearingList.Clear();
     }
 
     public void SetPlayerInformation(int playerNumber, int sourceRoundNum, Vector3 initialPosition)
@@ -233,7 +247,7 @@ public class PlayerController : MonoBehaviour, IRecordable
 
     public void OnReset()
     {
-        DestroyAllBullets();
+        DestroyAllPlayerCreations();
         health.FullHeal();
     }
 }
