@@ -5,22 +5,25 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour, IRecordable
 {
     //bullet information
-    public float bulletSpeed = 10;
+    public Rigidbody bullet;
+    public Transform fireTransform;
 
     private bool firingGun = false;
     private bool fired = false;
     private List<GameObject> roundClearingList = new List<GameObject>();
 
-    //player components/info
-    public Rigidbody bullet;
-    public Transform fireTransform;
+    //equipment information
+    public int equipmentLeft = 1;
     public Transform shieldTransform;
-    public GameObject targetingCursor;
     public GameObject equipment;
 
+    private bool currentlyUsingEquipment;
+
+    //player components/info
+    public GameObject targetingCursor;
     public int playerNumber = 0;
     public float lookOffset;
-    public int equipmentLeft = 1;
+
     private bool usingSnapshots = false;
     private bool aimLocked = false;
     private bool loadedCursor = false;
@@ -111,8 +114,8 @@ public class PlayerController : MonoBehaviour, IRecordable
             } else if (!usingSnapshots)
                 targetingCursor.SetActive(false);
 
-            //if (firingGun)
-            //    Shoot();
+            if (firingGun)
+                Shoot();
         }
     }
 
@@ -141,21 +144,26 @@ public class PlayerController : MonoBehaviour, IRecordable
             lookDirection.Set(0, 0, 0);
 
 
-        //firingGun = false;
+        firingGun = false;
         float fireActivity = Input.GetAxis("Fire" + playerNumber);
         float equipmentActivity = Input.GetAxis("Equipment" + playerNumber);
 
         if (!fired && fireActivity > 0f) //this works becuase of the masssive deadzone setting
         {
-            Shoot();
             fired = true;
-            //firingGun = true;
+            firingGun = true;
         }
         else if (fireActivity == 0f)
             fired = false;
 
-        if (equipmentActivity > 0f && equipmentLeft != 0)
+        if (equipmentActivity > 0f && !currentlyUsingEquipment && equipmentLeft != 0)
+        {
+            equipmentLeft--;
+            currentlyUsingEquipment = true;
             Equipment();
+        }
+        else if (equipmentActivity == 0f)
+            currentlyUsingEquipment = false;
 
 
         if (Input.GetButtonDown("AimLock" + playerNumber))
@@ -187,7 +195,7 @@ public class PlayerController : MonoBehaviour, IRecordable
     {
         Rigidbody bulletInstance = Instantiate(bullet, fireTransform.position, fireTransform.rotation) as Rigidbody;
         bulletInstance.GetComponent<Bullet>().playerNumber = playerNumber;
-        bulletInstance.velocity = bulletSpeed * fireTransform.forward;
+        bulletInstance.velocity = fireTransform.forward;
         roundClearingList.Add(bulletInstance.gameObject);
     }
 
