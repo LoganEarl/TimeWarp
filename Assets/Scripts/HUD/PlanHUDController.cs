@@ -4,16 +4,24 @@ using UnityEngine;
 
 public class PlanHUDController : MonoBehaviour
 {
-    public GameObject[] playerHealthAreas;
-    private PlanManager planManager;
+    [SerializeField]
+    private GameObject[] playerHealthAreas;
+    [SerializeField]
+    private GameObject[] playerHealthBarPrefabs;
+    [SerializeField]
+    private Timer timer;
+    [SerializeField]
+    private RoundNumber roundNumber;
 
-    public GameObject[] playerHealthBarPrefabs;
+    private PlanManager planManager;
 
     private List<GameObject>[] loadedPlayerHealthBars = new List<GameObject>[0];
 
     public void Setup(PlanManager planManager)
     {
         this.planManager = planManager;
+        timer.Setup(planManager);
+        roundNumber.Setup(planManager);
     }
 
     public void ReloadAll()

@@ -11,9 +11,12 @@ using UnityEngine.UI;
 public class LobbyDriver : MonoBehaviour {
     private ILevelConfig selectedLevel = null;
     private IGameMode selectedGameMode = null;
-    public Animator animator;
-    public Button startButton;
-    public PlanManager planGameMode;
+    [SerializeField]
+    private Animator animator;
+    [SerializeField]
+    private Button startButton;
+    [SerializeField]
+    private PlanManager planGameMode;
 
     // Added Start() in to make start button uninteractable at the beginning
     public void Start()

@@ -11,4 +11,7 @@ public interface IGameMode
     int StepNumber { get; }
     int MaxSteps { get; }
     int NumPlayers { get; }
+    int RoundNumber { get; }
+    int MaxRounds { get; }
+    float SecondsRemaining { get; }
 }
