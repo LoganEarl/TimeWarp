@@ -36,7 +36,7 @@ public class PlanHUDController : MonoBehaviour
             loadedPlayerHealthBars[playerNum] = new List<GameObject>();
             for(int roundNum = 0; roundNum < numRounds; roundNum++)
             {
-                Vector3 relativePosition = new Vector3(0, -1 * 25 * roundNum + 5,0);
+                Vector3 relativePosition = new Vector3(0, -1 * 15 * roundNum - 5,0);
                 loadedPlayerHealthBars[playerNum].Add(Instantiate(
                     playerHealthBarPrefabs[playerNum],
                     playerHealthAreas[playerNum].transform,

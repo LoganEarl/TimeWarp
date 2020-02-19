@@ -16,12 +16,22 @@ public class HealthBar : MonoBehaviour {
     private bool setup = false;
     private PlayerHealth playerHealth;
 
+    private Image fillImage;
+    private Image borderImage;
+    private Color defaultColor;
+
     public void Setup(IGameMode attachedGameMode, GameObject attachedPlayer, int playerNumber, int roundNumber)
     {
         this.attachedGameMode = attachedGameMode;
         this.playerNumber = playerNumber;
         this.roundNumber = roundNumber;
         this.playerHealth = attachedPlayer.GetComponent<PlayerHealth>();
+        Image[] childImages = gameObject.GetComponentsInChildren<Image>();
+        if (childImages.Length != 2)
+            throw new System.Exception("HUD health component images not found. Make sure to update the Healthbar script if you adjust these assets");
+        borderImage = childImages[0];
+        fillImage = childImages[1];
+        defaultColor = fillImage.color;
         setup = true;
     }
 
@@ -29,10 +39,9 @@ public class HealthBar : MonoBehaviour {
     {
         if (setup)
         {
+            Color targetColor;
             if (playerHealth.Dead)
-            {
-                //TODO: change color based on damage
-            }
+                targetColor = Color.black;
             else
             {
                 int maxSteps = attachedGameMode.MaxSteps;
@@ -41,8 +50,12 @@ public class HealthBar : MonoBehaviour {
 
                 gameObject.transform.localScale = new Vector2(scale,1);
 
-                //TODO: change color based on damage
+                float healthScale = playerHealth.Health / (float)playerHealth.MaxHealth;
+                targetColor = defaultColor * healthScale;
             }
+            if (!targetColor.Equals(fillImage.color))
+                fillImage.color = targetColor;
         }
+        
     }
 }
