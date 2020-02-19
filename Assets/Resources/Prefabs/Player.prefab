@@ -787,17 +787,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6998682b688e7234f9c417e41df30d51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletSpeed: 30
   bullet: {fileID: 2718643244815117112, guid: b1230d9a4c00d824dbae22f0b48fc769, type: 3}
   fireTransform: {fileID: 1051835922776050759}
+  equipmentLeft: 1
   shieldTransform: {fileID: 1726537901591723644}
-  targetingCursor: {fileID: 1814408534329862, guid: 3dd1434c704a6f34997c698b06c80000,
-    type: 3}
   equipment: {fileID: 3812315075213835272, guid: d93afc24d46aa1c4092527ff414b1970,
+    type: 3}
+  targetingCursor: {fileID: 1814408534329862, guid: cdb24244320ba524fa199ffaa8aec6a5,
     type: 3}
   playerNumber: 0
   lookOffset: -11
-  equipmentLeft: 1
   turnSpeed: 20
   moveSpeed: 20
 --- !u!54 &2599042971034976956

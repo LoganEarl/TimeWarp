@@ -10,8 +10,12 @@ public class Bullet : MonoBehaviour
     public int bulletDmg = 1;
     public float bouncesLeft = 4f;
     public float maxLifeTime = 4f;
+    public float inversePathDensity = 0.01f;
+    public float inversePathLength = 1f;
+    public GameObject bulletFade;
 
     private Rigidbody bulletInstance;
+    private float timeSinceLastPath = 0f;
 
     void Start() {
         bulletInstance = GetComponent<Rigidbody>();
@@ -21,6 +25,13 @@ public class Bullet : MonoBehaviour
     private void FixedUpdate()
     {
         bulletInstance.velocity = bulletInstance.velocity.normalized * bulletSpeed;
+
+        timeSinceLastPath += Time.fixedDeltaTime;
+
+        if (timeSinceLastPath > inversePathDensity) {
+            Instantiate(bulletFade, transform.position, transform.rotation).GetComponent<BulletFade>().SetPathLength(inversePathLength);
+            timeSinceLastPath = 0f;
+        }
     }
 
     private void OnCollisionEnter(Collision collision) {
