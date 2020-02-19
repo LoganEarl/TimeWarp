@@ -10,6 +10,7 @@ public class Bullet : MonoBehaviour
     public int bulletDmg = 1;
     public float bouncesLeft = 4f;
     public float maxLifeTime = 4f;
+    public Color bulletColor;
     public float inversePathDensity = 0.01f;
     public float inversePathLength = 1f;
     public GameObject bulletFade;
@@ -20,6 +21,8 @@ public class Bullet : MonoBehaviour
     void Start() {
         bulletInstance = GetComponent<Rigidbody>();
         Destroy(gameObject, maxLifeTime);
+
+        GetComponent<MeshRenderer>().material.SetColor("_Color", bulletColor);
     }
 
     private void FixedUpdate()
@@ -29,7 +32,9 @@ public class Bullet : MonoBehaviour
         timeSinceLastPath += Time.fixedDeltaTime;
 
         if (timeSinceLastPath > inversePathDensity) {
-            Instantiate(bulletFade, transform.position, transform.rotation).GetComponent<BulletFade>().SetPathLength(inversePathLength);
+            GameObject afterImage = Instantiate(bulletFade, transform.position, transform.rotation);
+            afterImage.GetComponent<BulletFade>().SetPathLength(inversePathLength);
+            afterImage.GetComponent<BulletFade>().SetColor(bulletColor);
             timeSinceLastPath = 0f;
         }
     }

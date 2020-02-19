@@ -70,11 +70,11 @@ InputManager:
     axis: 8
     joyNum: 1
   - serializedVersion: 3
-    m_Name: Null
+    m_Name: Fire1
     descriptiveName: 
     descriptiveNegativeName: 
-    negativeButton: s
-    positiveButton: w
+    negativeButton: 
+    positiveButton: '[0]'
     altNegativeButton: 
     altPositiveButton: 
     gravity: 1

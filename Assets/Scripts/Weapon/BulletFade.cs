@@ -6,9 +6,12 @@ public class BulletFade : MonoBehaviour
 {
     private float pathLength = 1f;
     private float adjustableAlpha;
+    private Color bulletColor;
 
     void Start()
     {
+        GetComponent<MeshRenderer>().material.SetColor("_Color", bulletColor);
+
         adjustableAlpha = 0.5f;
         gameObject.GetComponent<MeshRenderer>().material.SetFloat(
             "_AdjustableAlpha",
@@ -30,4 +33,5 @@ public class BulletFade : MonoBehaviour
     }
 
     public void SetPathLength(float length) { pathLength = length; }
+    public void SetColor(Color c) { bulletColor = c; }
 }

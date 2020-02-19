@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour, IRecordable
     private Animator animator;
     private Rigidbody rigidBody;
     private PlayerHealth health;
+    private Color pColor;
 
     //movement information
     public float turnSpeed, moveSpeed;
@@ -43,6 +44,8 @@ public class PlayerController : MonoBehaviour, IRecordable
 
     void Start() {
         lookDirection = new Vector3(0, 0, 1);
+        pColor = GetComponentsInChildren<SkinnedMeshRenderer>()[1].material.color;
+        Debug.Log(pColor);
     }
 
     void FixedUpdate() {
@@ -195,7 +198,12 @@ public class PlayerController : MonoBehaviour, IRecordable
     {
         Rigidbody bulletInstance = Instantiate(bullet, fireTransform.position, fireTransform.rotation) as Rigidbody;
         bulletInstance.GetComponent<Bullet>().playerNumber = playerNumber;
+
+
+        Debug.Log(pColor);
+        bulletInstance.GetComponent<Bullet>().bulletColor = pColor;
         bulletInstance.velocity = fireTransform.forward;
+
         roundClearingList.Add(bulletInstance.gameObject);
     }
 

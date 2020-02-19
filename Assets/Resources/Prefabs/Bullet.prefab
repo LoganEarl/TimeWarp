@@ -128,7 +128,8 @@ MonoBehaviour:
   bulletDmg: 1
   bouncesLeft: 4
   maxLifeTime: 8
-  pathDensity: 0.05
-  pathLength: 1
+  bulletColor: {r: 1, g: 0.88759816, b: 0, a: 0}
+  inversePathDensity: 0.01
+  inversePathLength: 0.5
   bulletFade: {fileID: 4514316513955595276, guid: c143993f2d31171418bf3718596f4b6e,
     type: 3}
