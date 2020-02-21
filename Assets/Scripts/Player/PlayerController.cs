@@ -110,7 +110,7 @@ public class PlayerController : MonoBehaviour, IRecordable
                 if (!usingSnapshots)
                 {
                     targetingCursor.SetActive(true);
-                    targetingCursor.transform.position = rigidBody.position + lookDirection * 5 + new Vector3(0, 0.01f, 0);
+                    targetingCursor.transform.position = rigidBody.position + lookDirection * 5 + new Vector3(0, fireTransform.position.y, 0);
                 }
             }
             else if (velocity.magnitude > 0.2)

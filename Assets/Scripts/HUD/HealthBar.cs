@@ -9,7 +9,8 @@ using UnityEngine.UI;
  * Other classes may reference this to control the UI of the player health bar.
  */
 
-public class HealthBar : MonoBehaviour {
+public class HealthBar : MonoBehaviour
+{
     private IGameMode attachedGameMode;
     private int playerNumber;
     private int roundNumber;
@@ -47,8 +48,8 @@ public class HealthBar : MonoBehaviour {
                 int maxSteps = attachedGameMode.MaxSteps;
                 int curStep = attachedGameMode.StepNumber;
                 float scale = curStep / (float)maxSteps * 0.8f + 0.2f;
-
-                gameObject.transform.localScale = new Vector2(scale,1);
+                scale = -1 * (scale - 1) * (scale - 1) + 1; //correct for the bad way humans see color
+                gameObject.transform.localScale = new Vector2(scale, 1);
 
                 float healthScale = playerHealth.Health / (float)playerHealth.MaxHealth;
                 targetColor = defaultColor * healthScale;
@@ -56,6 +57,6 @@ public class HealthBar : MonoBehaviour {
             if (!targetColor.Equals(fillImage.color))
                 fillImage.color = targetColor;
         }
-        
+
     }
 }

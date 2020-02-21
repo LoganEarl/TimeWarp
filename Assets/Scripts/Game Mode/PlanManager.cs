@@ -45,6 +45,13 @@ public class PlanManager : MonoBehaviour, IGameMode
         return playerManagers[playerNumber].ProjectedProjectilesRemaining(StepNumber);
     }
 
+    public int MaxShots(int playerNumber)
+    {
+        if (playerNumber < 0 || playerNumber >= playerManagers.Length)
+            return 0;
+        return playerManagers[playerNumber].MaxProjectiles;
+    }
+
     public GameObject GetPlayerObject(int playerNum, int roundNum)
     {
         if (playerNum < 0 || playerNum >= NumPlayers || roundNum < 0 || roundNum > RoundNumber)

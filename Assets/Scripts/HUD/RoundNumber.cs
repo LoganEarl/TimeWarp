@@ -6,7 +6,6 @@ using TMPro;
 public class RoundNumber : MonoBehaviour
 {
     [SerializeField]
-    
     private TextMeshProUGUI roundNumberText;
     private IGameMode gameMode;
     private bool setup = false;

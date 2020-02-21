@@ -9,6 +9,8 @@ public class PlanHUDController : MonoBehaviour
     [SerializeField]
     private GameObject[] playerHealthBarPrefabs;
     [SerializeField]
+    private PlanAmmoBar[] playerAmmoBars;
+    [SerializeField]
     private Timer timer;
     [SerializeField]
     private RoundNumber roundNumber;
@@ -22,6 +24,10 @@ public class PlanHUDController : MonoBehaviour
         this.planManager = planManager;
         timer.Setup(planManager);
         roundNumber.Setup(planManager);
+
+        for(int i = 0; i < playerAmmoBars.Length; i++)
+            playerAmmoBars[i].Setup(planManager, i);
+        
     }
 
     public void ReloadAll()
