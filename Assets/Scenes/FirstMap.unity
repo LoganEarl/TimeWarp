@@ -595,7 +595,7 @@ GameObject:
   - component: {fileID: 153525501}
   - component: {fileID: 153525500}
   - component: {fileID: 153525499}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: Lava Collider (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2080,7 +2080,7 @@ GameObject:
   - component: {fileID: 453014926}
   - component: {fileID: 453014925}
   - component: {fileID: 453014924}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: Lava Collider (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5603,7 +5603,7 @@ GameObject:
   - component: {fileID: 1374314096}
   - component: {fileID: 1374314095}
   - component: {fileID: 1374314094}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: Lava Collider (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6989,7 +6989,7 @@ GameObject:
   - component: {fileID: 1676389189}
   - component: {fileID: 1676389188}
   - component: {fileID: 1676389187}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: Lava Collider (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

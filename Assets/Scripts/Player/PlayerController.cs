@@ -10,15 +10,28 @@ public class PlayerController : MonoBehaviour, IRecordable
     public FireEventCallback FireCallback { private get; set; } = null;
     private bool firingGun = false;
     private bool fired = false;
-    private List<GameObject> firedBullets = new List<GameObject>();
+    private List<GameObject> roundClearingList = new List<GameObject>();
+    [SerializeField]
+    private Rigidbody bullet;
+    [SerializeField]
+    private Transform fireTransform;
+
+    //equipment information
+    public int equipmentLeft = 1;
+    [SerializeField]
+    private Transform shieldTransform;
+    [SerializeField]
+    private GameObject equipment;
+
+    private bool currentlyUsingEquipment;
 
     //player components/info
-    public Rigidbody bullet;
-    public Transform fireTransform;
-    public GameObject targetingCursor;
+    [SerializeField]
+    private GameObject targetingCursor;
+    private int playerNumber = 0;
+    [SerializeField]
+    private float lookOffset;
 
-    public int playerNumber = 0;
-    public float lookOffset;
     private bool usingSnapshots = false;
     private bool aimLocked = false;
     private bool loadedCursor = false;
@@ -26,9 +39,11 @@ public class PlayerController : MonoBehaviour, IRecordable
     private Animator animator;
     private Rigidbody rigidBody;
     private PlayerHealth health;
+    private Color playerColor;
 
     //movement information
-    public float turnSpeed, moveSpeed;
+    [SerializeField]
+    private float turnSpeed, moveSpeed;
 
     private bool isIdle = true;
     private int frameCounter = 0;
@@ -47,7 +62,7 @@ public class PlayerController : MonoBehaviour, IRecordable
             if (frameCounter > 30)
             {
                 frameCounter = 0;
-                firedBullets.RemoveAll(bullet => bullet == null);
+                roundClearingList.RemoveAll(gameObject => gameObject == null);
             }
 
             if (!loadedCursor && !usingSnapshots)
@@ -142,6 +157,8 @@ public class PlayerController : MonoBehaviour, IRecordable
 
         firingGun = false;
         float fireActivity = Input.GetAxis("Fire" + playerNumber);
+        float equipmentActivity = Input.GetAxis("Equipment" + playerNumber);
+
         if (!fired && fireActivity > 0f) //this works becuase of the masssive deadzone setting
         {
             fired = true;
@@ -149,6 +166,16 @@ public class PlayerController : MonoBehaviour, IRecordable
         }
         else if (fireActivity == 0f)
             fired = false;
+
+        if (equipmentActivity > 0f && !currentlyUsingEquipment && equipmentLeft != 0)
+        {
+            equipmentLeft--;
+            currentlyUsingEquipment = true;
+            PlaceEquipment();
+        }
+        else if (equipmentActivity == 0f)
+            currentlyUsingEquipment = false;
+
 
         if (Input.GetButtonDown("AimLock" + playerNumber))
             aimLocked = !aimLocked;
@@ -169,22 +196,27 @@ public class PlayerController : MonoBehaviour, IRecordable
         isIdle = snapshot.IsIdle;
     }
 
-    void OnAnimatorMove() {
+    private void PlaceEquipment()
+    {
+        GameObject shieldInstance = Instantiate(equipment, shieldTransform.position, shieldTransform.rotation) as GameObject;
+        roundClearingList.Add(shieldInstance.gameObject);
     }
 
     private void Shoot()
     {
         Rigidbody bulletInstance = Instantiate(bullet, fireTransform.position, fireTransform.rotation) as Rigidbody;
         bulletInstance.GetComponent<Bullet>().playerNumber = playerNumber;
-        bulletInstance.velocity = bulletSpeed * fireTransform.forward;
-        firedBullets.Add(bulletInstance.gameObject);
+        bulletInstance.GetComponent<Bullet>().bulletColor = playerColor;
+        bulletInstance.velocity = fireTransform.forward;
+
+        roundClearingList.Add(bulletInstance.gameObject);
     }
 
-    private void DestroyAllBullets()
+    private void DestroyAllPlayerCreations()
     {
-        for (int i = 0; i < firedBullets.Count; i++)
-            Destroy(firedBullets[i]);
-        firedBullets.Clear();
+        for (int i = 0; i < roundClearingList.Count; i++)
+            Destroy(roundClearingList[i]);
+        roundClearingList.Clear();
     }
 
     public void SetPlayerInformation(int playerNumber, int sourceRoundNum, Vector3 initialPosition)
@@ -232,11 +264,13 @@ public class PlayerController : MonoBehaviour, IRecordable
             primaryRenderer.material = Resources.Load<Material>("Materials/Player/Player" + playerNumber + "PrimaryGhost");
             secondaryRenderer.material = Resources.Load<Material>("Materials/Player/Player" + playerNumber + "SecondaryGhost");
         }
+
+        playerColor = primaryRenderer.material.GetColor("_GlowColor");
     }
 
     public void OnReset()
     {
-        DestroyAllBullets();
+        DestroyAllPlayerCreations();
         health.FullHeal();
     }
 }
