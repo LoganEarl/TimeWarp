@@ -48,10 +48,10 @@ public class HealthBar : MonoBehaviour
                 int maxSteps = attachedGameMode.MaxSteps;
                 int curStep = attachedGameMode.StepNumber;
                 float scale = curStep / (float)maxSteps * 0.8f + 0.2f;
-                scale = -1 * (scale - 1) * (scale - 1) + 1; //correct for the bad way humans see color
                 gameObject.transform.localScale = new Vector2(scale, 1);
 
                 float healthScale = playerHealth.Health / (float)playerHealth.MaxHealth;
+                healthScale = -1 * (healthScale - 1) * (healthScale - 1) + 1; //correct for the bad way humans see color
                 targetColor = defaultColor * healthScale;
             }
             if (!targetColor.Equals(fillImage.color))
