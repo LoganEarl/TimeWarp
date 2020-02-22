@@ -4,34 +4,32 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour, IRecordable
 {
-    //bullet information
-    public float bulletSpeed = 10;
+    //delegates
     public delegate bool FireEventCallback();
     public FireEventCallback FireCallback { private get; set; } = null;
+    public delegate bool EquipmentEventCallback();
+    public EquipmentEventCallback EquipmentCallback { private get; set; } = null;
+
+    //equipment info
     private bool firingGun = false;
     private bool fired = false;
+    private bool usingEquipment = false;
+    private bool usedEquipment = false;
     private List<GameObject> roundClearingList = new List<GameObject>();
-    [SerializeField]
-    private Rigidbody bullet;
-    [SerializeField]
-    private Transform fireTransform;
 
-    //equipment information
-    public int equipmentLeft = 1;
-    [SerializeField]
-    private Transform shieldTransform;
-    [SerializeField]
-    private GameObject equipment;
-
-    private bool currentlyUsingEquipment;
+#pragma warning disable IDE0044
+    [SerializeField] private float bulletSpeed = 10;
+    [SerializeField] private Rigidbody bullet;
+    [SerializeField] private Transform fireTransform;
+    [SerializeField] private Transform shieldTransform;
+    [SerializeField] private GameObject equipment;
+    [SerializeField] private float lookOffset;
+    [SerializeField] private GameObject targetingCursor;
+    [SerializeField] private float turnSpeed, moveSpeed;
+#pragma warning restore IDE0044
 
     //player components/info
-    [SerializeField]
-    private GameObject targetingCursor;
     private int playerNumber = 0;
-    [SerializeField]
-    private float lookOffset;
-
     private bool usingSnapshots = false;
     private bool aimLocked = false;
     private bool loadedCursor = false;
@@ -41,21 +39,20 @@ public class PlayerController : MonoBehaviour, IRecordable
     private PlayerHealth health;
     private Color playerColor;
 
-    //movement information
-    [SerializeField]
-    private float turnSpeed, moveSpeed;
-
+    //movement
     private bool isIdle = true;
     private int frameCounter = 0;
     private Vector3 position, velocity, lookDirection;
     private Quaternion desiredRotation = Quaternion.identity;
     private PlayerSnapshot snapshot;
 
-    void Start() {
+    void Start()
+    {
         lookDirection = new Vector3(0, 0, 1);
     }
 
-    void FixedUpdate() {
+    void FixedUpdate()
+    {
         if (setupPlayer && !health.Dead)
         {
             frameCounter++;
@@ -121,12 +118,13 @@ public class PlayerController : MonoBehaviour, IRecordable
                 rigidBody.MoveRotation(desiredRotation);
                 if (!usingSnapshots)
                     targetingCursor.SetActive(false);
-            } else if (!usingSnapshots)
+            }
+            else if (!usingSnapshots)
                 targetingCursor.SetActive(false);
             if (firingGun && (FireCallback?.Invoke() ?? true))
-            {
                 Shoot();
-            }
+            if (usingEquipment && (EquipmentCallback?.Invoke() ?? true))
+                PlaceEquipment();
         }
     }
 
@@ -154,11 +152,10 @@ public class PlayerController : MonoBehaviour, IRecordable
         else if (lookDirection.magnitude < 0.03)
             lookDirection.Set(0, 0, 0);
 
-
-        firingGun = false;
         float fireActivity = Input.GetAxis("Fire" + playerNumber);
         float equipmentActivity = Input.GetAxis("Equipment" + playerNumber);
 
+        firingGun = false;
         if (!fired && fireActivity > 0f) //this works becuase of the masssive deadzone setting
         {
             fired = true;
@@ -167,14 +164,14 @@ public class PlayerController : MonoBehaviour, IRecordable
         else if (fireActivity == 0f)
             fired = false;
 
-        if (equipmentActivity > 0f && !currentlyUsingEquipment && equipmentLeft != 0)
+        usingEquipment = false;
+        if (!usedEquipment && equipmentActivity > 0f)
         {
-            equipmentLeft--;
-            currentlyUsingEquipment = true;
-            PlaceEquipment();
+            usedEquipment = true;
+            usingEquipment = true;
         }
         else if (equipmentActivity == 0f)
-            currentlyUsingEquipment = false;
+            usedEquipment = false;
 
 
         if (Input.GetButtonDown("AimLock" + playerNumber))
@@ -193,6 +190,7 @@ public class PlayerController : MonoBehaviour, IRecordable
         velocity = snapshot.Velocity;
         lookDirection = snapshot.LookDirection;
         firingGun = snapshot.Firing;
+        usingEquipment = snapshot.UsingEquipment;
         isIdle = snapshot.IsIdle;
     }
 
@@ -238,7 +236,7 @@ public class PlayerController : MonoBehaviour, IRecordable
 
     public PlayerSnapshot GetSnapshot()
     {
-        return new PlayerSnapshot(position, velocity, lookDirection, firingGun, isIdle);
+        return new PlayerSnapshot(position, velocity, lookDirection, firingGun, usingEquipment, isIdle);
     }
 
     public void SetSnapshot(PlayerSnapshot playerSnapshot)

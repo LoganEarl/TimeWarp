@@ -52,6 +52,27 @@ public class PlanManager : MonoBehaviour, IGameMode
         return playerManagers[playerNumber].MaxProjectiles;
     }
 
+    public int EquipmentRemaining(int playerNumber)
+    {
+        if (playerNumber < 0 || playerNumber >= playerManagers.Length)
+            return 0;
+        return playerManagers[playerNumber].AvailableEquipment;
+    }
+
+    public int ProjectedEquipmentRemaining(int playerNumber)
+    {
+        if (playerNumber < 0 || playerNumber >= playerManagers.Length)
+            return 0;
+        return playerManagers[playerNumber].ProjectedEquipmentRemaining(StepNumber);
+    }
+
+    public int MaxEquipment(int playerNumber)
+    {
+        if (playerNumber < 0 || playerNumber >= playerManagers.Length)
+            return 0;
+        return playerManagers[playerNumber].MaxEquipment;
+    }
+
     public GameObject GetPlayerObject(int playerNum, int roundNum)
     {
         if (playerNum < 0 || playerNum >= NumPlayers || roundNum < 0 || roundNum > RoundNumber)
@@ -101,7 +122,7 @@ public class PlanManager : MonoBehaviour, IGameMode
 
         playerManagers = new PlanPlayerManager[numPlayers];
         for (int i = 0; i < numPlayers; i++)
-            playerManagers[i] = new PlanPlayerManager(10);
+            playerManagers[i] = new PlanPlayerManager(10,1);
     }
 
     public void Begin()
