@@ -58,4 +58,10 @@ public class PlanEquipmentBar : MonoBehaviour
             }
         }
     }
+
+    private void OnDestroy()
+    {
+        foreach (GameObject dot in instantiatedPrefabs)
+            Destroy(dot);
+    }
 }

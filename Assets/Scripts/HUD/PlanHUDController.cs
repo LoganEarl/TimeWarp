@@ -69,4 +69,15 @@ public class PlanHUDController : MonoBehaviour
             }
         }
     }
+
+    private void OnDestroy()
+    {
+        for(int i = 0; i < loadedPlayerHealthBars.Length; i++)
+            foreach (GameObject bar in loadedPlayerHealthBars[i])
+                Destroy(bar);
+        Destroy(timer.gameObject);
+        Destroy(roundNumber.gameObject);
+        foreach (PlanEquipmentBar bar in equipmentBars)
+            Destroy(bar);
+    }
 }

@@ -29,7 +29,7 @@ public class PlanManager : MonoBehaviour, IGameMode
     }
 
     public int StepNumber { get; private set; } = -1;
-    public int MaxSteps { get; private set; } = 20 * 50;    //20 seconds
+    public int MaxSteps { get; private set; } = 5 * 50;    //20 seconds
     public int NumPlayers { get; private set; }
     public int MaxRounds { get; private set; } = 1;
     public bool GameEnabled { private set; get; } = false;
@@ -84,6 +84,38 @@ public class PlanManager : MonoBehaviour, IGameMode
         return playerManagers[playerNum].GetPlayerObject(roundNum);
     }
 
+    //================================================Public Interface
+    public void Setup(int numPlayers, ILevelConfig levelConfig)
+    {
+        //Ensure old data is cleared out
+        this.levelConfig = levelConfig;
+        this.NumPlayers = numPlayers;
+        this.MaxRounds = levelConfig.GetMaxRounds();
+        RoundNumber = -1;
+        StepNumber = -1;
+        betweenRounds = true;
+        GameEnabled = false;
+
+        if (hudController != null) Destroy(hudController);
+
+        if(playerManagers != null)
+            foreach(PlanPlayerManager manager in playerManagers)
+                manager.DestroyAll();
+
+        playerObjects = new List<GameObject>();
+
+        //Begin initialization
+        playerManagers = new PlanPlayerManager[numPlayers];
+        for (int i = 0; i < numPlayers; i++)
+            playerManagers[i] = new PlanPlayerManager(18, 2);
+    }
+
+    public void Begin()
+    {
+        if (levelConfig != null)
+            SceneManager.LoadScene(levelConfig.GetSceneName(), LoadSceneMode.Single);
+    }
+
     //================================================Unity Callback Methods
     private void Awake()
     {
@@ -121,26 +153,7 @@ public class PlanManager : MonoBehaviour, IGameMode
             SceneManager.SetActiveScene(SceneManager.GetSceneByName(levelConfig.GetSceneName()));
             LoadHUD();
             NextMatch();
-           
         }
-    }
-
-    //================================================Public Interface
-    public void Setup(int numPlayers, ILevelConfig levelConfig)
-    {
-        this.levelConfig = levelConfig;
-        this.NumPlayers = numPlayers;
-        this.MaxRounds = levelConfig.GetMaxRounds();
-
-        playerManagers = new PlanPlayerManager[numPlayers];
-        for (int i = 0; i < numPlayers; i++)
-            playerManagers[i] = new PlanPlayerManager(18,2);
-    }
-
-    public void Begin()
-    {
-        if (levelConfig != null)
-            SceneManager.LoadScene(levelConfig.GetSceneName(), LoadSceneMode.Single);
     }
 
     //================================================Private Utilities
@@ -158,11 +171,16 @@ public class PlanManager : MonoBehaviour, IGameMode
             foreach (GameObject playerObject in playerObjects)
                 playerObject.GetComponent<PlayerController>().OnReset();
 
-            foreach (PlanPlayerManager player in playerManagers)
+            foreach (PlanPlayerManager player in playerManagers)    //frontload the first frame of recorded data
                 player.Step(0);
             LoadNewPlayers();
-            hudController.ReloadAll();   
+            hudController.ReloadAll();
 
+        }
+        else
+        {
+            Setup(NumPlayers, levelConfig);
+            Begin();
         }
     }
 

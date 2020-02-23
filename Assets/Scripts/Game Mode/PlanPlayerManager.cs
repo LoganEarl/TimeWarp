@@ -53,7 +53,6 @@ public class PlanPlayerManager
         AvailableProjectiles = availableProjectiles;
         MaxEquipment = availableEquipment;
         AvailableEquipment = availableEquipment;
-
     }
 
     //add another controlled player instance
@@ -82,6 +81,12 @@ public class PlanPlayerManager
             recording.Finish();
         AvailableProjectiles = MaxProjectiles;
         AvailableEquipment = MaxEquipment;
+    }
+
+    internal void DestroyAll()
+    {
+        foreach (PlayerController controller in playerControllers)
+            Object.Destroy(controller);
     }
 
     internal bool RecordExistsForMatch(int matchNum)
