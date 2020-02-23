@@ -5,10 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class PlanManager : MonoBehaviour, IGameMode
 {
-
     private bool begun = false;
     private ILevelConfig levelConfig = null;
-    
     
     private Dictionary<string, GameObject> loadedPlayerModels = new Dictionary<string, GameObject>();
     private PlanPlayerManager[] playerManagers = null;
@@ -122,7 +120,7 @@ public class PlanManager : MonoBehaviour, IGameMode
 
         playerManagers = new PlanPlayerManager[numPlayers];
         for (int i = 0; i < numPlayers; i++)
-            playerManagers[i] = new PlanPlayerManager(10,1);
+            playerManagers[i] = new PlanPlayerManager(18,2);
     }
 
     public void Begin()

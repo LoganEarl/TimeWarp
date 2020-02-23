@@ -14,6 +14,8 @@ public class PlanHUDController : MonoBehaviour
     private Timer timer;
     [SerializeField]
     private RoundNumber roundNumber;
+    [SerializeField]
+    private PlanEquipmentBar[] equipmentBars;
 
     private PlanManager planManager;
 
@@ -27,7 +29,12 @@ public class PlanHUDController : MonoBehaviour
 
         for(int i = 0; i < playerAmmoBars.Length; i++)
             playerAmmoBars[i].Setup(planManager, i);
-        
+        for (int i = 0; i < equipmentBars.Length; i++)
+            equipmentBars[i].Setup(planManager, i);
+
+        Canvas drawCanvas = gameObject.GetComponent<Canvas>();
+        drawCanvas.worldCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+        drawCanvas.planeDistance = 1;
     }
 
     public void ReloadAll()

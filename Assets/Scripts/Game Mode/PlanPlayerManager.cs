@@ -49,8 +49,11 @@ public class PlanPlayerManager
 
     internal PlanPlayerManager(int availableProjectiles, int availableEquipment)
     {
+        MaxProjectiles = availableProjectiles;
         AvailableProjectiles = availableProjectiles;
+        MaxEquipment = availableEquipment;
         AvailableEquipment = availableEquipment;
+
     }
 
     //add another controlled player instance
