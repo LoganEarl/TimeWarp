@@ -14,4 +14,5 @@ public interface IGameMode
     int RoundNumber { get; }
     int MaxRounds { get; }
     float SecondsRemaining { get; }
+    bool GameEnabled { get; }
 }

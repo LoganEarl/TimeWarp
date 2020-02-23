@@ -19,6 +19,14 @@ public class PlayerSnapshot
     public bool Firing { get; }             //if triggered the fire button this frame
     public bool UsingEquipment { get; }     //if triggered the equipment button this frame
     //eventually have endpoints for actions taken.
-    public PlayerSnapshot(Vector3 translation, Vector3 velocity, Vector3 lookDirection, bool firing, bool usingEquipment, bool isIdle) =>
-        (Translation, Velocity, LookDirection, Firing, UsingEquipment, IsIdle) = (translation, velocity, lookDirection, firing, usingEquipment, isIdle);
+    public PlayerSnapshot(
+        Vector3 translation, 
+        Vector3 velocity, 
+        Vector3 lookDirection, 
+        bool firing, 
+        bool usingEquipment, 
+        bool isIdle
+        ) =>
+        (Translation, Velocity, LookDirection, Firing, UsingEquipment, IsIdle) = 
+        (translation, velocity, lookDirection, firing, usingEquipment, isIdle);
 }

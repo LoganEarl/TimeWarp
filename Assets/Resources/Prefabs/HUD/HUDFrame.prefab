@@ -84,7 +84,7 @@ GameObject:
   - component: {fileID: 2850436710253763027}
   - component: {fileID: 8442504810713840206}
   m_Layer: 5
-  m_Name: UIFrame
+  m_Name: HUDFrame
   m_TagString: HUD
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -651,7 +651,7 @@ PrefabInstance:
     - target: {fileID: 3793190072673464979, guid: d7d83f28371d9d0489dde96efccfd8e2,
         type: 3}
       propertyPath: m_textInfo.characterCount
-      value: 7
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 3793190072673464979, guid: d7d83f28371d9d0489dde96efccfd8e2,
         type: 3}
@@ -661,7 +661,7 @@ PrefabInstance:
     - target: {fileID: 3793190072673464979, guid: d7d83f28371d9d0489dde96efccfd8e2,
         type: 3}
       propertyPath: m_textInfo.wordCount
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3793190072673464979, guid: d7d83f28371d9d0489dde96efccfd8e2,
         type: 3}
@@ -736,17 +736,17 @@ PrefabInstance:
     - target: {fileID: 3793190073473369138, guid: d7d83f28371d9d0489dde96efccfd8e2,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -31.39
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3793190073473369138, guid: d7d83f28371d9d0489dde96efccfd8e2,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 120.5
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 3793190073473369138, guid: d7d83f28371d9d0489dde96efccfd8e2,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 62.78
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 3793190073473369138, guid: d7d83f28371d9d0489dde96efccfd8e2,
         type: 3}
@@ -776,7 +776,7 @@ PrefabInstance:
     - target: {fileID: 3793190073473369138, guid: d7d83f28371d9d0489dde96efccfd8e2,
         type: 3}
       propertyPath: m_Pivot.y
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3793190073473369139, guid: d7d83f28371d9d0489dde96efccfd8e2,
         type: 3}

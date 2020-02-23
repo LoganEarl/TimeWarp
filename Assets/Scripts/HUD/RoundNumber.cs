@@ -19,6 +19,11 @@ public class RoundNumber : MonoBehaviour
     public void Update()
     {
         if (setup)
-            roundNumberText.text = "Round " + gameMode.RoundNumber;
+        {
+            if (!gameMode.GameEnabled)
+                roundNumberText.text = "Get Ready";
+            else
+                roundNumberText.text = "Round " + (gameMode.RoundNumber + 1);
+        }
     }
 }

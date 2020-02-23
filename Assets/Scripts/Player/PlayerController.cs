@@ -45,6 +45,7 @@ public class PlayerController : MonoBehaviour, IRecordable
     private Vector3 position, velocity, lookDirection;
     private Quaternion desiredRotation = Quaternion.identity;
     private PlayerSnapshot snapshot;
+    private IGameMode gameMode;
 
     void Start()
     {
@@ -76,8 +77,13 @@ public class PlayerController : MonoBehaviour, IRecordable
 
             if (usingSnapshots)
                 RecordedFrame();
-            else
+            else if (gameMode.GameEnabled)
                 ControlledFrame();
+            else
+            {
+                velocity = new Vector3();
+                isIdle = true;
+            }
 
             animator.SetBool("IsIdle", isIdle);
             int animDirection = 2;
@@ -217,7 +223,7 @@ public class PlayerController : MonoBehaviour, IRecordable
         roundClearingList.Clear();
     }
 
-    public void SetPlayerInformation(int playerNumber, int sourceRoundNum, Vector3 initialPosition)
+    public void SetPlayerInformation(int playerNumber, int sourceRoundNum, Vector3 initialPosition, IGameMode gameMode)
     {
         this.playerNumber = playerNumber;
 
@@ -230,6 +236,8 @@ public class PlayerController : MonoBehaviour, IRecordable
             collider.gameObject.tag = "Player" + playerNumber;
 
         rigidBody.MovePosition(initialPosition);
+
+        this.gameMode = gameMode;
 
         setupPlayer = true;
     }

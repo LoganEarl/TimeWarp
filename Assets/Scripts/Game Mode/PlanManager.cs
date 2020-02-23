@@ -13,20 +13,26 @@ public class PlanManager : MonoBehaviour, IGameMode
     private List<GameObject> playerObjects = new List<GameObject>();
     private PlanHUDController hudController;
 
+    private bool betweenRounds = true;
+    private readonly int betweenRoundsTime = 3 * 50;        //3 seconds
+
     //================================================Public Accessors
 
     public float SecondsRemaining
     {
         get
         {
+            if (betweenRounds)
+                return (betweenRoundsTime - StepNumber) * Time.fixedDeltaTime;
             return (MaxSteps - StepNumber) * Time.fixedDeltaTime;
         }
     }
 
     public int StepNumber { get; private set; } = -1;
-    public int MaxSteps { get; private set; } = 1000;
+    public int MaxSteps { get; private set; } = 20 * 50;    //20 seconds
     public int NumPlayers { get; private set; }
     public int MaxRounds { get; private set; } = 1;
+    public bool GameEnabled { private set; get; } = false;
     public int RoundNumber { get; private set; } = -1;      //starts at -1, but first match is 0.
                                                             //This is so NextMatch() doesnt need edge case checks
     public int ShotsRemaining(int playerNumber)
@@ -89,13 +95,21 @@ public class PlanManager : MonoBehaviour, IGameMode
     {
         if (begun)
         {
-            if (StepNumber > MaxSteps)
+            if (!betweenRounds && StepNumber > MaxSteps)
                 NextMatch();
+            if(betweenRounds && StepNumber > betweenRoundsTime)
+            {
+                betweenRounds = false;
+                StepNumber = -1;
+            }
+
+            GameEnabled = !betweenRounds;
 
             StepNumber++;
 
-            foreach (PlanPlayerManager player in playerManagers)
-                player.Step(StepNumber);
+            if (!betweenRounds)
+                foreach (PlanPlayerManager player in playerManagers)
+                    player.Step(StepNumber);
         }
     }
 
@@ -134,6 +148,7 @@ public class PlanManager : MonoBehaviour, IGameMode
     {
         StepNumber = -1;
         RoundNumber++;
+        betweenRounds = true;
 
         if (RoundNumber < levelConfig.GetMaxRounds())
         {
@@ -143,8 +158,11 @@ public class PlanManager : MonoBehaviour, IGameMode
             foreach (GameObject playerObject in playerObjects)
                 playerObject.GetComponent<PlayerController>().OnReset();
 
+            foreach (PlanPlayerManager player in playerManagers)
+                player.Step(0);
             LoadNewPlayers();
             hudController.ReloadAll();   
+
         }
     }
 
@@ -171,7 +189,8 @@ public class PlanManager : MonoBehaviour, IGameMode
             playerController.SetPlayerInformation(
                 curPlayer,
                 RoundNumber,
-                levelConfig.GetPlayerSpawnPosition(curPlayer, RoundNumber)
+                levelConfig.GetPlayerSpawnPosition(curPlayer, RoundNumber),
+                this
             );
 
             if (!manager.RecordExistsForMatch(RoundNumber))
@@ -181,8 +200,10 @@ public class PlanManager : MonoBehaviour, IGameMode
 
     private void LoadHUD()
     {
-        string canvasPath = "Prefabs/HUD/UIFrame";
+        string canvasPath = "Prefabs/HUD/HUDFrame";
         GameObject loaded = Resources.Load(canvasPath) as GameObject;
+        if (loaded == null)
+            throw new System.Exception("Unable to find HUDFrame component. Have you renamed/moved it?");
         loaded = Instantiate(loaded);
         hudController = loaded.GetComponent<PlanHUDController>();
         hudController.Setup(this);
