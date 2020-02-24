@@ -6,12 +6,13 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuDriver: MonoBehaviour
 {
-    //Remove the Start Function if you want to test the menus.
+    /*Remove the Start Function if you want to test the menus.
     private void Start()
     {
         GoToLobby();
     }
-
+    
+    /*Ending extraneous start function*/
     public void GoToLobby()
     {
         SceneManager.LoadScene("Lobby");

@@ -76,4 +76,15 @@ public class LobbyDriver : MonoBehaviour {
             selectedGameMode.Begin();
         }
     }
+
+    /*Extra part for demonstration purposes*/
+    private void FixedUpdate()
+    {
+        if (Input.GetButtonDown("Reset"))
+        {
+            Destroy(this.gameObject, 1f);
+            SceneManager.LoadScene("Menu");
+        }
+    }
+    /*-------------*/
 }
