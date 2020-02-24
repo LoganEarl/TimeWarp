@@ -278,6 +278,7 @@ public class PlayerController : MonoBehaviour, IRecordable
     {
         DestroyAllPlayerCreations();
         health.FullHeal();
+        health.ResetStatistics();
     }
 
     public void OnDestroy() => DestroyAllPlayerCreations();

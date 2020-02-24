@@ -48,6 +48,8 @@ public class HealthBar : MonoBehaviour
                 int maxSteps = attachedGameMode.MaxSteps;
                 int curStep = attachedGameMode.StepNumber;
                 float scale = curStep / (float)maxSteps * 0.8f + 0.2f;
+                if (!attachedGameMode.GameEnabled)
+                    scale = 0.2f;
                 gameObject.transform.localScale = new Vector2(scale, 1);
 
                 float healthScale = playerHealth.Health / (float)playerHealth.MaxHealth;

@@ -4221,7 +4221,7 @@ GameObject:
   - component: {fileID: 918983561}
   - component: {fileID: 918983560}
   - component: {fileID: 918983559}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: Lava Collider (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4643,7 +4643,7 @@ GameObject:
   - component: {fileID: 1056577953}
   - component: {fileID: 1056577952}
   - component: {fileID: 1056577951}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: Lava Collider (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -22,11 +22,6 @@ public class LobbyDriver : MonoBehaviour {
     public void Start()
     {
         startButton.interactable = false;
-
-        //Remove all code underneath here to have lobby interactivity again.
-        
-        planGameMode.Setup(2, new LevelOneConfig());
-        planGameMode.Begin();
     }
     
     public void SelectTestLevel()

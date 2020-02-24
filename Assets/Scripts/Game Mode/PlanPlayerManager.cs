@@ -40,6 +40,40 @@ public class PlanPlayerManager
         return usage;
     }
 
+    public int NumberRecordingsAlive
+    {
+        get
+        {
+            int count = 0;
+            foreach (PlayerController controller in playerControllers)
+                if (controller.GetComponent<PlayerHealth>().Health > 0)
+                    count++;
+            return count;
+        }
+    }
+
+    public int TotalHealthRemaining
+    {
+        get
+        {
+            int count = 0;
+            foreach (PlayerController controller in playerControllers)
+                count += controller.GetComponent<PlayerHealth>().Health;               
+            return count;
+        }
+    }
+
+    public int TotalTimeAlive
+    {
+        get
+        {
+            int count = 0;
+            foreach (PlayerController controller in playerControllers)
+                count += controller.GetComponent<PlayerHealth>().TimeAlive;
+            return count;
+        }
+    }
+
     public GameObject GetPlayerObject(int roundNumber)
     {
         if (roundNumber < 0 || roundNumber >= playerControllers.Count)

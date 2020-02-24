@@ -14,7 +14,8 @@ public class PlanManager : MonoBehaviour, IGameMode
     private PlanHUDController hudController;
 
     private bool betweenRounds = true;
-    private readonly int betweenRoundsTime = 3 * 50;        //3 seconds
+    private bool runningRecordingRound = false;
+    private readonly int betweenRoundsTime = 4 * 50;        //3 seconds
 
     //================================================Public Accessors
 
@@ -29,7 +30,7 @@ public class PlanManager : MonoBehaviour, IGameMode
     }
 
     public int StepNumber { get; private set; } = -1;
-    public int MaxSteps { get; private set; } = 20 * 50;    //20 seconds
+    public int MaxSteps { get; private set; } = 15 * 50;    //20 seconds
     public int NumPlayers { get; private set; }
     public int MaxRounds { get; private set; } = 1;
     public bool GameEnabled { private set; get; } = false;
@@ -46,6 +47,8 @@ public class PlanManager : MonoBehaviour, IGameMode
     {
         if (playerNumber < 0 || playerNumber >= playerManagers.Length)
             return 0;
+        if (betweenRounds)
+            return playerManagers[playerNumber].ProjectedProjectilesRemaining(0);
         return playerManagers[playerNumber].ProjectedProjectilesRemaining(StepNumber);
     }
 
@@ -67,6 +70,8 @@ public class PlanManager : MonoBehaviour, IGameMode
     {
         if (playerNumber < 0 || playerNumber >= playerManagers.Length)
             return 0;
+        if(betweenRounds)
+            return playerManagers[playerNumber].ProjectedEquipmentRemaining(0);
         return playerManagers[playerNumber].ProjectedEquipmentRemaining(StepNumber);
     }
 
@@ -82,6 +87,11 @@ public class PlanManager : MonoBehaviour, IGameMode
         if (playerNum < 0 || playerNum >= NumPlayers || roundNum < 0 || roundNum > RoundNumber)
             throw new System.Exception("Passed illegal playernum or roundNumber to getPlayerObject");
         return playerManagers[playerNum].GetPlayerObject(roundNum);
+    }
+
+    public GameObject GameObject
+    {
+        get { return gameObject; }
     }
 
     //================================================Public Interface
@@ -114,6 +124,12 @@ public class PlanManager : MonoBehaviour, IGameMode
     {
         if (levelConfig != null)
             SceneManager.LoadScene(levelConfig.GetSceneName(), LoadSceneMode.Single);
+    }
+
+    public void Reset()
+    {
+        Setup(NumPlayers, levelConfig);
+        Begin();
     }
 
     //================================================Unity Callback Methods
@@ -160,7 +176,14 @@ public class PlanManager : MonoBehaviour, IGameMode
     private void NextMatch()
     {
         StepNumber = -1;
+
         RoundNumber++;
+        if (RoundNumber == levelConfig.GetMaxRounds() && !runningRecordingRound)
+        {
+            runningRecordingRound = true;
+            RoundNumber--;
+        }
+            
         betweenRounds = true;
 
         if (RoundNumber < levelConfig.GetMaxRounds())
@@ -173,14 +196,18 @@ public class PlanManager : MonoBehaviour, IGameMode
 
             foreach (PlanPlayerManager player in playerManagers)    //frontload the first frame of recorded data
                 player.Step(0);
-            LoadNewPlayers();
+
+            if(!runningRecordingRound)
+                LoadNewPlayers();
             hudController.ReloadAll();
 
         }
         else
         {
-            Setup(NumPlayers, levelConfig);
-            Begin();
+            GameEnabled = false;
+            begun = false;
+            hudController.gameObject.SetActive(false);
+            DoScoreScreen();
         }
     }
 
@@ -225,6 +252,44 @@ public class PlanManager : MonoBehaviour, IGameMode
         loaded = Instantiate(loaded);
         hudController = loaded.GetComponent<PlanHUDController>();
         hudController.Setup(this);
+    }
+
+    private void DoScoreScreen()
+    {
+        string[] scoreKeyOrder = { "Unused Ammo", "Unused Sheilds", "Damage Taken", "Time Alive", "Survival" };
+        int[] scores = new int[NumPlayers];
+        Dictionary<string, int>[] listings = new Dictionary<string, int>[NumPlayers];
+
+        for(int i = 0; i < NumPlayers; i++)
+        {
+            int remainingAmmo = playerManagers[i].AvailableProjectiles;
+            int remainingEquip = playerManagers[i].AvailableEquipment;
+            int remainingPlayers = playerManagers[i].NumberRecordingsAlive;
+            int remainingHealth = playerManagers[i].TotalHealthRemaining;
+            int totalTimeAlive = playerManagers[i].TotalTimeAlive; 
+
+            Dictionary<string, int> stats = new Dictionary<string, int>();
+            stats["Unused Ammo"] = remainingAmmo * 100;
+            stats["Unused Sheilds"] = remainingEquip * 200;
+            stats["Survival"] = remainingPlayers * 10000;
+            stats["Damage Taken"] = remainingHealth * 500;
+            stats["Time Alive"] = totalTimeAlive;
+
+            int total = 0;
+            foreach (int value in stats.Values)
+                total += value;
+
+            scores[i] = total;
+            listings[i] = stats;
+        }
+
+        ScoreOverlay.ScoreList scoreListings = new ScoreOverlay.ScoreList(scores, listings, scoreKeyOrder);
+        string canvasPath = "Prefabs/Overlay/ScoreOverlay";
+        GameObject loaded = Resources.Load(canvasPath) as GameObject;
+        if (loaded == null)
+            throw new System.Exception("Unable to find ScoreOverlay component. Have you renamed/moved it?");
+        loaded = Instantiate(loaded);
+        loaded.GetComponent<ScoreOverlay>().Setup(scoreListings, this);
     }
 }
 
