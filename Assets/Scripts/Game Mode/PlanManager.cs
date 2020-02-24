@@ -29,7 +29,7 @@ public class PlanManager : MonoBehaviour, IGameMode
     }
 
     public int StepNumber { get; private set; } = -1;
-    public int MaxSteps { get; private set; } = 5 * 50;    //20 seconds
+    public int MaxSteps { get; private set; } = 20 * 50;    //20 seconds
     public int NumPlayers { get; private set; }
     public int MaxRounds { get; private set; } = 1;
     public bool GameEnabled { private set; get; } = false;
