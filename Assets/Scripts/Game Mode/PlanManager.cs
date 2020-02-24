@@ -15,7 +15,7 @@ public class PlanManager : MonoBehaviour, IGameMode
 
     private bool betweenRounds = true;
     private bool runningRecordingRound = false;
-    private readonly int betweenRoundsTime = 4 * 50;        //3 seconds
+    private readonly int betweenRoundsTime = 3 * 50;        //3 seconds
 
     //================================================Public Accessors
 
@@ -30,7 +30,7 @@ public class PlanManager : MonoBehaviour, IGameMode
     }
 
     public int StepNumber { get; private set; } = -1;
-    public int MaxSteps { get; private set; } = 15 * 50;    //20 seconds
+    public int MaxSteps { get; private set; } = 15 * 50;    //15 seconds
     public int NumPlayers { get; private set; }
     public int MaxRounds { get; private set; } = 1;
     public bool GameEnabled { private set; get; } = false;
@@ -106,7 +106,7 @@ public class PlanManager : MonoBehaviour, IGameMode
         betweenRounds = true;
         GameEnabled = false;
 
-        if (hudController != null) Destroy(hudController);
+        if (hudController != null) Destroy(hudController.gameObject);
 
         if(playerManagers != null)
             foreach(PlanPlayerManager manager in playerManagers)
@@ -117,7 +117,7 @@ public class PlanManager : MonoBehaviour, IGameMode
         //Begin initialization
         playerManagers = new PlanPlayerManager[numPlayers];
         for (int i = 0; i < numPlayers; i++)
-            playerManagers[i] = new PlanPlayerManager(18, 2);
+            playerManagers[i] = new PlanPlayerManager(18, 1);
     }
 
     public void Begin()
@@ -129,7 +129,6 @@ public class PlanManager : MonoBehaviour, IGameMode
     public void Reset()
     {
         Setup(NumPlayers, levelConfig);
-        Begin();
     }
 
     //================================================Unity Callback Methods
@@ -165,10 +164,10 @@ public class PlanManager : MonoBehaviour, IGameMode
     {
         if (levelConfig != null && scene.name.Equals(levelConfig.GetSceneName()))
         {
-            begun = true;
             SceneManager.SetActiveScene(SceneManager.GetSceneByName(levelConfig.GetSceneName()));
             LoadHUD();
             NextMatch();
+            begun = true;
         }
     }
 
@@ -245,6 +244,9 @@ public class PlanManager : MonoBehaviour, IGameMode
 
     private void LoadHUD()
     {
+        if (hudController != null)
+            Destroy(hudController);
+
         string canvasPath = "Prefabs/HUD/HUDFrame";
         GameObject loaded = Resources.Load(canvasPath) as GameObject;
         if (loaded == null)

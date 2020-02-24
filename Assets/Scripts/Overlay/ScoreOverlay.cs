@@ -52,6 +52,7 @@ public class ScoreOverlay : MonoBehaviour
         if (setup)
         {
             sourceGameMode.Reset();
+            sourceGameMode.Begin();
             Destroy(this);
         }
     }

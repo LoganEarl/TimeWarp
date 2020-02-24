@@ -77,7 +77,7 @@ public class PlanPlayerManager
     public GameObject GetPlayerObject(int roundNumber)
     {
         if (roundNumber < 0 || roundNumber >= playerControllers.Count)
-            throw new System.Exception("Passed in illegal round number to GetPlayerObject");
+            throw new System.Exception("Passed in illegal round number to GetPlayerObject:" + roundNumber);
         return playerControllers[roundNumber].gameObject;
     }
 
@@ -120,7 +120,7 @@ public class PlanPlayerManager
     internal void DestroyAll()
     {
         foreach (PlayerController controller in playerControllers)
-            Object.Destroy(controller);
+            Object.Destroy(controller.gameObject);
     }
 
     internal bool RecordExistsForMatch(int matchNum)
