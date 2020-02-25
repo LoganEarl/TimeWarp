@@ -29,7 +29,7 @@ public class LevelLoader : MonoBehaviour {
         canvas.GetComponent<Canvas>().sortingOrder = sortOrder;
         transition.SetTrigger("Start");
         yield return new WaitForSeconds(transitionTime);
-        SceneManager.LoadScene(sceneName);
+        SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
         yield return new WaitForSeconds(transitionTime);
         canvas.sortingOrder = 0;
     }

@@ -9,6 +9,8 @@ TagManager:
   - Player1
   - Player0
   - StartButton
+  - ForceField
+  - HUD
   layers:
   - Default
   - TransparentFX
@@ -25,8 +27,9 @@ TagManager:
   - Projectile
   - Player0
   - Player1
-  - 
-  - 
+  - ForceField
+  - PostProcess
+  - PlayerBarrier
   - 
   - 
   - 

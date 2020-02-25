@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
-    public int MaxHealth { get; set; } = 1;
-    private int health = 1;
+    public int MaxHealth { get; set; } = 3;
+    private int health = 3;
     private bool dead = false;
+    public int TimeAlive { get; private set; }
 
     public int Health {
         get {
@@ -29,6 +30,11 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
+    private void FixedUpdate()
+    {
+        TimeAlive++;
+    }
+
     public void DoDamage(int damage)
     {
         if(damage > 0)
@@ -38,6 +44,11 @@ public class PlayerHealth : MonoBehaviour
     public void FullHeal()
     {
         Health = MaxHealth;
+    }
+
+    public void ResetStatistics()
+    {
+        TimeAlive = 0;
     }
 
     public void Awake()

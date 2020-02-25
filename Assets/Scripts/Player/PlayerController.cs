@@ -4,20 +4,32 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour, IRecordable
 {
-    //bullet information
-    public float bulletSpeed = 10;
+    //delegates
+    public delegate bool FireEventCallback();
+    public FireEventCallback FireCallback { private get; set; } = null;
+    public delegate bool EquipmentEventCallback();
+    public EquipmentEventCallback EquipmentCallback { private get; set; } = null;
 
+    //equipment info
     private bool firingGun = false;
     private bool fired = false;
-    private List<GameObject> firedBullets = new List<GameObject>();
+    private bool usingEquipment = false;
+    private bool usedEquipment = false;
+    private List<GameObject> roundClearingList = new List<GameObject>();
+
+#pragma warning disable IDE0044
+    [SerializeField] private float bulletSpeed = 10;
+    [SerializeField] private Rigidbody bullet;
+    [SerializeField] private Transform fireTransform;
+    [SerializeField] private Transform shieldTransform;
+    [SerializeField] private GameObject equipment;
+    [SerializeField] private float lookOffset;
+    [SerializeField] private GameObject targetingCursor;
+    [SerializeField] private float turnSpeed, moveSpeed;
+#pragma warning restore IDE0044
 
     //player components/info
-    public Rigidbody bullet;
-    public Transform fireTransform;
-    public GameObject targetingCursor;
-
-    public int playerNumber = 0;
-    public float lookOffset;
+    private int playerNumber = 0;
     private bool usingSnapshots = false;
     private bool aimLocked = false;
     private bool loadedCursor = false;
@@ -25,28 +37,30 @@ public class PlayerController : MonoBehaviour, IRecordable
     private Animator animator;
     private Rigidbody rigidBody;
     private PlayerHealth health;
+    private Color playerColor;
 
-    //movement information
-    public float turnSpeed, moveSpeed;
-
+    //movement
     private bool isIdle = true;
     private int frameCounter = 0;
     private Vector3 position, velocity, lookDirection;
     private Quaternion desiredRotation = Quaternion.identity;
     private PlayerSnapshot snapshot;
+    private IGameMode gameMode;
 
-    void Start() {
+    void Start()
+    {
         lookDirection = new Vector3(0, 0, 1);
     }
 
-    void FixedUpdate() {
+    void FixedUpdate()
+    {
         if (setupPlayer && !health.Dead)
         {
             frameCounter++;
             if (frameCounter > 30)
             {
                 frameCounter = 0;
-                firedBullets.RemoveAll(bullet => bullet == null);
+                roundClearingList.RemoveAll(gameObject => gameObject == null);
             }
 
             if (!loadedCursor && !usingSnapshots)
@@ -63,8 +77,13 @@ public class PlayerController : MonoBehaviour, IRecordable
 
             if (usingSnapshots)
                 RecordedFrame();
-            else
+            else if (gameMode.GameEnabled)
                 ControlledFrame();
+            else
+            {
+                velocity = new Vector3();
+                isIdle = true;
+            }
 
             animator.SetBool("IsIdle", isIdle);
             int animDirection = 2;
@@ -94,7 +113,7 @@ public class PlayerController : MonoBehaviour, IRecordable
                 if (!usingSnapshots)
                 {
                     targetingCursor.SetActive(true);
-                    targetingCursor.transform.position = rigidBody.position + lookDirection * 5 + new Vector3(0, 0.01f, 0);
+                    targetingCursor.transform.position = rigidBody.position + lookDirection * 5 + new Vector3(0, fireTransform.position.y, 0);
                 }
             }
             else if (velocity.magnitude > 0.2)
@@ -105,10 +124,13 @@ public class PlayerController : MonoBehaviour, IRecordable
                 rigidBody.MoveRotation(desiredRotation);
                 if (!usingSnapshots)
                     targetingCursor.SetActive(false);
-            } else if (!usingSnapshots)
+            }
+            else if (!usingSnapshots)
                 targetingCursor.SetActive(false);
-            if (firingGun)
+            if (firingGun && (FireCallback?.Invoke() ?? true))
                 Shoot();
+            if (usingEquipment && (EquipmentCallback?.Invoke() ?? true))
+                PlaceEquipment();
         }
     }
 
@@ -136,9 +158,10 @@ public class PlayerController : MonoBehaviour, IRecordable
         else if (lookDirection.magnitude < 0.03)
             lookDirection.Set(0, 0, 0);
 
+        float fireActivity = Input.GetAxis("Fire" + playerNumber);
+        float equipmentActivity = Input.GetAxis("Equipment" + playerNumber);
 
         firingGun = false;
-        float fireActivity = Input.GetAxis("Fire" + playerNumber);
         if (!fired && fireActivity > 0f) //this works becuase of the masssive deadzone setting
         {
             fired = true;
@@ -146,6 +169,16 @@ public class PlayerController : MonoBehaviour, IRecordable
         }
         else if (fireActivity == 0f)
             fired = false;
+
+        usingEquipment = false;
+        if (!usedEquipment && equipmentActivity > 0f)
+        {
+            usedEquipment = true;
+            usingEquipment = true;
+        }
+        else if (equipmentActivity == 0f)
+            usedEquipment = false;
+
 
         if (Input.GetButtonDown("AimLock" + playerNumber))
             aimLocked = !aimLocked;
@@ -163,28 +196,34 @@ public class PlayerController : MonoBehaviour, IRecordable
         velocity = snapshot.Velocity;
         lookDirection = snapshot.LookDirection;
         firingGun = snapshot.Firing;
+        usingEquipment = snapshot.UsingEquipment;
         isIdle = snapshot.IsIdle;
     }
 
-    void OnAnimatorMove() {
+    private void PlaceEquipment()
+    {
+        GameObject shieldInstance = Instantiate(equipment, shieldTransform.position, shieldTransform.rotation) as GameObject;
+        roundClearingList.Add(shieldInstance.gameObject);
     }
 
     private void Shoot()
     {
         Rigidbody bulletInstance = Instantiate(bullet, fireTransform.position, fireTransform.rotation) as Rigidbody;
         bulletInstance.GetComponent<Bullet>().playerNumber = playerNumber;
-        bulletInstance.velocity = bulletSpeed * fireTransform.forward;
-        firedBullets.Add(bulletInstance.gameObject);
+        bulletInstance.GetComponent<Bullet>().bulletColor = playerColor;
+        bulletInstance.velocity = fireTransform.forward;
+
+        roundClearingList.Add(bulletInstance.gameObject);
     }
 
-    private void DestroyAllBullets()
+    private void DestroyAllPlayerCreations()
     {
-        for (int i = 0; i < firedBullets.Count; i++)
-            Destroy(firedBullets[i]);
-        firedBullets.Clear();
+        for (int i = 0; i < roundClearingList.Count; i++)
+            Destroy(roundClearingList[i]);
+        roundClearingList.Clear();
     }
 
-    public void SetPlayerInformation(int playerNumber, int sourceRoundNum, Vector3 initialPosition)
+    public void SetPlayerInformation(int playerNumber, int sourceRoundNum, Vector3 initialPosition, IGameMode gameMode)
     {
         this.playerNumber = playerNumber;
 
@@ -198,12 +237,14 @@ public class PlayerController : MonoBehaviour, IRecordable
 
         rigidBody.MovePosition(initialPosition);
 
+        this.gameMode = gameMode;
+
         setupPlayer = true;
     }
 
     public PlayerSnapshot GetSnapshot()
     {
-        return new PlayerSnapshot(position, velocity, lookDirection, firingGun, isIdle);
+        return new PlayerSnapshot(position, velocity, lookDirection, firingGun, usingEquipment, isIdle);
     }
 
     public void SetSnapshot(PlayerSnapshot playerSnapshot)
@@ -229,11 +270,16 @@ public class PlayerController : MonoBehaviour, IRecordable
             primaryRenderer.material = Resources.Load<Material>("Materials/Player/Player" + playerNumber + "PrimaryGhost");
             secondaryRenderer.material = Resources.Load<Material>("Materials/Player/Player" + playerNumber + "SecondaryGhost");
         }
+
+        playerColor = primaryRenderer.material.GetColor("_GlowColor");
     }
 
     public void OnReset()
     {
-        DestroyAllBullets();
+        DestroyAllPlayerCreations();
         health.FullHeal();
+        health.ResetStatistics();
     }
+
+    public void OnDestroy() => DestroyAllPlayerCreations();
 }

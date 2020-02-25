@@ -11,18 +11,17 @@ using UnityEngine.UI;
 public class LobbyDriver : MonoBehaviour {
     private ILevelConfig selectedLevel = null;
     private IGameMode selectedGameMode = null;
-    public Animator animator;
-    public Button startButton;
-    public PlanManager planGameMode;
+    [SerializeField]
+    private Animator animator;
+    [SerializeField]
+    private Button startButton;
+    [SerializeField]
+    private PlanManager planGameMode;
 
     // Added Start() in to make start button uninteractable at the beginning
     public void Start()
     {
         startButton.interactable = false;
-
-        //Remove all code underneath here to have lobby interactivity again.
-        planGameMode.Setup(2, new LevelOneConfig());
-        planGameMode.Begin();
     }
     
     public void SelectTestLevel()
@@ -37,7 +36,6 @@ public class LobbyDriver : MonoBehaviour {
         CheckLoadButtonAvailability();
     }
 
-    // Added for levels and game modes not created yet
     public void SelectTestLevelWithIndex(int level) // maybe pass in levels by an index? or by name
     {
         if (level == 1)
@@ -59,11 +57,10 @@ public class LobbyDriver : MonoBehaviour {
 
         CheckLoadButtonAvailability();
     }
-    // End added stuff
 
     public void GoToMainMenu()
     {
-        SceneManager.LoadScene("Menu");
+        SceneManager.LoadScene("Menu", LoadSceneMode.Single);
     }
 
     private void CheckLoadButtonAvailability()
@@ -79,4 +76,16 @@ public class LobbyDriver : MonoBehaviour {
             selectedGameMode.Begin();
         }
     }
+
+    /*Extra part for demonstration purposes*/
+    private void FixedUpdate()
+    {
+        if (Input.GetButtonDown("Reset"))
+        {
+            //Destroy(this.gameObject, 1f);
+            selectedGameMode.Reset();
+            SceneManager.LoadScene("Menu", LoadSceneMode.Single);
+        }
+    }
+    /*-------------*/
 }
