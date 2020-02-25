@@ -30,7 +30,7 @@ public class PlanManager : MonoBehaviour, IGameMode
     }
 
     public int StepNumber { get; private set; } = -1;
-    public int MaxSteps { get; private set; } = 15 * 50;    //15 seconds
+    public int MaxSteps { get; private set; } = 3 * 50;    //15 seconds
     public int NumPlayers { get; private set; }
     public int MaxRounds { get; private set; } = 1;
     public bool GameEnabled { private set; get; } = false;
@@ -95,16 +95,19 @@ public class PlanManager : MonoBehaviour, IGameMode
     }
 
     //================================================Public Interface
+    //both resets the current state of things and sets up for a new game. To start, follow with a call to Begin()
     public void Setup(int numPlayers, ILevelConfig levelConfig)
     {
-        //Ensure old data is cleared out
+        //Ensure any old data is cleared out
         this.levelConfig = levelConfig;
         this.NumPlayers = numPlayers;
         this.MaxRounds = levelConfig.GetMaxRounds();
+        this.runningRecordingRound = false;
         RoundNumber = -1;
         StepNumber = -1;
         betweenRounds = true;
         GameEnabled = false;
+        begun = false;
 
         if (hudController != null) Destroy(hudController.gameObject);
 
@@ -113,6 +116,8 @@ public class PlanManager : MonoBehaviour, IGameMode
                 manager.DestroyAll();
 
         playerObjects = new List<GameObject>();
+
+        SceneManager.sceneLoaded -= OnSceneLoaded;
 
         //Begin initialization
         playerManagers = new PlanPlayerManager[numPlayers];
@@ -123,7 +128,15 @@ public class PlanManager : MonoBehaviour, IGameMode
     public void Begin()
     {
         if (levelConfig != null)
-            SceneManager.LoadScene(levelConfig.GetSceneName(), LoadSceneMode.Single);
+        {
+            string sceneName = levelConfig.GetSceneName();
+            Scene scene = SceneManager.GetSceneByName(sceneName);
+            if (scene == null || !scene.isLoaded)
+                SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
+            else
+                OnSceneLoaded(scene, LoadSceneMode.Single);
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }    
     }
 
     public void Reset()
@@ -135,7 +148,6 @@ public class PlanManager : MonoBehaviour, IGameMode
     private void Awake()
     {
         DontDestroyOnLoad(this);
-        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void FixedUpdate()
@@ -164,7 +176,7 @@ public class PlanManager : MonoBehaviour, IGameMode
     {
         if (levelConfig != null && scene.name.Equals(levelConfig.GetSceneName()))
         {
-            SceneManager.SetActiveScene(SceneManager.GetSceneByName(levelConfig.GetSceneName()));
+            SceneManager.SetActiveScene(scene);
             LoadHUD();
             NextMatch();
             begun = true;
@@ -245,7 +257,7 @@ public class PlanManager : MonoBehaviour, IGameMode
     private void LoadHUD()
     {
         if (hudController != null)
-            Destroy(hudController);
+            Destroy(hudController.gameObject);
 
         string canvasPath = "Prefabs/HUD/HUDFrame";
         GameObject loaded = Resources.Load(canvasPath) as GameObject;

@@ -15,7 +15,7 @@ public class MainMenuDriver: MonoBehaviour
     /*Ending extraneous start function*/
     public void GoToLobby()
     {
-        SceneManager.LoadScene("Lobby");
+        SceneManager.LoadScene("Lobby", LoadSceneMode.Single);
     }
 
     public void CancelGame()

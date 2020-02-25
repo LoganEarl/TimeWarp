@@ -60,7 +60,7 @@ public class LobbyDriver : MonoBehaviour {
 
     public void GoToMainMenu()
     {
-        SceneManager.LoadScene("Menu");
+        SceneManager.LoadScene("Menu", LoadSceneMode.Single);
     }
 
     private void CheckLoadButtonAvailability()
@@ -82,9 +82,9 @@ public class LobbyDriver : MonoBehaviour {
     {
         if (Input.GetButtonDown("Reset"))
         {
-            Destroy(this.gameObject, 1f);
+            //Destroy(this.gameObject, 1f);
             selectedGameMode.Reset();
-            SceneManager.LoadScene("Menu");
+            SceneManager.LoadScene("Menu", LoadSceneMode.Single);
         }
     }
     /*-------------*/

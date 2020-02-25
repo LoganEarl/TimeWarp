@@ -49,7 +49,7 @@ public class PlanHUDController : MonoBehaviour
     private void LoadPlayerHealthBars()
     {
         int numPlayers = planManager.NumPlayers;
-        int numRounds = planManager.RoundNumber + 1; //round number is 0 indexed
+        int numRounds = planManager.RoundNumber;
         loadedPlayerHealthBars = new List<GameObject>[numPlayers];
 
         for(int playerNum = 0; playerNum < numPlayers; playerNum++)

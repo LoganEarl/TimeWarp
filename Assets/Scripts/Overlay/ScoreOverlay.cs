@@ -51,9 +51,9 @@ public class ScoreOverlay : MonoBehaviour
     {
         if (setup)
         {
+            Destroy(gameObject);
             sourceGameMode.Reset();
-            sourceGameMode.Begin();
-            Destroy(this);
+            sourceGameMode.Begin(); 
         }
     }
 
@@ -62,7 +62,7 @@ public class ScoreOverlay : MonoBehaviour
         if (setup)
         {
             Destroy(sourceGameMode.GameObject);
-            SceneManager.LoadScene("Menu");
+            SceneManager.LoadScene("Menu", LoadSceneMode.Single);
         }
     }
 
