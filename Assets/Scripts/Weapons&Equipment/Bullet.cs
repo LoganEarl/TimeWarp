@@ -13,7 +13,6 @@ public class Bullet : MonoBehaviour
     public Color bulletColor;
     public float inversePathDensity = 0.01f;
     public float inversePathLength = 1f;
-    public GameObject bulletFade;
 
     private Rigidbody bulletInstance;
     private float timeSinceLastPath = 0f;
@@ -26,18 +25,8 @@ public class Bullet : MonoBehaviour
         GetComponent<TrailRenderer>().material.SetColor("_GlowColor", bulletColor);
     }
 
-    private void FixedUpdate()
-    {
+    private void FixedUpdate() {
         bulletInstance.velocity = bulletInstance.velocity.normalized * bulletSpeed;
-
-        timeSinceLastPath += Time.fixedDeltaTime;
-
-        /*if (timeSinceLastPath > inversePathDensity) {
-            GameObject afterImage = Instantiate(bulletFade, transform.position, transform.rotation);
-            afterImage.GetComponent<BulletFade>().SetPathLength(inversePathLength);
-            afterImage.GetComponent<BulletFade>().SetColor(bulletColor);
-            timeSinceLastPath = 0f;
-        }*/
     }
 
     private void OnCollisionEnter(Collision collision) {
@@ -49,8 +38,13 @@ public class Bullet : MonoBehaviour
             other.GetComponent<PlayerHealth>().DoDamage(bulletDmg);
             Destroy(gameObject);
         }
+        else if (other.tag == "ForceField")
+        {
+            other.GetComponent<ForceField>().DoDamage();
+            Destroy(gameObject);
+        }
 
-        if ((other.tag == "Wall" || other.tag == "ForceField") && bouncesLeft != 0)
+        if ((other.tag == "Wall") && bouncesLeft != 0)
             bouncesLeft--;
         else if (bouncesLeft == 0)
             Destroy(gameObject);

@@ -790,13 +790,12 @@ MonoBehaviour:
   bulletSpeed: 10
   bullet: {fileID: 2718643244815117112, guid: b1230d9a4c00d824dbae22f0b48fc769, type: 3}
   fireTransform: {fileID: 1051835922776050759}
-  equipmentLeft: 1
   shieldTransform: {fileID: 1726537901591723644}
   equipment: {fileID: 3812315075213835272, guid: d93afc24d46aa1c4092527ff414b1970,
     type: 3}
+  lookOffset: -11
   targetingCursor: {fileID: 1814408534329862, guid: 3dd1434c704a6f34997c698b06c80000,
     type: 3}
-  lookOffset: -11
   turnSpeed: 20
   moveSpeed: 20
 --- !u!54 &2599042971034976956
@@ -2260,13 +2259,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7880102736085368330}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.5}
+  m_LocalRotation: {x: 0, y: 0.10452846, z: 0, w: 0.9945219}
+  m_LocalPosition: {x: 0.25, y: 0, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7651129370166832492}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 12, z: 0}
 --- !u!1 &8171407745324934970
 GameObject:
   m_ObjectHideFlags: 0
