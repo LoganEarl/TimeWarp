@@ -5,20 +5,18 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     public int playerNumber;
-    public AudioSource bounceSound;
     public float bulletSpeed = 30;
     public int bulletDmg = 1;
     public float bouncesLeft = 4f;
     public float maxLifeTime = 4f;
     public Color bulletColor;
-    public float inversePathDensity = 0.01f;
-    public float inversePathLength = 1f;
 
     private Rigidbody bulletInstance;
-    private float timeSinceLastPath = 0f;
+    private AudioSource bounceSound;
 
     void Start() {
         bulletInstance = GetComponent<Rigidbody>();
+        bounceSound = GetComponent<AudioSource>();
         Destroy(gameObject, maxLifeTime);
 
         GetComponent<MeshRenderer>().material.SetColor("_GlowColor", bulletColor);
@@ -34,19 +32,16 @@ public class Bullet : MonoBehaviour
         Collider other = collision.collider;
 
         if (other.tag.StartsWith("Player"))
-        {
             other.GetComponent<PlayerHealth>().DoDamage(bulletDmg);
-            Destroy(gameObject);
-        }
         else if (other.tag == "ForceField")
-        {
             other.GetComponent<ForceField>().DoDamage();
-            Destroy(gameObject);
-        }
 
         if ((other.tag == "Wall") && bouncesLeft != 0)
+        {
+            bounceSound.Play();
             bouncesLeft--;
-        else if (bouncesLeft == 0)
+        }
+        else
             Destroy(gameObject);
     }
 }

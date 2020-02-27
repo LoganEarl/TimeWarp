@@ -18,7 +18,6 @@ public class PlayerController : MonoBehaviour, IRecordable
     private List<GameObject> roundClearingList = new List<GameObject>();
 
 #pragma warning disable IDE0044
-    [SerializeField] private float bulletSpeed = 10;
     [SerializeField] private Rigidbody bullet;
     [SerializeField] private Transform fireTransform;
     [SerializeField] private Transform shieldTransform;
@@ -26,35 +25,42 @@ public class PlayerController : MonoBehaviour, IRecordable
     [SerializeField] private float lookOffset;
     [SerializeField] private GameObject targetingCursor;
     [SerializeField] private float turnSpeed, moveSpeed;
+    [SerializeField] private AudioClip[] smacktalk;
 #pragma warning restore IDE0044
 
     //player components/info
+    private static bool talking = false;
     private int playerNumber = 0;
     private bool usingSnapshots = false;
     private bool aimLocked = false;
     private bool loadedCursor = false;
-    private bool setupPlayer = false;
     private Animator animator;
     private Rigidbody rigidBody;
     private PlayerHealth health;
     private Color playerColor;
+    private AudioSource voiceLine;
 
     //movement
     private bool isIdle = true;
     private int frameCounter = 0;
+    private int lookSnap = 5;
     private Vector3 position, velocity, lookDirection;
     private Quaternion desiredRotation = Quaternion.identity;
     private PlayerSnapshot snapshot;
     private IGameMode gameMode;
 
-    void Start()
+    private void Awake()
     {
         lookDirection = new Vector3(0, 0, 1);
+        voiceLine = GetComponent<AudioSource>();
+        animator = GetComponentInChildren<Animator>();
+        rigidBody = GetComponent<Rigidbody>();
+        health = GetComponent<PlayerHealth>();
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
-        if (setupPlayer && !health.Dead)
+        if (!health.Dead)
         {
             frameCounter++;
             if (frameCounter > 30)
@@ -77,7 +83,7 @@ public class PlayerController : MonoBehaviour, IRecordable
 
             if (usingSnapshots)
                 RecordedFrame();
-            else if (gameMode.GameEnabled)
+            else if (gameMode == null || gameMode.GameEnabled)
                 ControlledFrame();
             else
             {
@@ -107,6 +113,13 @@ public class PlayerController : MonoBehaviour, IRecordable
             if (lookDirection.magnitude > 0.1)
             {
                 Vector3 moddedDirection = Quaternion.AngleAxis(lookOffset, Vector3.up) * lookDirection;
+
+                float lookAngle = Vector3.Angle(Vector3.forward, moddedDirection) % 45;
+                if (lookAngle > lookSnap) lookAngle -= 45;
+
+                if (Mathf.Abs(lookAngle) <= lookSnap)
+                    moddedDirection = Quaternion.AngleAxis(lookAngle, Vector3.up) * moddedDirection;
+
                 desiredRotation = Quaternion.LookRotation(moddedDirection, Vector3.up);
                 rigidBody.MoveRotation(desiredRotation);
                 //TODO: this does not belong here. Make a targetingCursor script to handle this
@@ -153,8 +166,10 @@ public class PlayerController : MonoBehaviour, IRecordable
         bool hasHorizontalAim = DeltaExceeds(horizontalAim, 0f, 0.02f);
         bool hasVerticalAim = DeltaExceeds(verticalAim, 0f, 0.02f);
 
-        if ((hasHorizontalAim || hasVerticalAim) && !aimLocked)
+        if ((hasHorizontalAim || hasVerticalAim) && !aimLocked) {
             lookDirection = new Vector3(horizontalAim, 0f, verticalAim);
+
+        }
         else if (lookDirection.magnitude < 0.03)
             lookDirection.Set(0, 0, 0);
 
@@ -214,7 +229,27 @@ public class PlayerController : MonoBehaviour, IRecordable
         bulletInstance.velocity = fireTransform.forward;
 
         roundClearingList.Add(bulletInstance.gameObject);
+
+        bool speaking = (Random.value * 100) <= 50;
+        int randomSound = Mathf.RoundToInt(Random.value * (smacktalk.Length - 1));
+        voiceLine.clip = smacktalk[randomSound];
+
+        //foreach(AudioClip clip in smacktalk)
+        Debug.Log("talking: " + talking + ", speaking: " + speaking + ", sound#: " + randomSound);
+
+        if (speaking)
+        {
+            if (!talking)
+            {
+                Debug.Log("I should be saying something");
+                voiceLine.Play();
+                talking = true;
+                Invoke("TalkingStopped", smacktalk[randomSound].length);
+            }
+        }
     }
+
+    private void TalkingStopped() { talking = false; }
 
     private void DestroyAllPlayerCreations()
     {
@@ -227,10 +262,6 @@ public class PlayerController : MonoBehaviour, IRecordable
     {
         this.playerNumber = playerNumber;
 
-        animator = GetComponentInChildren<Animator>();
-        rigidBody = GetComponent<Rigidbody>();
-        health = GetComponent<PlayerHealth>();
-
         Collider[] setColliderTags = GetComponentsInChildren<Collider>();
         foreach (Collider collider in setColliderTags)
             collider.gameObject.tag = "Player" + playerNumber;
@@ -238,8 +269,6 @@ public class PlayerController : MonoBehaviour, IRecordable
         rigidBody.MovePosition(initialPosition);
 
         this.gameMode = gameMode;
-
-        setupPlayer = true;
     }
 
     public PlayerSnapshot GetSnapshot()
