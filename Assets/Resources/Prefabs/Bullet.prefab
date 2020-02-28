@@ -125,14 +125,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92a500752a1c8854dab835e5be14ad41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerNumber: 0
+  bounceSound: {fileID: 8300000, guid: 160c84d778b34c24ab7bfa68dd859597, type: 3}
   bulletSpeed: 25
   bulletDmg: 1
   bouncesLeft: 4
-  maxLifeTime: 8
   bulletColor: {r: 0, g: 0, b: 0, a: 0}
-  inversePathDensity: 0.01
-  inversePathLength: 0.5
 --- !u!96 &2831283823806978470
 TrailRenderer:
   serializedVersion: 2

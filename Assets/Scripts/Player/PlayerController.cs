@@ -15,15 +15,17 @@ public class PlayerController : MonoBehaviour, IRecordable
     private bool fired = false;
     private bool usingEquipment = false;
     private bool usedEquipment = false;
+    private GameObject shieldPlacer;
     private List<GameObject> roundClearingList = new List<GameObject>();
 
 #pragma warning disable IDE0044
-    [SerializeField] private Rigidbody bullet;
     [SerializeField] private Transform fireTransform;
+    [SerializeField] private Rigidbody bullet;
+    [SerializeField] private GameObject targetingCursor;
     [SerializeField] private Transform shieldTransform;
     [SerializeField] private GameObject equipment;
+    [SerializeField] private GameObject equipmentGuide;
     [SerializeField] private float lookOffset;
-    [SerializeField] private GameObject targetingCursor;
     [SerializeField] private float turnSpeed, moveSpeed;
     [SerializeField] private AudioClip[] smacktalk;
 #pragma warning restore IDE0044
@@ -142,7 +144,7 @@ public class PlayerController : MonoBehaviour, IRecordable
                 targetingCursor.SetActive(false);
             if (firingGun && (FireCallback?.Invoke() ?? true))
                 Shoot();
-            if (usingEquipment && (EquipmentCallback?.Invoke() ?? true))
+            if (!usingEquipment && usedEquipment && (EquipmentCallback?.Invoke() ?? true))
                 PlaceEquipment();
         }
     }
@@ -185,14 +187,20 @@ public class PlayerController : MonoBehaviour, IRecordable
         else if (fireActivity == 0f)
             fired = false;
 
-        usingEquipment = false;
-        if (!usedEquipment && equipmentActivity > 0f)
+        usedEquipment = false;
+        if (!usingEquipment && equipmentActivity > 0f && gameMode.EquipmentRemaining(playerNumber) != 0)
         {
-            usedEquipment = true;
             usingEquipment = true;
+            PlacingEquipmentGuide();
+        }
+        else if (usingEquipment && equipmentActivity == 0f)
+        {
+            Destroy(shieldPlacer);
+            usedEquipment = true;
+            usingEquipment = false;
         }
         else if (equipmentActivity == 0f)
-            usedEquipment = false;
+            usingEquipment = false;
 
 
         if (Input.GetButtonDown("AimLock" + playerNumber))
@@ -215,6 +223,21 @@ public class PlayerController : MonoBehaviour, IRecordable
         isIdle = snapshot.IsIdle;
     }
 
+    private void PlacingEquipmentGuide()
+    {
+        shieldPlacer = Instantiate(equipmentGuide, shieldTransform);
+        foreach(Collider collin in shieldPlacer.GetComponentsInChildren<Collider>())
+            Destroy(collin);
+
+        shieldPlacer.transform.localScale = new Vector3(.1f, .1f, .1f);
+
+        Material shieldMaterial = shieldPlacer.GetComponentsInChildren<MeshRenderer>()[3].material;
+        Color shieldColor = shieldMaterial.GetColor("_Color");
+
+        shieldColor.a = 0.1f;
+        shieldMaterial.SetColor("_Color", shieldColor);
+    }
+
     private void PlaceEquipment()
     {
         GameObject shieldInstance = Instantiate(equipment, shieldTransform.position, shieldTransform.rotation) as GameObject;
@@ -224,15 +247,14 @@ public class PlayerController : MonoBehaviour, IRecordable
     private void Shoot()
     {
         Rigidbody bulletInstance = Instantiate(bullet, fireTransform.position, fireTransform.rotation) as Rigidbody;
-        bulletInstance.GetComponent<Bullet>().playerNumber = playerNumber;
-        bulletInstance.GetComponent<Bullet>().bulletColor = playerColor;
+        //bulletInstance.GetComponent<Bullet>().playerNumber = playerNumber;
+        //bulletInstance.GetComponent<Bullet>().bulletColor = playerColor;
         bulletInstance.velocity = fireTransform.forward;
 
         roundClearingList.Add(bulletInstance.gameObject);
 
         bool speaking = (Random.value * 100) <= 50;
         int randomSound = Mathf.RoundToInt(Random.value * (smacktalk.Length - 1));
-        voiceLine.clip = smacktalk[randomSound];
 
         //foreach(AudioClip clip in smacktalk)
         Debug.Log("talking: " + talking + ", speaking: " + speaking + ", sound#: " + randomSound);
@@ -242,7 +264,7 @@ public class PlayerController : MonoBehaviour, IRecordable
             if (!talking)
             {
                 Debug.Log("I should be saying something");
-                voiceLine.Play();
+                voiceLine.PlayOneShot(smacktalk[randomSound]);
                 talking = true;
                 Invoke("TalkingStopped", smacktalk[randomSound].length);
             }

@@ -17,4 +17,6 @@ public interface IGameMode
     float SecondsRemaining { get; }
     bool GameEnabled { get; }
     GameObject GameObject { get; }
+
+    int EquipmentRemaining(int playerNumber);
 }

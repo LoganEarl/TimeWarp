@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class ForceField : MonoBehaviour
 {
-    public int shieldHealth = 3;
-    public Color Damaged1;
-    public Color Damaged2;
+    [SerializeField] private int shieldHealth = 3;
+    [SerializeField] private Color Damaged1;
+    [SerializeField] private Color Damaged2;
 
     void Start()
     {

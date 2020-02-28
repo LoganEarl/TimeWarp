@@ -4,20 +4,16 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    public int playerNumber;
-    public float bulletSpeed = 30;
-    public int bulletDmg = 1;
-    public float bouncesLeft = 4f;
-    public float maxLifeTime = 4f;
-    public Color bulletColor;
+    [SerializeField] private AudioClip bounceSound;
+    [SerializeField] private float bulletSpeed = 25;
+    [SerializeField] private int bulletDmg = 1;
+    [SerializeField] private int bouncesLeft = 4;
+    [SerializeField] private Color bulletColor;
 
     private Rigidbody bulletInstance;
-    private AudioSource bounceSound;
 
     void Start() {
         bulletInstance = GetComponent<Rigidbody>();
-        bounceSound = GetComponent<AudioSource>();
-        Destroy(gameObject, maxLifeTime);
 
         GetComponent<MeshRenderer>().material.SetColor("_GlowColor", bulletColor);
         GetComponent<TrailRenderer>().material.SetColor("_GlowColor", bulletColor);
@@ -36,11 +32,10 @@ public class Bullet : MonoBehaviour
         else if (other.tag == "ForceField")
             other.GetComponent<ForceField>().DoDamage();
 
+        GetComponent<AudioSource>().PlayOneShot(bounceSound);
+
         if ((other.tag == "Wall") && bouncesLeft != 0)
-        {
-            bounceSound.Play();
             bouncesLeft--;
-        }
         else
             Destroy(gameObject);
     }
