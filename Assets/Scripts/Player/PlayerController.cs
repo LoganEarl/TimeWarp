@@ -77,12 +77,15 @@ public class PlayerController : MonoBehaviour, IRecordable
 
             if (usingSnapshots)
                 RecordedFrame();
-            else if (gameMode.GameEnabled)
-                ControlledFrame();
             else
             {
-                velocity = new Vector3();
-                isIdle = true;
+                ControlledFrame();
+                if (gameMode.GameState.PlayersPositionsLocked)
+                {
+                    velocity = new Vector3();
+                    isIdle = true;
+                }
+                
             }
 
             animator.SetBool("IsIdle", isIdle);
@@ -108,7 +111,8 @@ public class PlayerController : MonoBehaviour, IRecordable
             {
                 Vector3 moddedDirection = Quaternion.AngleAxis(lookOffset, Vector3.up) * lookDirection;
                 desiredRotation = Quaternion.LookRotation(moddedDirection, Vector3.up);
-                rigidBody.MoveRotation(desiredRotation);
+                if (!gameMode.GameState.PlayersLookLocked)
+                    rigidBody.MoveRotation(desiredRotation);
                 //TODO: this does not belong here. Make a targetingCursor script to handle this
                 if (!usingSnapshots)
                 {
@@ -121,15 +125,16 @@ public class PlayerController : MonoBehaviour, IRecordable
                 Vector3 moddedDirection = Quaternion.AngleAxis(lookOffset, Vector3.up) * velocity;
                 moddedDirection.y = 0;
                 desiredRotation = Quaternion.LookRotation(moddedDirection, Vector3.up);
-                rigidBody.MoveRotation(desiredRotation);
+                if(!gameMode.GameState.PlayersLookLocked)
+                    rigidBody.MoveRotation(desiredRotation);
                 if (!usingSnapshots)
                     targetingCursor.SetActive(false);
             }
             else if (!usingSnapshots)
                 targetingCursor.SetActive(false);
-            if (firingGun && (FireCallback?.Invoke() ?? true))
+            if (firingGun && !gameMode.GameState.PlayersFireLocked && (FireCallback?.Invoke() ?? true))
                 Shoot();
-            if (usingEquipment && (EquipmentCallback?.Invoke() ?? true))
+            if (usingEquipment && !gameMode.GameState.PlayersFireLocked && (EquipmentCallback?.Invoke() ?? true))
                 PlaceEquipment();
         }
     }
