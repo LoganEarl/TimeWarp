@@ -18,17 +18,21 @@ public class ScoreOverlay : MonoBehaviour
     {
         this.sourceGameMode = gameMode;
 
-        int max = 0, maxIndex = 0;
+        int max = 0, second = 0, maxIndex = 0;
         for(int i = 0; i < scores.PlayerScores.Length; i++)
         {
-            if(scores.PlayerScores[i] > max)
+            if(scores.PlayerScores[i] >= max)
             {
+                second = max;
                 max = scores.PlayerScores[i];
                 maxIndex = i;
             }
         }
 
-        textWinner.text = "Player " + (maxIndex + 1) + " Wins!";
+        if (max != second)
+            textWinner.text = "Player " + (maxIndex + 1) + " Wins!";
+        else
+            textWinner.text = "You Both Lose";
 
         for(int i = 0; i < scores.ScoreListings.Length && i < textPlayerScores.Length; i++)
         {
