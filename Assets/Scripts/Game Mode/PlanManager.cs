@@ -14,192 +14,16 @@ public class PlanManager : MonoBehaviour, IGameMode
 
     private bool runningRecordingRound = false;
 
-    //================================================Game States
-    public abstract class PlanGameState : IGameState
-    {
-        private protected PlanManager manager;
-        private protected PlanGameState(PlanManager manager)
-        {
-            this.manager = manager;
-        }
-
-        public abstract int StepNumber { get; set; }
-        private protected abstract PlanGameState NextState { get; }
-        public abstract void OnEnterState();
-        public virtual void OnLeaveState() { }
-        public virtual void Tick()
-        {
-            if(TimeAdvancing) StepNumber++;
-            if(StepNumber > MaxSteps)
-            {
-                OnLeaveState();
-                manager.gameState = NextState;
-                manager.gameState.OnEnterState();
-            }
-        }
-        public virtual bool PlayersVisible { get => false; }
-        public virtual bool PlayersPositionsLocked { get => true; }
-        public virtual bool PlayersLookLocked { get => true; }
-        public virtual bool PlayersFireLocked { get => true; }
-        public virtual bool TimeAdvancing { get => false; }
-        public virtual int MaxSteps { get; private protected set; } = 0;
-        public virtual float SecondsRemaining { get => (MaxSteps - StepNumber) * Time.fixedDeltaTime; }
-    }
-
-    private PlanGameState gameState;
-    public IGameState GameState { get => gameState; }
-
-
-    //active from the start of call to setup() to after the begin() call is finished executing
-    public class StateInitializing : PlanGameState
-    {
-        public StateInitializing(PlanManager manager) : base(manager) { }
-
-        public override void OnEnterState()
-        {
-            //Ensure any old data is cleared out
-            manager.runningRecordingRound = false;
-            manager.RoundNumber = -1;
-
-            if (manager.hudController != null) Destroy(manager.hudController.gameObject);
-
-            if (manager.playerManagers != null)
-                foreach (PlanPlayerManager manager in manager.playerManagers)
-                    manager.DestroyAll();
-
-            manager.playerObjects = new List<GameObject>();
-
-            SceneManager.sceneLoaded -= manager.OnSceneLoaded;
-
-            //Begin initialization
-            manager.playerManagers = new PlanPlayerManager[manager.NumPlayers];
-            for (int i = 0; i < manager.NumPlayers; i++)
-                manager.playerManagers[i] = new PlanPlayerManager(18, 1);
-        }
-        private protected override PlanGameState NextState { get => new StateSpawning(true, manager); }
-        public override int StepNumber { get => 0; set { /*ignored*/ } }
-    }
-
-    //active between rounds while spawn pillars are rising, before players are visible
-    public class StateSpawning : PlanGameState
-    {
-        private static readonly int STATE_LENGTH = 2 * 50;
-        private readonly bool spawnNewPlayers;
-        public StateSpawning(bool spawnNewPlayers, PlanManager manager) : base(manager)
-        {
-            this.spawnNewPlayers = spawnNewPlayers;
-        }
-
-        public override void OnEnterState()
-        {
-            if (spawnNewPlayers)
-            {
-                manager.RoundNumber++;
-                manager.LoadNewPlayers();
-
-                foreach (GameObject playerObject in manager.playerObjects)
-                    playerObject.GetComponent<PlayerController>().OnReset();
-
-                foreach (PlanPlayerManager player in manager.playerManagers)    //frontload the first frame of recorded data
-                    player.Step(0);
-            }
-            if(manager.hudController == null)
-                manager.LoadHUD();
-            else
-                manager.hudController.ReloadAll();
-        }
-
-        private protected override PlanGameState NextState { get => new StateSpanwed(manager); }
-        public override int StepNumber { get => 0; set { /*ignored*/ } }
-    }
-
-    //active from when players are spawned in to the point the match starts
-    public class StateSpanwed : PlanGameState
-    {
-        private static readonly int STATE_LENGTH = 2 * 50;
-
-        public StateSpanwed(PlanManager manager) : base(manager) { MaxSteps = STATE_LENGTH; }
-
-        public override void OnEnterState()
-        {
-            //TODO this
-        }
-
-        private protected override PlanGameState NextState { get => new StatePlaying(manager); }
-        public override bool PlayersVisible { get => true; }
-        public override bool PlayersLookLocked { get => false; }
-        public override bool TimeAdvancing { get => true; }
-
-        public override int StepNumber { get; set; }
-    }
-
-    public class StatePlaying : PlanGameState
-    {
-        private int stepNum;
-        public StatePlaying(PlanManager manager) : base(manager)
-        {
-            MaxSteps = manager.roundLength;
-        }
-
-        public override void OnEnterState()
-        {
-            //TODO this
-        }
-
-        public override void Tick()
-        {
-            base.Tick();
-
-            foreach (PlanPlayerManager player in manager.playerManagers)
-                player.Step(StepNumber);
-        }
-
-        public override void OnLeaveState()
-        {
-            foreach (PlanPlayerManager player in manager.playerManagers)
-                player.FinishSequence();
-        }
-
-        private protected override PlanGameState NextState
-        {
-            get
-            {
-                if (manager.runningRecordingRound)
-                    return new StateFinished(manager);
-                else
-                    return new StateSpawning(manager.RoundNumber == manager.MaxRounds, manager);
-            }
-        }
-
-        public override bool PlayersVisible { get => true; }
-        public override bool PlayersPositionsLocked { get => false; }
-        public override bool PlayersLookLocked { get => false; }
-        public override bool PlayersFireLocked { get => false; }
-        public override bool TimeAdvancing { get => true; }
-        public override int StepNumber { get; set; }
-    }
-
-    public class StateFinished : PlanGameState
-    {
-        public StateFinished(PlanManager manager) : base(manager) { }
-
-        public override void OnEnterState()
-        {
-            manager.hudController.gameObject.SetActive(false);
-            manager.DoScoreScreen();
-        }
-
-        private protected override PlanGameState NextState { get => new StateInitializing(manager); }
-        public override int StepNumber { get => 0; set { /*ignored*/ } }
-    }
-
     //================================================Public Accessors
 
-    [SerializeField] private int roundLength = 15 * 50;
+    [SerializeField] private int roundLength = 3 * 50;
     public int NumPlayers { get; private set; }
     public int MaxRounds { get; private set; } = 1;
     public int RoundNumber { get; private set; } = -1;      //starts at -1, but first match is 0.
                                                             //This is so NextMatch() doesnt need edge case checks
+    private PlanGameState gameState;
+    public IGameState GameState { get => gameState; }
+
     public int MaxShots(int playerNumber)
     {
         if (playerNumber < 0 || playerNumber >= playerManagers.Length)
@@ -214,7 +38,8 @@ public class PlanManager : MonoBehaviour, IGameMode
         return playerManagers[playerNumber].MaxEquipment;
     }
 
-    public int ShotsRemaining(int playerNumber) {
+    public int ShotsRemaining(int playerNumber)
+    {
         if (playerNumber < 0 || playerNumber >= playerManagers.Length)
             return 0;
         return playerManagers[playerNumber].AvailableProjectiles;
@@ -262,7 +87,6 @@ public class PlanManager : MonoBehaviour, IGameMode
         this.MaxRounds = levelConfig.GetMaxRounds();
         gameState = new StateInitializing(this);
         gameState.OnEnterState();
-
     }
 
     public void Begin()
@@ -272,10 +96,12 @@ public class PlanManager : MonoBehaviour, IGameMode
             string sceneName = levelConfig.GetSceneName();
             Scene scene = SceneManager.GetSceneByName(sceneName);
             if (scene == null || !scene.isLoaded)
+            {
+                SceneManager.sceneLoaded += OnSceneLoaded;
                 SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
+            }
             else
                 OnSceneLoaded(scene, LoadSceneMode.Single);
-            SceneManager.sceneLoaded += OnSceneLoaded;
         }
     }
 
@@ -288,6 +114,7 @@ public class PlanManager : MonoBehaviour, IGameMode
     private void Awake()
     {
         DontDestroyOnLoad(this);
+        gameState = new StateInitializing(this);
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -295,6 +122,7 @@ public class PlanManager : MonoBehaviour, IGameMode
         if (gameState is StateInitializing && scene.name.Equals(levelConfig.GetSceneName()))
         {
             SceneManager.SetActiveScene(scene);
+            gameState.OnLeaveState();
             gameState = new StateSpawning(true, this);
             gameState.OnEnterState();
         }
@@ -302,12 +130,194 @@ public class PlanManager : MonoBehaviour, IGameMode
 
     private void FixedUpdate()
     {
-        gameState.Tick();
+        if (gameState != null)
+            gameState.Tick();
     }
 
+    //================================================Game States
+    public abstract class PlanGameState : IGameState
+    {
+        private protected PlanManager manager;
+        private protected PlanGameState(PlanManager manager)
+        {
+            this.manager = manager;
+        }
+
+        public virtual int StepNumber { get; private set; }
+        private protected abstract PlanGameState NextState { get; }
+        public abstract void OnEnterState();
+        public virtual void OnLeaveState() { }
+        public void Tick()
+        {
+            if (TimeAdvancing) StepNumber++;
+            if (StepNumber >= MaxSteps)
+            {
+                OnLeaveState();
+                manager.gameState = NextState;
+                manager.gameState.OnEnterState();
+            }
+            else if (TimeAdvancing)
+                OnTick();
+        }
+        private protected virtual void OnTick() { }
+
+        public virtual bool PlayersVisible { get => false; }
+        public virtual bool PlayersPositionsLocked { get => true; }
+        public virtual bool PlayersLookLocked { get => true; }
+        public virtual bool PlayersFireLocked { get => true; }
+        public virtual bool TimeAdvancing { get => false; }
+        public virtual int MaxSteps { get; private protected set; } = 1;
+        public virtual float SecondsRemaining { get => (MaxSteps - StepNumber) * Time.fixedDeltaTime; }
+    }
+
+    //active from the start of call to setup() to after the begin() call is finished executing
+    public class StateInitializing : PlanGameState
+    {
+        public StateInitializing(PlanManager manager) : base(manager) { }
+
+        public override void OnEnterState()
+        {
+            //Ensure any old data is cleared out
+            manager.runningRecordingRound = false;
+            manager.RoundNumber = -1;
+
+            if (manager.playerManagers != null)
+                foreach (PlanPlayerManager manager in manager.playerManagers)
+                    manager.DestroyAll();
+
+            manager.playerObjects = new List<GameObject>();
+
+            SceneManager.sceneLoaded -= manager.OnSceneLoaded;
+
+            //Begin initialization
+            manager.playerManagers = new PlanPlayerManager[manager.NumPlayers];
+            for (int i = 0; i < manager.NumPlayers; i++)
+                manager.playerManagers[i] = new PlanPlayerManager(18, 1);
+        }
+        private protected override PlanGameState NextState { get => new StateSpawning(true, manager); }
+    }
+
+    //active between rounds while spawn pillars are rising, before players are visible
+    public class StateSpawning : PlanGameState
+    {
+        private static readonly int STATE_LENGTH = 2 * 50;
+        private readonly bool spawnNewPlayers;
+
+        private readonly StateSpanwed nextState;
+
+        public StateSpawning(bool spawnNewPlayers, PlanManager manager) : base(manager)
+        {
+            this.spawnNewPlayers = spawnNewPlayers;
+            MaxSteps = STATE_LENGTH;
+            nextState = new StateSpanwed(manager);
+        }
+
+        public override void OnEnterState()
+        {
+            if (spawnNewPlayers)
+            {
+                manager.RoundNumber++;
+                manager.LoadNewPlayers();
+            }
+
+            foreach (PlanPlayerManager manager in manager.playerManagers)
+                manager.ResetAll();
+
+            if (manager.hudController == null)
+                manager.LoadHUD();
+            else
+                manager.hudController.ReloadAll();
+            manager.hudController.gameObject.SetActive(true);
+        }
+
+        public override bool TimeAdvancing { get => true; }
+        private protected override PlanGameState NextState { get => new StateSpanwed(manager); }
+        public override float SecondsRemaining { get => (MaxSteps - StepNumber + nextState.MaxSteps) * Time.fixedDeltaTime; }
+    }
+
+    //active from when players are spawned in to the point the match starts
+    public class StateSpanwed : PlanGameState
+    {
+        private static readonly int STATE_LENGTH = 2 * 50;
+
+        public StateSpanwed(PlanManager manager) : base(manager) { MaxSteps = STATE_LENGTH; }
+
+        public override void OnEnterState()
+        {
+            //TODO this
+        }
+
+        private protected override PlanGameState NextState { get => new StatePlaying(manager); }
+        public override bool PlayersVisible { get => true; }
+        public override bool PlayersLookLocked { get => false; }
+        public override bool TimeAdvancing { get => true; }
+    }
+
+    public class StatePlaying : PlanGameState
+    {
+        private int stepNum;
+        public StatePlaying(PlanManager manager) : base(manager)
+        {
+            MaxSteps = manager.roundLength;
+        }
+
+        public override void OnEnterState()
+        {
+            //TODO this
+        }
+
+        private protected override void OnTick()
+        {
+            foreach (PlanPlayerManager player in manager.playerManagers)
+                player.Step(StepNumber);
+        }
+
+        public override void OnLeaveState()
+        {
+            if (!manager.runningRecordingRound)
+                foreach (PlanPlayerManager player in manager.playerManagers)
+                {
+                    player.FinishSequence();
+                    player.Step(0);
+                }
+
+            manager.runningRecordingRound = manager.RoundNumber >= manager.MaxRounds - 1;
+        }
+
+        private protected override PlanGameState NextState
+        {
+            get
+            {
+                if (manager.runningRecordingRound)
+                    return new StateFinished(manager);
+                else
+                    return new StateSpawning(manager.RoundNumber < manager.MaxRounds, manager);
+
+            }
+        }
+
+        public override bool PlayersVisible { get => true; }
+        public override bool PlayersPositionsLocked { get => false; }
+        public override bool PlayersLookLocked { get => false; }
+        public override bool PlayersFireLocked { get => false; }
+        public override bool TimeAdvancing { get => true; }
+    }
+
+    public class StateFinished : PlanGameState
+    {
+        public StateFinished(PlanManager manager) : base(manager) { }
+
+        public override void OnEnterState()
+        {
+            manager.hudController.gameObject.SetActive(false);
+            manager.DoScoreScreen();
+        }
+
+        private protected override PlanGameState NextState { get => new StateInitializing(manager); }
+    }
+
+
     //================================================Private Utilities
-
-
     private void LoadNewPlayers()
     {
         for (int curPlayer = 0; curPlayer < NumPlayers; curPlayer++)

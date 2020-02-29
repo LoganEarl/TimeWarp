@@ -58,7 +58,7 @@ public class PlanPlayerManager
         {
             int count = 0;
             foreach (PlayerController controller in playerControllers)
-                count += controller.GetComponent<PlayerHealth>().Health;               
+                count += controller.GetComponent<PlayerHealth>().Health;
             return count;
         }
     }
@@ -108,11 +108,19 @@ public class PlanPlayerManager
         }
     }
 
-    //resets for the next match
+    //finishes recordings and attaches newest generation to replays
     internal void FinishSequence()
     {
         foreach (MatchRecordingManager recording in playerRecordings)
             recording.Finish();
+        foreach (PlayerController controller in playerControllers)
+            controller.SetUseSnapshots(true);
+    }
+
+    internal void ResetAll()
+    {
+        foreach (PlayerController controller in playerControllers)
+            controller.OnReset();
         AvailableProjectiles = MaxProjectiles;
         AvailableEquipment = MaxEquipment;
     }

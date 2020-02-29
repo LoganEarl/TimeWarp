@@ -20,7 +20,7 @@ public class RoundNumber : MonoBehaviour
     {
         if (setup)
         {
-            if (!gameMode.GameState.TimeAdvancing)
+            if (!gameMode.GameState.TimeAdvancing || gameMode.GameState.PlayersPositionsLocked)
                 roundNumberText.text = "Get Ready";
             else
                 roundNumberText.text = "Round " + (gameMode.RoundNumber + 1);
