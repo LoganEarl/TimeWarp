@@ -150,14 +150,14 @@ public class PlayerController : MonoBehaviour, IRecordable
             if (firingGun && !gameMode.GameState.PlayersFireLocked && (FireCallback?.Invoke() ?? true))
                 Shoot();
 
-            bool placeEquipment = (!usingEquipment && usedEquipment) || (!usingEquipment && usingSnapshots);
-            if (placeEquipment && !gameMode.GameState.PlayersFireLocked  && (EquipmentCallback?.Invoke() ?? true))
+            if (!usingEquipment && usedEquipment && !gameMode.GameState.PlayersFireLocked && (EquipmentCallback?.Invoke() ?? true))
                 PlaceEquipment();
         }
         else
         {
             gameObject.transform.localScale = new Vector3(0, 0, 0); //hides the player without deactiviating
-            if(targetingCursor != null) targetingCursor.SetActive(false);
+            if (targetingCursor != null) targetingCursor.SetActive(false);
+            if (shieldPlacer != null) Destroy(shieldPlacer);
         }
     }
 
@@ -182,7 +182,6 @@ public class PlayerController : MonoBehaviour, IRecordable
 
         if ((hasHorizontalAim || hasVerticalAim) && !aimLocked) {
             lookDirection = new Vector3(horizontalAim, 0f, verticalAim);
-
         }
         else if (lookDirection.magnitude < 0.03)
             lookDirection.Set(0, 0, 0);
@@ -200,7 +199,7 @@ public class PlayerController : MonoBehaviour, IRecordable
             fired = false;
 
         usedEquipment = false;
-        if (!usingEquipment && equipmentActivity > 0f && gameMode.EquipmentRemaining(playerNumber) != 0)
+        if (!usingEquipment && equipmentActivity > 0f && !gameMode.GameState.PlayersFireLocked && gameMode.EquipmentRemaining(playerNumber) != 0)
         {
             usingEquipment = true;
             PlacingEquipmentGuide();
@@ -232,6 +231,7 @@ public class PlayerController : MonoBehaviour, IRecordable
         lookDirection = snapshot.LookDirection;
         firingGun = snapshot.Firing;
         usingEquipment = snapshot.UsingEquipment;
+        usedEquipment = snapshot.UsedEquipment;
         isIdle = snapshot.IsIdle;
     }
 
@@ -297,7 +297,7 @@ public class PlayerController : MonoBehaviour, IRecordable
 
     public PlayerSnapshot GetSnapshot()
     {
-        return new PlayerSnapshot(position, velocity, lookDirection, firingGun, usingEquipment, isIdle);
+        return new PlayerSnapshot(position, velocity, lookDirection, firingGun, usingEquipment, usedEquipment, isIdle);
     }
 
     public void SetSnapshot(PlayerSnapshot playerSnapshot)
