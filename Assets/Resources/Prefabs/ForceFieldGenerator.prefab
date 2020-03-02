@@ -406,6 +406,7 @@ GameObject:
   - component: {fileID: 4280085918218303184}
   - component: {fileID: 2407270921911648317}
   - component: {fileID: 4261956705130301115}
+  - component: {fileID: 4157929550315648180}
   m_Layer: 15
   m_Name: ForceField
   m_TagString: ForceField
@@ -500,5 +501,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shieldHealth: 3
-  Damaged1: {r: 1, g: 0.66206235, b: 0.023584902, a: 0}
+  damagedColor:
+  - {r: 1, g: 0, b: 0.011764707, a: 1}
+  - {r: 1, g: 0.63086456, b: 0.13679248, a: 1}
   Damaged2: {r: 1, g: 0, b: 0.013125896, a: 0}
+--- !u!114 &4157929550315648180
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4280085918218303214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae930e72a0901124db33f42f17c09cca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shieldHealth: 3
+  damagedColor: []
+  Damaged2: {r: 0, g: 0, b: 0, a: 0}

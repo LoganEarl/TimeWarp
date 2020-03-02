@@ -19,6 +19,6 @@ public class Timer : MonoBehaviour {
     public void Update()
     {
         if (setup)
-            timerText.text = string.Format("{0:F1}", gameMode.SecondsRemaining);
+            timerText.text = string.Format("{0:F1}", gameMode.GameState.SecondsRemaining);
     }
 }

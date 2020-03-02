@@ -7,12 +7,12 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: ForceField
+  m_Name: ForceFieldGuide
   m_Shader: {fileID: -6465566751694194690, guid: 9e102a614d3954144982b8e48e8b86d8,
     type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
-  m_EnableInstancingVariants: 1
+  m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -25,10 +25,9 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - Vector1_447649DE: 0.03
-    - Vector1_866B4B11: 0.5
-    - Vector1_98B85027: 0.2
-    - Vector1_9B44F616: 0
+    - Vector1_447649DE: 0.05
+    - Vector1_866B4B11: 10
+    - Vector1_98B85027: 0.05
+    - Vector1_9B44F616: 1
     m_Colors:
-    - Color_BC252F37: {r: 0, g: 0.7490196, b: 0.7490196, a: 0}
-    - _Color: {r: 0, g: 0.9113845, b: 1.176471, a: 1}
+    - _Color: {r: 0, g: 1.176471, b: 1.176471, a: 0}
