@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ForceFieldGuide : MonoBehaviour
+public class BasicForceField : MonoBehaviour
 {
     // Start is called before the first frame update
-    void Start()
+    protected void Start()
     {
         Mesh temp = GetComponent<MeshFilter>().mesh;
         Vector3[] normals = temp.normals;
@@ -22,7 +22,5 @@ public class ForceFieldGuide : MonoBehaviour
 
         temp.normals = normals;
         temp.vertices = vertices;
-
-        GetComponent<MeshCollider>().convex = true;
     }
 }

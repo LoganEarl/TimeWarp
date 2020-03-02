@@ -501,7 +501,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shieldHealth: 3
-  Damaged1: {r: 1, g: 0.66206235, b: 0.023584902, a: 0}
+  damagedColor:
+  - {r: 1, g: 0, b: 0.011764707, a: 1}
+  - {r: 1, g: 0.63086456, b: 0.13679248, a: 1}
   Damaged2: {r: 1, g: 0, b: 0.013125896, a: 0}
 --- !u!114 &4157929550315648180
 MonoBehaviour:
@@ -516,5 +518,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shieldHealth: 3
-  Damaged1: {r: 0, g: 0, b: 0, a: 0}
+  damagedColor: []
   Damaged2: {r: 0, g: 0, b: 0, a: 0}

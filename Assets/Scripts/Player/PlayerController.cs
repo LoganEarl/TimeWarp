@@ -45,7 +45,7 @@ public class PlayerController : MonoBehaviour, IRecordable
     //movement
     private bool isIdle = true;
     private int frameCounter = 0;
-    private int lookSnap = 5;
+    private readonly int lookSnap = 5;
     private Vector3 position, velocity, lookDirection;
     private Quaternion desiredRotation = Quaternion.identity;
     private PlayerSnapshot snapshot;
@@ -93,6 +93,11 @@ public class PlayerController : MonoBehaviour, IRecordable
                 isIdle = true;
             }
 
+            //write the calculated values to the rigidbody depending on type of player moving
+            rigidBody.velocity = velocity;
+            if (usingSnapshots)
+                rigidBody.transform.position = position;
+
             animator.SetBool("IsIdle", isIdle);
             int animDirection = 2;
             if (!isIdle)
@@ -105,15 +110,12 @@ public class PlayerController : MonoBehaviour, IRecordable
 
                 animator.SetInteger("WalkingAngle", animDirection);
             }
-            rigidBody.velocity = velocity;
-
-            if (usingSnapshots)
-                rigidBody.transform.position = position;
 
             Quaternion desiredRotation;
+            bool isLooking = lookDirection.magnitude > 0.1;
+            bool isMoving = velocity.magnitude > 0.2;
 
-            if (lookDirection.magnitude > 0.1)
-            {
+            if (isLooking) {
                 Vector3 moddedDirection = Quaternion.AngleAxis(lookOffset, Vector3.up) * lookDirection;
 
                 float lookAngle = Vector3.Angle(Vector3.forward, moddedDirection) % 45;
@@ -124,27 +126,27 @@ public class PlayerController : MonoBehaviour, IRecordable
 
                 desiredRotation = Quaternion.LookRotation(moddedDirection, Vector3.up);
                 rigidBody.MoveRotation(desiredRotation);
-                //TODO: this does not belong here. Make a targetingCursor script to handle this
-                if (!usingSnapshots)
-                {
-                    targetingCursor.SetActive(true);
-                    targetingCursor.transform.position = rigidBody.position + lookDirection * 5 + new Vector3(0, fireTransform.position.y, 0);
-                }
             }
-            else if (velocity.magnitude > 0.2)
-            {
+            else if (isMoving) {
                 Vector3 moddedDirection = Quaternion.AngleAxis(lookOffset, Vector3.up) * velocity;
                 moddedDirection.y = 0;
+
                 desiredRotation = Quaternion.LookRotation(moddedDirection, Vector3.up);
                 rigidBody.MoveRotation(desiredRotation);
-                if (!usingSnapshots)
-                    targetingCursor.SetActive(false);
             }
-            else if (!usingSnapshots)
-                targetingCursor.SetActive(false);
+
+            if (targetingCursor != null) { 
+                targetingCursor.SetActive(isLooking && !usingSnapshots);
+
+                if(targetingCursor.activeInHierarchy)
+                    targetingCursor.transform.position =
+                         rigidBody.position + lookDirection * 5 + new Vector3(0, fireTransform.position.y, 0);
+            }
+
             if (firingGun && (FireCallback?.Invoke() ?? true))
                 Shoot();
-            if (!usingEquipment && usedEquipment && (EquipmentCallback?.Invoke() ?? true))
+
+            if (((!usingEquipment && usedEquipment) || (!usingEquipment && usingSnapshots)) && (EquipmentCallback?.Invoke() ?? true))
                 PlaceEquipment();
         }
     }

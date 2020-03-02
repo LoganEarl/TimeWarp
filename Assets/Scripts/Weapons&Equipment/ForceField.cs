@@ -2,30 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ForceField : MonoBehaviour
+public class ForceField : BasicForceField
 {
     [SerializeField] private int shieldHealth = 3;
-    [SerializeField] private Color Damaged1;
-    [SerializeField] private Color Damaged2;
+    [SerializeField] private readonly Color[] damagedColor;
 
-    void Start()
+    private new void Start()
     {
-        Mesh temp = GetComponent<MeshFilter>().mesh;
-        Vector3[] normals = temp.normals;
-        Vector3[] vertices = temp.vertices;
-
-        for(int i = 0; i < temp.vertexCount; i++)
-        {
-            if (normals[i].z < 0)
-            {
-                normals[i] = Vector3.back;
-                vertices[i].z = vertices[i].z / 2 * -1;
-            }
-        }
-
-        temp.normals = normals;
-        temp.vertices = vertices;
-
+        base.Start();
         GetComponent<MeshCollider>().convex = true;
     }
 
@@ -36,12 +20,8 @@ public class ForceField : MonoBehaviour
         if (shieldHealth <= 0)
             foreach (Transform go in GetComponentsInParent<Transform>())
                 Destroy(go.gameObject);
-
-
-        if (shieldHealth == 2) 
-            GetComponent<MeshRenderer>().material.SetColor("_Color", Damaged1);
-        else if (shieldHealth == 1) 
-            GetComponent<MeshRenderer>().material.SetColor("_Color", Damaged2);
+        else
+            GetComponent<MeshRenderer>().material.SetColor("_Color", damagedColor[shieldHealth + 1]);
 
     }
 }

@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    [SerializeField] private AudioClip bounceSound;
-    [SerializeField] private float bulletSpeed = 25;
-    [SerializeField] private int bulletDmg = 1;
+    [SerializeField] private readonly AudioClip bounceSound;
+    [SerializeField] private readonly float bulletSpeed = 25;
+    [SerializeField] private readonly int bulletDmg = 1;
     [SerializeField] private int bouncesLeft = 4;
     [SerializeField] private Color bulletColor;
 
@@ -20,6 +20,8 @@ public class Bullet : MonoBehaviour
     }
 
     private void FixedUpdate() {
+        // Needed to maintain the correct speed even when bouncing off of surfaces that aren't
+        // actually a clean vertical surface to rebound off of.
         bulletInstance.velocity = bulletInstance.velocity.normalized * bulletSpeed;
     }
 
@@ -38,5 +40,9 @@ public class Bullet : MonoBehaviour
             bouncesLeft--;
         else
             Destroy(gameObject);
+    }
+
+    private void OnDestroy() {
+        GetComponent<AudioSource>().PlayOneShot(bounceSound);
     }
 }
