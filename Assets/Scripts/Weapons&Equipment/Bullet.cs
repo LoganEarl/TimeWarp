@@ -8,7 +8,8 @@ public class Bullet : MonoBehaviour
     [SerializeField] private readonly float bulletSpeed = 25;
     [SerializeField] private readonly int bulletDmg = 1;
     [SerializeField] private int bouncesLeft = 4;
-    [SerializeField] private Color bulletColor;
+
+    public Color bulletColor { private get; set; }
 
     private Rigidbody bulletInstance;
 

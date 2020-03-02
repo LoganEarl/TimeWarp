@@ -62,7 +62,7 @@ public class PlayerController : MonoBehaviour, IRecordable
 
     private void FixedUpdate()
     {
-        if (setupPlayer && !health.Dead && gameMode.GameState.PlayersVisible)
+        if (!health.Dead && gameMode.GameState.PlayersVisible)
         {
             gameObject.transform.localScale = new Vector3(2, 2, 2); //unhides the player if they are hidden
 
@@ -95,7 +95,7 @@ public class PlayerController : MonoBehaviour, IRecordable
                     velocity = new Vector3();
                     isIdle = true;
                 }
-
+            }
             //write the calculated values to the rigidbody depending on type of player moving
             rigidBody.velocity = velocity;
             if (usingSnapshots)
@@ -137,8 +137,6 @@ public class PlayerController : MonoBehaviour, IRecordable
                 desiredRotation = Quaternion.LookRotation(moddedDirection, Vector3.up);
                 if (!gameMode.GameState.PlayersLookLocked)
                     rigidBody.MoveRotation(desiredRotation);
-                if (!usingSnapshots)
-                    targetingCursor.SetActive(false);
             }
 
             if (targetingCursor != null) { 
@@ -149,10 +147,11 @@ public class PlayerController : MonoBehaviour, IRecordable
                          rigidBody.position + lookDirection * 5 + new Vector3(0, fireTransform.position.y, 0);
             }
 
-            if (firingGun && (FireCallback?.Invoke() ?? true))
+            if (firingGun && !gameMode.GameState.PlayersFireLocked && (FireCallback?.Invoke() ?? true))
                 Shoot();
 
-            if (((!usingEquipment && usedEquipment) || (!usingEquipment && usingSnapshots)) && (EquipmentCallback?.Invoke() ?? true))
+            bool placeEquipment = (!usingEquipment && usedEquipment) || (!usingEquipment && usingSnapshots);
+            if (placeEquipment && !gameMode.GameState.PlayersFireLocked  && (EquipmentCallback?.Invoke() ?? true))
                 PlaceEquipment();
         }
         else
@@ -239,16 +238,7 @@ public class PlayerController : MonoBehaviour, IRecordable
     private void PlacingEquipmentGuide()
     {
         shieldPlacer = Instantiate(equipmentGuide, shieldTransform);
-        foreach(Collider collin in shieldPlacer.GetComponentsInChildren<Collider>())
-            Destroy(collin);
-
         shieldPlacer.transform.localScale = new Vector3(.1f, .1f, .1f);
-
-        Material shieldMaterial = shieldPlacer.GetComponentsInChildren<MeshRenderer>()[3].material;
-        Color shieldColor = shieldMaterial.GetColor("_Color");
-
-        shieldColor.a = 0.1f;
-        shieldMaterial.SetColor("_Color", shieldColor);
     }
 
     private void PlaceEquipment()
@@ -260,7 +250,6 @@ public class PlayerController : MonoBehaviour, IRecordable
     private void Shoot()
     {
         Rigidbody bulletInstance = Instantiate(bullet, fireTransform.position, fireTransform.rotation) as Rigidbody;
-        bulletInstance.GetComponent<Bullet>().playerNumber = playerNumber;
         bulletInstance.GetComponent<Bullet>().bulletColor = playerColor;
         bulletInstance.velocity = fireTransform.forward;
 
@@ -270,7 +259,7 @@ public class PlayerController : MonoBehaviour, IRecordable
         int randomSound = Mathf.RoundToInt(Random.value * (smacktalk.Length - 1));
 
         //foreach(AudioClip clip in smacktalk)
-        Debug.Log("talking: " + talking + ", speaking: " + speaking + ", sound#: " + randomSound);
+        //Debug.Log("talking: " + talking + ", speaking: " + speaking + ", sound#: " + randomSound);
 
         if (speaking)
         {
