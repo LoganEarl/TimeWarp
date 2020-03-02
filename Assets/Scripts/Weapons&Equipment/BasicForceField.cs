@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class BasicForceField : MonoBehaviour
 {
-    // Start is called before the first frame update
     protected void Start()
     {
         Mesh temp = GetComponent<MeshFilter>().mesh;

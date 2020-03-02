@@ -22,6 +22,5 @@ public class ForceField : BasicForceField
                 Destroy(go.gameObject);
         else
             GetComponent<MeshRenderer>().material.SetColor("_Color", damagedColor[shieldHealth + 1]);
-
     }
 }

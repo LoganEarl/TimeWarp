@@ -12,7 +12,7 @@ public class Bullet : MonoBehaviour
 
     private Rigidbody bulletInstance;
 
-    void Start() {
+    private void Start() {
         bulletInstance = GetComponent<Rigidbody>();
 
         GetComponent<MeshRenderer>().material.SetColor("_GlowColor", bulletColor);
