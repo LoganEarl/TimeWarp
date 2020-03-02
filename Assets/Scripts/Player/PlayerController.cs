@@ -62,8 +62,10 @@ public class PlayerController : MonoBehaviour, IRecordable
 
     private void FixedUpdate()
     {
-        if (!health.Dead)
+        if (setupPlayer && !health.Dead && gameMode.GameState.PlayersVisible)
         {
+            gameObject.transform.localScale = new Vector3(2, 2, 2); //unhides the player if they are hidden
+
             frameCounter++;
             if (frameCounter > 30)
             {
@@ -85,13 +87,14 @@ public class PlayerController : MonoBehaviour, IRecordable
 
             if (usingSnapshots)
                 RecordedFrame();
-            else if (gameMode == null || gameMode.GameEnabled)
-                ControlledFrame();
             else
             {
-                velocity = new Vector3();
-                isIdle = true;
-            }
+                ControlledFrame();
+                if (gameMode.GameState.PlayersPositionsLocked)
+                {
+                    velocity = new Vector3();
+                    isIdle = true;
+                }
 
             //write the calculated values to the rigidbody depending on type of player moving
             rigidBody.velocity = velocity;
@@ -132,7 +135,10 @@ public class PlayerController : MonoBehaviour, IRecordable
                 moddedDirection.y = 0;
 
                 desiredRotation = Quaternion.LookRotation(moddedDirection, Vector3.up);
-                rigidBody.MoveRotation(desiredRotation);
+                if (!gameMode.GameState.PlayersLookLocked)
+                    rigidBody.MoveRotation(desiredRotation);
+                if (!usingSnapshots)
+                    targetingCursor.SetActive(false);
             }
 
             if (targetingCursor != null) { 
@@ -148,6 +154,11 @@ public class PlayerController : MonoBehaviour, IRecordable
 
             if (((!usingEquipment && usedEquipment) || (!usingEquipment && usingSnapshots)) && (EquipmentCallback?.Invoke() ?? true))
                 PlaceEquipment();
+        }
+        else
+        {
+            gameObject.transform.localScale = new Vector3(0, 0, 0); //hides the player without deactiviating
+            if(targetingCursor != null) targetingCursor.SetActive(false);
         }
     }
 
@@ -249,8 +260,8 @@ public class PlayerController : MonoBehaviour, IRecordable
     private void Shoot()
     {
         Rigidbody bulletInstance = Instantiate(bullet, fireTransform.position, fireTransform.rotation) as Rigidbody;
-        //bulletInstance.GetComponent<Bullet>().playerNumber = playerNumber;
-        //bulletInstance.GetComponent<Bullet>().bulletColor = playerColor;
+        bulletInstance.GetComponent<Bullet>().playerNumber = playerNumber;
+        bulletInstance.GetComponent<Bullet>().bulletColor = playerColor;
         bulletInstance.velocity = fireTransform.forward;
 
         roundClearingList.Add(bulletInstance.gameObject);
