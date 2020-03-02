@@ -2,24 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BounceLevel: ILevelConfig
+public class BounceLevelConfig: ILevelConfig
 {
     private static readonly Vector3[][] playerSpawns = new Vector3[][] {
         new Vector3[]
         {
-            new Vector3(9.25f,.1f,-17.25f),
-            new Vector3(-9.25f,.1f,-17.25f),
-            new Vector3(0,.1f,-15f),
-            new Vector3(8,.1f,-7),
-            new Vector3(6,.1f,2)
+            new Vector3(-17.25f,.1f,9.25f),
+            new Vector3(-17.25f,.1f,-9.25f),
+            new Vector3(-15f,.1f,0),
+            new Vector3(-7f,.1f,8),
+            new Vector3(2,.1f,6)
         },
         new Vector3[]
         {
-            new Vector3(-9.25f,.1f,17.25f),
-            new Vector3(9.25f,.1f,17.25f),
-            new Vector3(0,.1f,15f),
-            new Vector3(-8,.1f,7),
-            new Vector3(-6,.1f,-2)
+            new Vector3(17.25f,.1f,-9.25f),
+            new Vector3(17.25f,.1f,9.25f),
+            new Vector3(15f,.1f,0),
+            new Vector3(7f,.1f,-8),
+            new Vector3(-2,.1f,-6)
         }
     };
 
