@@ -17,16 +17,10 @@ public class GameModeDescriptionController : MonoBehaviour {
     public void SetGameDescription(string gameModeName)
     {
         if (!gameModeName.Equals("") || gameModeName != null)
-        {
             if (gameModeName.Equals("Plan"))
-            {
                 this.description = ThePlanDescription();
-            }
             else if (gameModeName.Equals("Lineage"))
-            {
                 this.description = LineageDescription();
-            }
-        }
     }
 
     private string ThePlanDescription()
