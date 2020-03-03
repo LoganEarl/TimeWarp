@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour, IRecordable
 
     //player components/info
     private static bool talking = false;
-    private int playerNumber = 0;
+    [SerializeField] private int playerNumber = 0;
     private bool usingSnapshots = false;
     private bool aimLocked = false;
     private bool loadedCursor = false;
@@ -158,6 +158,9 @@ public class PlayerController : MonoBehaviour, IRecordable
             gameObject.transform.localScale = new Vector3(0, 0, 0); //hides the player without deactiviating
             if (targetingCursor != null) targetingCursor.SetActive(false);
             if (shieldPlacer != null) Destroy(shieldPlacer);
+            
+            foreach (GameObject gameObj in gameObject.GetComponentsInChildren<GameObject>())
+                gameObj.layer = LayerMask.NameToLayer("Player" + playerNumber);
         }
     }
 
@@ -244,6 +247,7 @@ public class PlayerController : MonoBehaviour, IRecordable
     private void PlaceEquipment()
     {
         GameObject shieldInstance = Instantiate(equipment, shieldTransform.position, shieldTransform.rotation) as GameObject;
+        shieldInstance.layer = LayerMask.NameToLayer("ForceField" + playerNumber);
         roundClearingList.Add(shieldInstance.gameObject);
     }
 
@@ -251,14 +255,16 @@ public class PlayerController : MonoBehaviour, IRecordable
     {
         Rigidbody bulletInstance = Instantiate(bullet, fireTransform.position, fireTransform.rotation) as Rigidbody;
         bulletInstance.GetComponent<Bullet>().bulletColor = playerColor;
+        bulletInstance.GetComponent<Bullet>().playerNumber = playerNumber;
+
+        bulletInstance.gameObject.layer = LayerMask.NameToLayer("Projectile" + playerNumber);
         bulletInstance.velocity = fireTransform.forward;
 
         roundClearingList.Add(bulletInstance.gameObject);
 
         bool speaking = (Random.value * 100) <= 50;
         int randomSound = Mathf.RoundToInt(Random.value * (smacktalk.Length - 1));
-
-        //foreach(AudioClip clip in smacktalk)
+        
         //Debug.Log("talking: " + talking + ", speaking: " + speaking + ", sound#: " + randomSound);
 
         if (speaking)

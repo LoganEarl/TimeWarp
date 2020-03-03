@@ -10,6 +10,7 @@ public class Bullet : MonoBehaviour
     [SerializeField] private int bouncesLeft = 4;
 
     public Color bulletColor { private get; set; }
+    public int playerNumber { private get; set; }
 
     private Rigidbody bulletInstance;
 
@@ -30,7 +31,7 @@ public class Bullet : MonoBehaviour
         Rigidbody bulletInstance = GetComponent<Rigidbody>();
         Collider other = collision.collider;
 
-        if (other.tag.StartsWith("Player"))
+        if (other.tag != ("Player" + playerNumber))
             other.GetComponent<PlayerHealth>().DoDamage(bulletDmg);
         else if (other.tag == "ForceField")
             other.GetComponent<ForceField>().DoDamage();
@@ -39,7 +40,7 @@ public class Bullet : MonoBehaviour
 
         if ((other.tag == "Wall") && bouncesLeft != 0)
             bouncesLeft--;
-        else
+        else if (other.tag != "Player" + playerNumber)
             Destroy(gameObject);
     }
 
