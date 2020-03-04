@@ -8,20 +8,26 @@ using UnityEngine.UI;
  * This class focuses on transitioning between scenes of the game.
  */
 
-public class LobbyDriver : MonoBehaviour {
+public class LobbyDriver : MonoBehaviour
+{
+    [SerializeField] private Animator animator;
+    [SerializeField] private Button startButton;
+    [SerializeField] private PlanManager planGameMode;
+
     private ILevelConfig selectedLevel = null;
     private IGameMode selectedGameMode = null;
-    [SerializeField]
-    private Animator animator;
-    [SerializeField]
-    private Button startButton;
-    [SerializeField]
-    private PlanManager planGameMode;
 
     // Added Start() in to make start button uninteractable at the beginning
     public void Start()
     {
         startButton.interactable = false;
+
+        /*---------- For Testing Purposes to skip main menu ----*/
+                            //just remove the '*/' at the end of ^ line to disable this block.
+        SelectPlanGameMode();
+        SelectTestLevelWithIndex(2);
+        LoadSelectedGame();
+        /*---------- End Testing Purposes block ----*/
     }
     
     public void SelectTestLevel()

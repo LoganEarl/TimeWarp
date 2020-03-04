@@ -342,7 +342,7 @@ InputManager:
     axis: 0
     joyNum: 2
   - serializedVersion: 3
-    m_Name: Fire0
+    m_Name: Equipment0
     descriptiveName: 
     descriptiveNegativeName: 
     negativeButton: 
