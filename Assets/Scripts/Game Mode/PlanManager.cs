@@ -117,7 +117,7 @@ public class PlanManager : MonoBehaviour, IGameMode
         gameState = new StateInitializing(this);
     }
 
-    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (gameState is StateInitializing && scene.name.Equals(levelConfig.GetSceneName()))
         {
@@ -135,7 +135,7 @@ public class PlanManager : MonoBehaviour, IGameMode
     }
 
     //================================================Game States
-    public abstract class PlanGameState : IGameState
+    internal abstract class PlanGameState : IGameState
     {
         private protected PlanManager manager;
         private protected PlanGameState(PlanManager manager)
@@ -143,11 +143,10 @@ public class PlanManager : MonoBehaviour, IGameMode
             this.manager = manager;
         }
 
-        public virtual int StepNumber { get; private set; }
         private protected abstract PlanGameState NextState { get; }
-        public abstract void OnEnterState();
-        public virtual void OnLeaveState() { }
-        public void Tick()
+        internal virtual void OnEnterState() { }
+        internal virtual void OnLeaveState() { }
+        internal void Tick()
         {
             if (TimeAdvancing) StepNumber++;
             if (StepNumber >= MaxSteps)
@@ -161,6 +160,7 @@ public class PlanManager : MonoBehaviour, IGameMode
         }
         private protected virtual void OnTick() { }
 
+        public virtual int StepNumber { get; private set; }
         public virtual bool PlayersVisible { get => false; }
         public virtual bool PlayersPositionsLocked { get => true; }
         public virtual bool PlayersLookLocked { get => true; }
@@ -171,11 +171,11 @@ public class PlanManager : MonoBehaviour, IGameMode
     }
 
     //active from the start of call to setup() to after the begin() call is finished executing
-    public class StateInitializing : PlanGameState
+    internal class StateInitializing : PlanGameState
     {
         public StateInitializing(PlanManager manager) : base(manager) { }
 
-        public override void OnEnterState()
+        internal override void OnEnterState()
         {
             //Ensure any old data is cleared out
             manager.runningRecordingRound = false;
@@ -198,21 +198,21 @@ public class PlanManager : MonoBehaviour, IGameMode
     }
 
     //active between rounds while spawn pillars are rising, before players are visible
-    public class StateSpawning : PlanGameState
+    internal class StateSpawning : PlanGameState
     {
         private static readonly int STATE_LENGTH = 2 * 50;
         private readonly bool spawnNewPlayers;
 
         private readonly StateSpanwed nextState;
 
-        public StateSpawning(bool spawnNewPlayers, PlanManager manager) : base(manager)
+        internal StateSpawning(bool spawnNewPlayers, PlanManager manager) : base(manager)
         {
             this.spawnNewPlayers = spawnNewPlayers;
             MaxSteps = STATE_LENGTH;
             nextState = new StateSpanwed(manager);
         }
 
-        public override void OnEnterState()
+        internal override void OnEnterState()
         {
             if (spawnNewPlayers)
             {
@@ -236,16 +236,12 @@ public class PlanManager : MonoBehaviour, IGameMode
     }
 
     //active from when players are spawned in to the point the match starts
-    public class StateSpanwed : PlanGameState
+    internal class StateSpanwed : PlanGameState
     {
         private static readonly int STATE_LENGTH = 2 * 50;
 
         public StateSpanwed(PlanManager manager) : base(manager) { MaxSteps = STATE_LENGTH; }
 
-        public override void OnEnterState()
-        {
-            //TODO this
-        }
 
         private protected override PlanGameState NextState { get => new StatePlaying(manager); }
         public override bool PlayersVisible { get => true; }
@@ -253,17 +249,11 @@ public class PlanManager : MonoBehaviour, IGameMode
         public override bool TimeAdvancing { get => true; }
     }
 
-    public class StatePlaying : PlanGameState
+    internal class StatePlaying : PlanGameState
     {
-        private int stepNum;
         public StatePlaying(PlanManager manager) : base(manager)
         {
             MaxSteps = manager.roundLength;
-        }
-
-        public override void OnEnterState()
-        {
-            //TODO this
         }
 
         private protected override void OnTick()
@@ -272,7 +262,7 @@ public class PlanManager : MonoBehaviour, IGameMode
                 player.Step(StepNumber);
         }
 
-        public override void OnLeaveState()
+        internal override void OnLeaveState()
         {
             if (!manager.runningRecordingRound)
                 foreach (PlanPlayerManager player in manager.playerManagers)
@@ -303,14 +293,14 @@ public class PlanManager : MonoBehaviour, IGameMode
         public override bool TimeAdvancing { get => true; }
     }
 
-    public class StateFinished : PlanGameState
+    internal class StateFinished : PlanGameState
     {
         public StateFinished(PlanManager manager) : base(manager) { }
 
-        public override void OnEnterState()
+        internal override void OnEnterState()
         {
             manager.hudController.gameObject.SetActive(false);
-            manager.DoScoreScreen();
+            manager.LoadScoreScreen();
         }
 
         private protected override PlanGameState NextState { get => new StateInitializing(manager); }
@@ -364,7 +354,7 @@ public class PlanManager : MonoBehaviour, IGameMode
         hudController.Setup(this);
     }
 
-    private void DoScoreScreen()
+    private void LoadScoreScreen()
     {
         string[] scoreKeyOrder = { "Unused Ammo", "Unused Sheilds", "Damage Taken", "Time Alive", "Survival" };
         int[] scores = new int[NumPlayers];
