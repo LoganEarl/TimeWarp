@@ -11,9 +11,9 @@ public class PlanPlayerManager
 {
     private List<MatchRecordingManager> playerRecordings = new List<MatchRecordingManager>();
     private List<PlayerController> playerControllers = new List<PlayerController>();
-    public int MaxProjectiles { get; set; } = 10;
-    public int AvailableProjectiles { internal set; get; }
-    public int ProjectedProjectilesRemaining(int asOfStepNumber)
+    internal int MaxProjectiles { get; set; } = 10;
+    internal int AvailableProjectiles { set; get; }
+    internal int ProjectedProjectilesRemaining(int asOfStepNumber)
     {
         int usage = MaxProjectiles - AvailableProjectiles;               //what we already used
         foreach (MatchRecordingManager recording in playerRecordings)   //what we are going to use in the future
@@ -25,9 +25,9 @@ public class PlanPlayerManager
             usage = 0;
         return usage;
     }
-    public int MaxEquipment { get; set; } = 1;
-    public int AvailableEquipment { internal set; get; }
-    public int ProjectedEquipmentRemaining(int asOfStepNumber)
+    internal int MaxEquipment { get; set; } = 1;
+    internal int AvailableEquipment { set; get; }
+    internal int ProjectedEquipmentRemaining(int asOfStepNumber)
     {
         int usage = MaxEquipment - AvailableEquipment;                  //what we already used
         foreach (MatchRecordingManager recording in playerRecordings)   //what we are going to use in the future
@@ -40,7 +40,7 @@ public class PlanPlayerManager
         return usage;
     }
 
-    public int NumberRecordingsAlive
+    internal int NumberRecordingsAlive
     {
         get
         {
@@ -52,18 +52,18 @@ public class PlanPlayerManager
         }
     }
 
-    public int TotalHealthRemaining
+    internal int TotalHealthRemaining
     {
         get
         {
             int count = 0;
             foreach (PlayerController controller in playerControllers)
-                count += controller.GetComponent<PlayerHealth>().Health;               
+                count += controller.GetComponent<PlayerHealth>().Health;
             return count;
         }
     }
 
-    public int TotalTimeAlive
+    internal int TotalTimeAlive
     {
         get
         {
@@ -74,19 +74,19 @@ public class PlanPlayerManager
         }
     }
 
-    public GameObject GetPlayerObject(int roundNumber)
-    {
-        if (roundNumber < 0 || roundNumber >= playerControllers.Count)
-            throw new System.Exception("Passed in illegal round number to GetPlayerObject:" + roundNumber);
-        return playerControllers[roundNumber].gameObject;
-    }
-
     internal PlanPlayerManager(int availableProjectiles, int availableEquipment)
     {
         MaxProjectiles = availableProjectiles;
         AvailableProjectiles = availableProjectiles;
         MaxEquipment = availableEquipment;
         AvailableEquipment = availableEquipment;
+    }
+
+    public GameObject GetPlayerObject(int roundNumber)
+    {
+        if (roundNumber < 0 || roundNumber >= playerControllers.Count)
+            throw new System.Exception("Passed in illegal round number to GetPlayerObject:" + roundNumber);
+        return playerControllers[roundNumber].gameObject;
     }
 
     //add another controlled player instance
@@ -108,11 +108,19 @@ public class PlanPlayerManager
         }
     }
 
-    //resets for the next match
+    //finishes recordings and attaches newest generation to replays
     internal void FinishSequence()
     {
         foreach (MatchRecordingManager recording in playerRecordings)
             recording.Finish();
+        foreach (PlayerController controller in playerControllers)
+            controller.SetUseSnapshots(true);
+    }
+
+    internal void ResetAll()
+    {
+        foreach (PlayerController controller in playerControllers)
+            controller.OnReset();
         AvailableProjectiles = MaxProjectiles;
         AvailableEquipment = MaxEquipment;
     }

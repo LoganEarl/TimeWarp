@@ -54,8 +54,10 @@ public class PlayerController : MonoBehaviour, IRecordable
 
     void FixedUpdate()
     {
-        if (setupPlayer && !health.Dead)
+        if (setupPlayer && !health.Dead && gameMode.GameState.PlayersVisible)
         {
+            gameObject.transform.localScale = new Vector3(2, 2, 2); //unhides the player if they are hidden
+
             frameCounter++;
             if (frameCounter > 30)
             {
@@ -85,7 +87,7 @@ public class PlayerController : MonoBehaviour, IRecordable
                     velocity = new Vector3();
                     isIdle = true;
                 }
-                
+
             }
 
             animator.SetBool("IsIdle", isIdle);
@@ -125,7 +127,7 @@ public class PlayerController : MonoBehaviour, IRecordable
                 Vector3 moddedDirection = Quaternion.AngleAxis(lookOffset, Vector3.up) * velocity;
                 moddedDirection.y = 0;
                 desiredRotation = Quaternion.LookRotation(moddedDirection, Vector3.up);
-                if(!gameMode.GameState.PlayersLookLocked)
+                if (!gameMode.GameState.PlayersLookLocked)
                     rigidBody.MoveRotation(desiredRotation);
                 if (!usingSnapshots)
                     targetingCursor.SetActive(false);
@@ -136,6 +138,11 @@ public class PlayerController : MonoBehaviour, IRecordable
                 Shoot();
             if (usingEquipment && !gameMode.GameState.PlayersFireLocked && (EquipmentCallback?.Invoke() ?? true))
                 PlaceEquipment();
+        }
+        else
+        {
+            gameObject.transform.localScale = new Vector3(0, 0, 0); //hides the player without deactiviating
+            if(targetingCursor != null) targetingCursor.SetActive(false);
         }
     }
 

@@ -35,6 +35,8 @@ public class PlanHUDController : MonoBehaviour
         Canvas drawCanvas = gameObject.GetComponent<Canvas>();
         drawCanvas.worldCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         drawCanvas.planeDistance = 1;
+
+        ReloadAll();
     }
 
     public void ReloadAll()
