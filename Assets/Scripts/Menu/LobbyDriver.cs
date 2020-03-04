@@ -22,8 +22,8 @@ public class LobbyDriver : MonoBehaviour
     {
         startButton.interactable = false;
 
-        /*---------- For Testing Purposes to skip main menu ----*/
-                            //just remove the '*/' at the end of ^ line to disable this block.
+        /*---------- For Testing Purposes to skip main menu ---- 
+                            //just remove the '*' at the end of ^ line to disable this block and '/' after '*' here.
         SelectPlanGameMode();
         SelectTestLevelWithIndex(2);
         LoadSelectedGame();
