@@ -31,10 +31,13 @@ public class Bullet : MonoBehaviour
         Rigidbody bulletInstance = GetComponent<Rigidbody>();
         Collider other = collision.collider;
 
-        if (other.tag != ("Player" + playerNumber))
-            other.GetComponent<PlayerHealth>().DoDamage(bulletDmg);
-        else if (other.tag == "ForceField")
-            other.GetComponent<ForceField>().DoDamage();
+        if (other.tag != "Wall")
+        {
+            if (other.tag != "Player" + playerNumber && other.tag != "Ghost")
+                other.GetComponent<PlayerHealth>().DoDamage(bulletDmg);
+            else if (other.tag == "ForceField")
+                other.GetComponent<ForceField>().DoDamage();
+        }
 
         GetComponent<AudioSource>().PlayOneShot(bounceSound);
 
