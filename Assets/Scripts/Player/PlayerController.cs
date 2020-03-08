@@ -15,46 +15,54 @@ public class PlayerController : MonoBehaviour, IRecordable
     private bool fired = false;
     private bool usingEquipment = false;
     private bool usedEquipment = false;
+    private GameObject shieldPlacer;
     private List<GameObject> roundClearingList = new List<GameObject>();
 
 #pragma warning disable IDE0044
-    [SerializeField] private float bulletSpeed = 10;
-    [SerializeField] private Rigidbody bullet;
     [SerializeField] private Transform fireTransform;
+    [SerializeField] private Rigidbody bullet;
+    [SerializeField] private GameObject targetingCursor;
     [SerializeField] private Transform shieldTransform;
     [SerializeField] private GameObject equipment;
+    [SerializeField] private GameObject equipmentGuide;
     [SerializeField] private float lookOffset;
-    [SerializeField] private GameObject targetingCursor;
     [SerializeField] private float turnSpeed, moveSpeed;
+    [SerializeField] private AudioClip[] smacktalk;
 #pragma warning restore IDE0044
 
     //player components/info
+    private static bool talking = false;
     private int playerNumber = 0;
     private bool usingSnapshots = false;
     private bool aimLocked = false;
     private bool loadedCursor = false;
-    private bool setupPlayer = false;
     private Animator animator;
     private Rigidbody rigidBody;
     private PlayerHealth health;
     private Color playerColor;
+    private AudioSource voiceLine;
 
     //movement
     private bool isIdle = true;
     private int frameCounter = 0;
+    private readonly int lookSnap = 5;
     private Vector3 position, velocity, lookDirection;
     private Quaternion desiredRotation = Quaternion.identity;
     private PlayerSnapshot snapshot;
     private IGameMode gameMode;
 
-    void Start()
+    private void Awake()
     {
         lookDirection = new Vector3(0, 0, 1);
+        voiceLine = GetComponent<AudioSource>();
+        animator = GetComponentInChildren<Animator>();
+        rigidBody = GetComponent<Rigidbody>();
+        health = GetComponent<PlayerHealth>();
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
-        if (setupPlayer && !health.Dead && gameMode.GameState.PlayersVisible)
+        if (!health.Dead && gameMode.GameState.PlayersVisible)
         {
             gameObject.transform.localScale = new Vector3(2, 2, 2); //unhides the player if they are hidden
 
@@ -87,8 +95,11 @@ public class PlayerController : MonoBehaviour, IRecordable
                     velocity = new Vector3();
                     isIdle = true;
                 }
-
             }
+            //write the calculated values to the rigidbody depending on type of player moving
+            rigidBody.velocity = velocity;
+            if (usingSnapshots)
+                rigidBody.transform.position = position;
 
             animator.SetBool("IsIdle", isIdle);
             int animDirection = 2;
@@ -102,47 +113,51 @@ public class PlayerController : MonoBehaviour, IRecordable
 
                 animator.SetInteger("WalkingAngle", animDirection);
             }
-            rigidBody.velocity = velocity;
-
-            if (usingSnapshots)
-                rigidBody.transform.position = position;
 
             Quaternion desiredRotation;
+            bool isLooking = lookDirection.magnitude > 0.1;
+            bool isMoving = velocity.magnitude > 0.2;
 
-            if (lookDirection.magnitude > 0.1)
-            {
+            if (isLooking) {
                 Vector3 moddedDirection = Quaternion.AngleAxis(lookOffset, Vector3.up) * lookDirection;
+
+                float lookAngle = Vector3.Angle(Vector3.forward, moddedDirection) % 45;
+                if (lookAngle > lookSnap) lookAngle -= 45;
+
+                if (Mathf.Abs(lookAngle) <= lookSnap)
+                    moddedDirection = Quaternion.AngleAxis(lookAngle, Vector3.up) * moddedDirection;
+
                 desiredRotation = Quaternion.LookRotation(moddedDirection, Vector3.up);
-                if (!gameMode.GameState.PlayersLookLocked)
-                    rigidBody.MoveRotation(desiredRotation);
-                //TODO: this does not belong here. Make a targetingCursor script to handle this
-                if (!usingSnapshots)
-                {
-                    targetingCursor.SetActive(true);
-                    targetingCursor.transform.position = rigidBody.position + lookDirection * 5 + new Vector3(0, fireTransform.position.y, 0);
-                }
+                rigidBody.MoveRotation(desiredRotation);
             }
-            else if (velocity.magnitude > 0.2)
-            {
+            else if (isMoving) {
                 Vector3 moddedDirection = Quaternion.AngleAxis(lookOffset, Vector3.up) * velocity;
                 moddedDirection.y = 0;
+
                 desiredRotation = Quaternion.LookRotation(moddedDirection, Vector3.up);
                 if (!gameMode.GameState.PlayersLookLocked)
                     rigidBody.MoveRotation(desiredRotation);
-                if (!usingSnapshots)
-                    targetingCursor.SetActive(false);
             }
-            else if (!usingSnapshots)
-                targetingCursor.SetActive(false);
+
+            if (targetingCursor != null) { 
+                targetingCursor.SetActive(isLooking && !usingSnapshots);
+
+                if(targetingCursor.activeInHierarchy)
+                    targetingCursor.transform.position =
+                         rigidBody.position + lookDirection * 5 + new Vector3(0, fireTransform.position.y, 0);
+            }
+
             if (firingGun && !gameMode.GameState.PlayersFireLocked && (FireCallback?.Invoke() ?? true))
                 Shoot();
-            if (usingEquipment && !gameMode.GameState.PlayersFireLocked && (EquipmentCallback?.Invoke() ?? true))
+
+            if (!usingEquipment && usedEquipment && !gameMode.GameState.PlayersFireLocked && (EquipmentCallback?.Invoke() ?? true))
                 PlaceEquipment();
         }
         else
         {
             gameObject.transform.localScale = new Vector3(0, 0, 0); //hides the player without deactiviating
-            if(targetingCursor != null) targetingCursor.SetActive(false);
+            if (targetingCursor != null) targetingCursor.SetActive(false);
+            if (shieldPlacer != null) Destroy(shieldPlacer);
         }
     }
 
@@ -165,8 +180,9 @@ public class PlayerController : MonoBehaviour, IRecordable
         bool hasHorizontalAim = DeltaExceeds(horizontalAim, 0f, 0.02f);
         bool hasVerticalAim = DeltaExceeds(verticalAim, 0f, 0.02f);
 
-        if ((hasHorizontalAim || hasVerticalAim) && !aimLocked)
+        if ((hasHorizontalAim || hasVerticalAim) && !aimLocked) {
             lookDirection = new Vector3(horizontalAim, 0f, verticalAim);
+        }
         else if (lookDirection.magnitude < 0.03)
             lookDirection.Set(0, 0, 0);
 
@@ -182,14 +198,20 @@ public class PlayerController : MonoBehaviour, IRecordable
         else if (fireActivity == 0f)
             fired = false;
 
-        usingEquipment = false;
-        if (!usedEquipment && equipmentActivity > 0f)
+        usedEquipment = false;
+        if (!usingEquipment && equipmentActivity > 0f && !gameMode.GameState.PlayersFireLocked && gameMode.EquipmentRemaining(playerNumber) != 0)
         {
-            usedEquipment = true;
             usingEquipment = true;
+            PlacingEquipmentGuide();
+        }
+        else if (usingEquipment && equipmentActivity == 0f)
+        {
+            Destroy(shieldPlacer);
+            usedEquipment = true;
+            usingEquipment = false;
         }
         else if (equipmentActivity == 0f)
-            usedEquipment = false;
+            usingEquipment = false;
 
 
         if (Input.GetButtonDown("AimLock" + playerNumber))
@@ -209,7 +231,14 @@ public class PlayerController : MonoBehaviour, IRecordable
         lookDirection = snapshot.LookDirection;
         firingGun = snapshot.Firing;
         usingEquipment = snapshot.UsingEquipment;
+        usedEquipment = snapshot.UsedEquipment;
         isIdle = snapshot.IsIdle;
+    }
+
+    private void PlacingEquipmentGuide()
+    {
+        shieldPlacer = Instantiate(equipmentGuide, shieldTransform);
+        shieldPlacer.transform.localScale = new Vector3(.1f, .1f, .1f);
     }
 
     private void PlaceEquipment()
@@ -221,12 +250,30 @@ public class PlayerController : MonoBehaviour, IRecordable
     private void Shoot()
     {
         Rigidbody bulletInstance = Instantiate(bullet, fireTransform.position, fireTransform.rotation) as Rigidbody;
-        bulletInstance.GetComponent<Bullet>().playerNumber = playerNumber;
         bulletInstance.GetComponent<Bullet>().bulletColor = playerColor;
         bulletInstance.velocity = fireTransform.forward;
 
         roundClearingList.Add(bulletInstance.gameObject);
+
+        bool speaking = (Random.value * 100) <= 50;
+        int randomSound = Mathf.RoundToInt(Random.value * (smacktalk.Length - 1));
+
+        //foreach(AudioClip clip in smacktalk)
+        //Debug.Log("talking: " + talking + ", speaking: " + speaking + ", sound#: " + randomSound);
+
+        if (speaking)
+        {
+            if (!talking)
+            {
+                Debug.Log("I should be saying something");
+                voiceLine.PlayOneShot(smacktalk[randomSound]);
+                talking = true;
+                Invoke("TalkingStopped", smacktalk[randomSound].length);
+            }
+        }
     }
+
+    private void TalkingStopped() { talking = false; }
 
     private void DestroyAllPlayerCreations()
     {
@@ -239,10 +286,6 @@ public class PlayerController : MonoBehaviour, IRecordable
     {
         this.playerNumber = playerNumber;
 
-        animator = GetComponentInChildren<Animator>();
-        rigidBody = GetComponent<Rigidbody>();
-        health = GetComponent<PlayerHealth>();
-
         Collider[] setColliderTags = GetComponentsInChildren<Collider>();
         foreach (Collider collider in setColliderTags)
             collider.gameObject.tag = "Player" + playerNumber;
@@ -250,13 +293,11 @@ public class PlayerController : MonoBehaviour, IRecordable
         rigidBody.MovePosition(initialPosition);
 
         this.gameMode = gameMode;
-
-        setupPlayer = true;
     }
 
     public PlayerSnapshot GetSnapshot()
     {
-        return new PlayerSnapshot(position, velocity, lookDirection, firingGun, usingEquipment, isIdle);
+        return new PlayerSnapshot(position, velocity, lookDirection, firingGun, usingEquipment, usedEquipment, isIdle);
     }
 
     public void SetSnapshot(PlayerSnapshot playerSnapshot)
