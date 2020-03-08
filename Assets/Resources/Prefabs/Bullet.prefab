@@ -122,14 +122,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2463973995420363885}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 92a500752a1c8854dab835e5be14ad41, type: 3}
+  m_Script: {fileID: 11500000, guid: 9ce772f1a1a859a4a97a7b32eb8d874e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bounceSound: {fileID: 8300000, guid: 160c84d778b34c24ab7bfa68dd859597, type: 3}
-  bulletSpeed: 25
-  bulletDmg: 1
   bouncesLeft: 4
-  bulletColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!96 &2831283823806978470
 TrailRenderer:
   serializedVersion: 2
@@ -341,7 +337,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 70ebb67e0c33bc344ba3633e225b11e1, type: 3}
+  m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 0.2
   m_Pitch: 1

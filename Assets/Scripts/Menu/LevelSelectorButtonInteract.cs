@@ -11,6 +11,8 @@ public class LevelSelectorButtonInteract : MonoBehaviour, ButtonInteract {
     [SerializeField]
     private Button[] levelSelectorButtons;
 
+    private Animator animator;
+
     public void ButtonClicked(Button clickedButton)
     {
         int buttonIndex = System.Array.IndexOf(levelSelectorButtons, clickedButton);

@@ -12,7 +12,7 @@ public class Bullet : MonoBehaviour
     public Color bulletColor { private get; set; }
 
     private Rigidbody bulletInstance;
-
+    
     private void Start() {
         bulletInstance = GetComponent<Rigidbody>();
 
