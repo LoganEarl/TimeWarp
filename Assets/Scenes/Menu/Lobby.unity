@@ -2807,7 +2807,7 @@ PrefabInstance:
     - target: {fileID: 537963546741996507, guid: 61df670a8e5447447a0c8c36013cdc0d,
         type: 3}
       propertyPath: m_RenderMode
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 537963546741996507, guid: 61df670a8e5447447a0c8c36013cdc0d,
         type: 3}
@@ -8586,7 +8586,7 @@ MonoBehaviour:
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 0.247
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96

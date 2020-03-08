@@ -151,8 +151,8 @@ public class PlanManager : MonoBehaviour, IGameMode
             if (TimeAdvancing) StepNumber++;
             if (StepNumber >= MaxSteps)
             {
-                OnLeaveState();
                 manager.gameState = NextState;
+                OnLeaveState();
                 manager.gameState.OnEnterState();
             }
             else if (TimeAdvancing)
@@ -268,7 +268,7 @@ public class PlanManager : MonoBehaviour, IGameMode
                 foreach (PlanPlayerManager player in manager.playerManagers)
                 {
                     player.FinishSequence();
-                    player.Step(0);
+                    player.Step(0); //frontloads first frame of recorded data. Cuts down on visual glitches
                 }
 
             manager.runningRecordingRound = manager.RoundNumber >= manager.MaxRounds - 1;
@@ -281,7 +281,7 @@ public class PlanManager : MonoBehaviour, IGameMode
                 if (manager.runningRecordingRound)
                     return new StateFinished(manager);
                 else
-                    return new StateSpawning(manager.RoundNumber < manager.MaxRounds, manager);
+                    return new StateSpawning(manager.RoundNumber < manager.MaxRounds-1, manager);
 
             }
         }
