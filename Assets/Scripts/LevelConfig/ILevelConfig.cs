@@ -12,6 +12,7 @@ public interface ILevelConfig
 
     //Given which player and which round it is, where should the player spawn?
     Vector3 GetPlayerSpawnPosition(int playerNumber, int playerRoundNumber);
+    Vector3[][] GetAllSpawnPositions();
 
     int GetMaxRounds();
 }

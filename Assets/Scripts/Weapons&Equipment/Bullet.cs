@@ -4,28 +4,25 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    public int playerNumber;
-    public AudioSource bounceSound;
-    public float bulletSpeed = 30;
-    public int bulletDmg = 1;
-    public float bouncesLeft = 4f;
-    public float maxLifeTime = 4f;
-    public Color bulletColor;
-    public float inversePathDensity = 0.01f;
-    public float inversePathLength = 1f;
+    [SerializeField] private readonly AudioClip bounceSound;
+    [SerializeField] private readonly float bulletSpeed = 25;
+    [SerializeField] private readonly int bulletDmg = 1;
+    [SerializeField] private int bouncesLeft = 4;
+
+    public Color bulletColor { private get; set; }
 
     private Rigidbody bulletInstance;
-    private float timeSinceLastPath = 0f;
-
-    void Start() {
+    
+    private void Start() {
         bulletInstance = GetComponent<Rigidbody>();
-        Destroy(gameObject, maxLifeTime);
 
         GetComponent<MeshRenderer>().material.SetColor("_GlowColor", bulletColor);
         GetComponent<TrailRenderer>().material.SetColor("_GlowColor", bulletColor);
     }
 
     private void FixedUpdate() {
+        // Needed to maintain the correct speed even when bouncing off of surfaces that aren't
+        // actually a clean vertical surface to rebound off of.
         bulletInstance.velocity = bulletInstance.velocity.normalized * bulletSpeed;
     }
 
@@ -34,19 +31,19 @@ public class Bullet : MonoBehaviour
         Collider other = collision.collider;
 
         if (other.tag.StartsWith("Player"))
-        {
             other.GetComponent<PlayerHealth>().DoDamage(bulletDmg);
-            Destroy(gameObject);
-        }
         else if (other.tag == "ForceField")
-        {
             other.GetComponent<ForceField>().DoDamage();
-            Destroy(gameObject);
-        }
+
+        GetComponent<AudioSource>().PlayOneShot(bounceSound);
 
         if ((other.tag == "Wall") && bouncesLeft != 0)
             bouncesLeft--;
-        else if (bouncesLeft == 0)
+        else
             Destroy(gameObject);
+    }
+
+    private void OnDestroy() {
+        GetComponent<AudioSource>().PlayOneShot(bounceSound);
     }
 }

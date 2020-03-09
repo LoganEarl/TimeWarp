@@ -4,10 +4,14 @@ using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
+    [SerializeField] private AudioClip hurtSound;
+
+    public int TimeAlive { get; private set; }
     public int MaxHealth { get; set; } = 3;
+
     private int health = 3;
     private bool dead = false;
-    public int TimeAlive { get; private set; }
+    private AudioSource audio;
 
     public int Health {
         get {
@@ -17,7 +21,7 @@ public class PlayerHealth : MonoBehaviour
             if (value > MaxHealth) value = MaxHealth;
             if (value < 0) value = 0;
             health = value;
-            Dead = Health == 0;
+            Dead = Health <= 0;
         }
     }
     public bool Dead {
@@ -37,8 +41,13 @@ public class PlayerHealth : MonoBehaviour
 
     public void DoDamage(int damage)
     {
-        if(damage > 0)
+        if (damage > 0)
+        {
             Health -= damage;
+            float temp = audio.volume;
+            audio.PlayOneShot(hurtSound, 0.3f);
+            //audio.volume = temp;
+        }
     }
 
     public void FullHeal()
@@ -54,5 +63,6 @@ public class PlayerHealth : MonoBehaviour
     public void Awake()
     {
         FullHeal();
+        audio = GetComponent<AudioSource>();
     }
 }
