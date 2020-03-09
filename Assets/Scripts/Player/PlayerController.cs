@@ -27,12 +27,14 @@ public class PlayerController : MonoBehaviour, IRecordable
     [SerializeField] private GameObject equipmentGuide;
     [SerializeField] private float lookOffset;
     [SerializeField] private float turnSpeed, moveSpeed;
+    [SerializeField] private int lookSnap = 5;
     [SerializeField] private AudioClip[] smacktalk;
 #pragma warning restore IDE0044
 
+    #region Components
     //player components/info
     private static bool talking = false;
-    private int playerNumber = 0;
+    [SerializeField] private int playerNumber = 0;
     private bool usingSnapshots = false;
     private bool aimLocked = false;
     private bool loadedCursor = false;
@@ -41,11 +43,11 @@ public class PlayerController : MonoBehaviour, IRecordable
     private PlayerHealth health;
     private Color playerColor;
     private AudioSource voiceLine;
+    #endregion
 
     //movement
     private bool isIdle = true;
     private int frameCounter = 0;
-    private readonly int lookSnap = 5;
     private Vector3 position, velocity, lookDirection;
     private Quaternion desiredRotation = Quaternion.identity;
     private PlayerSnapshot snapshot;
@@ -67,7 +69,7 @@ public class PlayerController : MonoBehaviour, IRecordable
             gameObject.transform.localScale = new Vector3(2, 2, 2); //unhides the player if they are hidden
 
             frameCounter++;
-            if (frameCounter > 30)
+            if (frameCounter > 30) //maxFrames or something
             {
                 frameCounter = 0;
                 roundClearingList.RemoveAll(gameObject => gameObject == null);
@@ -83,7 +85,8 @@ public class PlayerController : MonoBehaviour, IRecordable
 
             //read in the calculated values from the rigidbody
             velocity = rigidBody.velocity;
-            position = rigidBody.position;
+            position = rigidBody.position; // seperate method?
+            //end
 
             if (usingSnapshots)
                 RecordedFrame();
@@ -158,6 +161,9 @@ public class PlayerController : MonoBehaviour, IRecordable
             gameObject.transform.localScale = new Vector3(0, 0, 0); //hides the player without deactiviating
             if (targetingCursor != null) targetingCursor.SetActive(false);
             if (shieldPlacer != null) Destroy(shieldPlacer);
+            
+            //foreach (Transform obj in gameObject.GetComponentsInChildren<Transform>())
+            //    obj.gameObject.layer = LayerMask.NameToLayer("Player" + playerNumber);
         }
     }
 
@@ -244,6 +250,7 @@ public class PlayerController : MonoBehaviour, IRecordable
     private void PlaceEquipment()
     {
         GameObject shieldInstance = Instantiate(equipment, shieldTransform.position, shieldTransform.rotation) as GameObject;
+        shieldInstance.layer = LayerMask.NameToLayer("ForceField" + playerNumber);
         roundClearingList.Add(shieldInstance.gameObject);
     }
 
@@ -251,21 +258,20 @@ public class PlayerController : MonoBehaviour, IRecordable
     {
         Rigidbody bulletInstance = Instantiate(bullet, fireTransform.position, fireTransform.rotation) as Rigidbody;
         bulletInstance.GetComponent<Bullet>().bulletColor = playerColor;
+        bulletInstance.GetComponent<Bullet>().playerNumber = playerNumber;
+
+        bulletInstance.gameObject.layer = LayerMask.NameToLayer("Projectile" + playerNumber);
         bulletInstance.velocity = fireTransform.forward;
 
         roundClearingList.Add(bulletInstance.gameObject);
 
-        bool speaking = (Random.value * 100) <= 50;
+        bool speaking = (Random.value * 100) <= 40;
         int randomSound = Mathf.RoundToInt(Random.value * (smacktalk.Length - 1));
-
-        //foreach(AudioClip clip in smacktalk)
-        //Debug.Log("talking: " + talking + ", speaking: " + speaking + ", sound#: " + randomSound);
-
+        
         if (speaking)
         {
             if (!talking)
             {
-                Debug.Log("I should be saying something");
                 voiceLine.PlayOneShot(smacktalk[randomSound]);
                 talking = true;
                 Invoke("TalkingStopped", smacktalk[randomSound].length);
@@ -311,15 +317,19 @@ public class PlayerController : MonoBehaviour, IRecordable
 
         SkinnedMeshRenderer secondaryRenderer = gameObject.GetComponentsInChildren<SkinnedMeshRenderer>()[0];
         SkinnedMeshRenderer primaryRenderer = gameObject.GetComponentsInChildren<SkinnedMeshRenderer>()[1];
+
         if (useSnapshots)
         {
-            gameObject.layer = LayerMask.NameToLayer("BlockingLayer");
+            foreach (Transform obj in gameObject.GetComponentsInChildren<Transform>())
+                obj.gameObject.layer = LayerMask.NameToLayer("Player" + playerNumber);
+
             primaryRenderer.material = Resources.Load<Material>("Materials/Player/Player" + playerNumber + "Primary");
             secondaryRenderer.material = Resources.Load<Material>("Materials/Player/Player" + playerNumber + "Secondary");
         }
         else
         {
             gameObject.layer = LayerMask.NameToLayer("Ghost");
+
             primaryRenderer.material = Resources.Load<Material>("Materials/Player/Player" + playerNumber + "PrimaryGhost");
             secondaryRenderer.material = Resources.Load<Material>("Materials/Player/Player" + playerNumber + "SecondaryGhost");
         }

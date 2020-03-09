@@ -214,7 +214,7 @@ public class PlanManager : MonoBehaviour, IGameMode
         private static readonly int STATE_LENGTH = 2 * 50;
         private readonly bool spawnNewPlayers;
 
-        private readonly StateSpanwed nextState;
+        private readonly StateSpawned nextState;
 
         internal StateSpawning(bool spawnNewPlayers, PlanManager manager) : base(manager)
         {
@@ -244,7 +244,7 @@ public class PlanManager : MonoBehaviour, IGameMode
         }
 
         public override bool TimeAdvancing { get => true; }
-        private protected override PlanGameState NextState { get => new StateSpanwed(manager); }
+        private protected override PlanGameState NextState { get => new StateSpawned(manager); }
         public override float SecondsRemaining { get => (MaxSteps - StepNumber + nextState.MaxSteps) * Time.fixedDeltaTime; }
     }
 
