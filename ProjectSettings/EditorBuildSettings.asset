@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/testLevel.unity
     guid: dfddcf07e921f4946b0f7e5e817b0e63
+  - enabled: 1
+    path: Assets/Scenes/BounceMap.unity
+    guid: 42475f8e66f3bfc45bc892df991a0cea
   m_configObjects: {}
