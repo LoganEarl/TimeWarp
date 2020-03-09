@@ -7,6 +7,8 @@ public class PlanManager : MonoBehaviour, IGameMode
 {
     private ILevelConfig levelConfig = null;
 
+    [SerializeField] private SpawnerController spawnerController;
+
     private Dictionary<string, GameObject> loadedPlayerModels = new Dictionary<string, GameObject>();
     private PlanPlayerManager[] playerManagers = null;
     private List<GameObject> playerObjects = new List<GameObject>();
@@ -15,8 +17,17 @@ public class PlanManager : MonoBehaviour, IGameMode
     private bool runningRecordingRound = false;
 
     //================================================Public Accessors
-
-    [SerializeField] private int roundLength = 3 * 50;
+    [SerializeField] private float roundLengthSeconds = 20;
+    private int RoundLength {
+        get
+        {
+            return (int)(roundLengthSeconds * 50);
+        }
+        set
+        {
+            roundLengthSeconds = value / 50.0f;
+        }
+    }
     public int NumPlayers { get; private set; }
     public int MaxRounds { get; private set; } = 1;
     public int RoundNumber { get; private set; } = -1;      //starts at -1, but first match is 0.
@@ -220,6 +231,8 @@ public class PlanManager : MonoBehaviour, IGameMode
                 manager.LoadNewPlayers();
             }
 
+            manager.spawnerController.BeginSpawnSequence(STATE_LENGTH, STATE_LENGTH + nextState.MaxSteps, manager.levelConfig.GetAllSpawnPositions());
+
             foreach (PlanPlayerManager manager in manager.playerManagers)
                 manager.ResetAll();
 
@@ -253,7 +266,7 @@ public class PlanManager : MonoBehaviour, IGameMode
     {
         public StatePlaying(PlanManager manager) : base(manager)
         {
-            MaxSteps = manager.roundLength;
+            MaxSteps = manager.RoundLength;
         }
 
         private protected override void OnTick()
@@ -281,7 +294,7 @@ public class PlanManager : MonoBehaviour, IGameMode
                 if (manager.runningRecordingRound)
                     return new StateFinished(manager);
                 else
-                    return new StateSpawning(manager.RoundNumber < manager.MaxRounds-1, manager);
+                    return new StateSpawning(manager.RoundNumber < manager.MaxRounds - 1, manager);
 
             }
         }

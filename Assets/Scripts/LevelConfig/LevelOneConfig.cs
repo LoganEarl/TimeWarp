@@ -42,4 +42,9 @@ public class LevelOneConfig : ILevelConfig
     {
         return playerSpawns[playerNum % 2][matchNum % 5];
     }
+
+    public Vector3[][] GetAllSpawnPositions()
+    {
+        return playerSpawns;
+    }
 }

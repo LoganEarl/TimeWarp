@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7058409687327364153}
   - component: {fileID: 7058409687327364148}
   - component: {fileID: 7058409687327364151}
+  - component: {fileID: 7306439072910383384}
   m_Layer: 0
   m_Name: LobbyDriver
   m_TagString: Untagged
@@ -60,7 +61,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42df757e6f618f9459c9749139bea6cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UICanvas: {fileID: 0}
+  spawnerController: {fileID: 7306439072910383384}
+  roundLength: 150
 --- !u!95 &7058409687327364151
 Animator:
   serializedVersion: 3
@@ -80,3 +82,17 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &7306439072910383384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7058409687327364152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a6539f67e2c066428acea2ab2c5c4b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnerPrefab: {fileID: 1140140958406709208, guid: 0f94256698765df409e046fa3cd0f5db,
+    type: 3}
