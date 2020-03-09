@@ -24,15 +24,14 @@ TagManager:
   - Menus
   - BlockingLayer
   - Ghost
-  - Projectile
   - Player0
   - Player1
-  - ForceField
+  - ForceField0
+  - ForceField1
   - PostProcess
   - PlayerBarrier
-  - 
-  - 
-  - 
+  - Projectile0
+  - Projectile1
   - 
   - 
   - 

@@ -16,7 +16,7 @@ public class PlanManager : MonoBehaviour, IGameMode
 
     //================================================Public Accessors
 
-    [SerializeField] private int roundLength = 3 * 50;
+    [SerializeField] private int roundLength = 18 * 50;
     public int NumPlayers { get; private set; }
     public int MaxRounds { get; private set; } = 1;
     public int RoundNumber { get; private set; } = -1;      //starts at -1, but first match is 0.
@@ -203,13 +203,13 @@ public class PlanManager : MonoBehaviour, IGameMode
         private static readonly int STATE_LENGTH = 2 * 50;
         private readonly bool spawnNewPlayers;
 
-        private readonly StateSpanwed nextState;
+        private readonly StateSpawned nextState;
 
         public StateSpawning(bool spawnNewPlayers, PlanManager manager) : base(manager)
         {
             this.spawnNewPlayers = spawnNewPlayers;
             MaxSteps = STATE_LENGTH;
-            nextState = new StateSpanwed(manager);
+            nextState = new StateSpawned(manager);
         }
 
         public override void OnEnterState()
@@ -231,16 +231,16 @@ public class PlanManager : MonoBehaviour, IGameMode
         }
 
         public override bool TimeAdvancing { get => true; }
-        private protected override PlanGameState NextState { get => new StateSpanwed(manager); }
+        private protected override PlanGameState NextState { get => new StateSpawned(manager); }
         public override float SecondsRemaining { get => (MaxSteps - StepNumber + nextState.MaxSteps) * Time.fixedDeltaTime; }
     }
 
     //active from when players are spawned in to the point the match starts
-    public class StateSpanwed : PlanGameState
+    public class StateSpawned : PlanGameState
     {
         private static readonly int STATE_LENGTH = 2 * 50;
 
-        public StateSpanwed(PlanManager manager) : base(manager) { MaxSteps = STATE_LENGTH; }
+        public StateSpawned(PlanManager manager) : base(manager) { MaxSteps = STATE_LENGTH; }
 
         public override void OnEnterState()
         {
