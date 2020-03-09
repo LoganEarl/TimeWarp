@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    [SerializeField] private readonly AudioClip bounceSound;
-    [SerializeField] private readonly float bulletSpeed = 25;
-    [SerializeField] private readonly int bulletDmg = 1;
+    [SerializeField] private AudioClip bounceSound;
+    [SerializeField] private float bulletSpeed = 25;
+    [SerializeField] private int bulletDmg = 1;
     [SerializeField] private int bouncesLeft = 4;
 
     public Color bulletColor { private get; set; }
