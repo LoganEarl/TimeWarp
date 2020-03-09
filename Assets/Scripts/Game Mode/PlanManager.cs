@@ -146,7 +146,7 @@ public class PlanManager : MonoBehaviour, IGameMode
     }
 
     //================================================Game States
-    internal abstract class PlanGameState : IGameState
+    public abstract class PlanGameState : IGameState
     {
         private protected PlanManager manager;
         private protected PlanGameState(PlanManager manager)
@@ -214,7 +214,7 @@ public class PlanManager : MonoBehaviour, IGameMode
         private static readonly int STATE_LENGTH = 2 * 50;
         private readonly bool spawnNewPlayers;
 
-        private readonly StateSpawned nextState;
+        private readonly StateSpanwed nextState;
 
         internal StateSpawning(bool spawnNewPlayers, PlanManager manager) : base(manager)
         {
@@ -244,12 +244,12 @@ public class PlanManager : MonoBehaviour, IGameMode
         }
 
         public override bool TimeAdvancing { get => true; }
-        private protected override PlanGameState NextState { get => new StateSpawned(manager); }
+        private protected override PlanGameState NextState { get => new StateSpanwed(manager); }
         public override float SecondsRemaining { get => (MaxSteps - StepNumber + nextState.MaxSteps) * Time.fixedDeltaTime; }
     }
 
     //active from when players are spawned in to the point the match starts
-    internal class StateSpanwed : PlanGameState
+    public class StateSpanwed : PlanGameState
     {
         private static readonly int STATE_LENGTH = 2 * 50;
 

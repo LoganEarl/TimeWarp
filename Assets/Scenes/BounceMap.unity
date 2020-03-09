@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 2425357}
   m_Layer: 0
   m_Name: Cylinder (6)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -227,7 +227,7 @@ GameObject:
   - component: {fileID: 18788119}
   m_Layer: 0
   m_Name: Cylinder (15)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -393,6 +393,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: BumperSupport (1)
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 9c9b7447d8db2e04a92a4264e0ae0665,
+        type: 3}
+      propertyPath: m_TagString
+      value: Wall
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9c9b7447d8db2e04a92a4264e0ae0665, type: 3}
 --- !u!4 &54676015 stripped
@@ -427,7 +432,7 @@ GameObject:
   - component: {fileID: 73270879}
   m_Layer: 0
   m_Name: Cylinder
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -520,7 +525,7 @@ GameObject:
   - component: {fileID: 78878620}
   m_Layer: 0
   m_Name: Cube (7)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -779,6 +784,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: BumperSupport (1)
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 9c9b7447d8db2e04a92a4264e0ae0665,
+        type: 3}
+      propertyPath: m_TagString
+      value: Wall
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9c9b7447d8db2e04a92a4264e0ae0665, type: 3}
 --- !u!4 &124538330 stripped
@@ -874,6 +884,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bumper1 (3)
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: b8565a0a66f854c49a153368bf672b83,
+        type: 3}
+      propertyPath: m_TagString
+      value: Wall
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b8565a0a66f854c49a153368bf672b83, type: 3}
 --- !u!1 &148971513
@@ -890,7 +905,7 @@ GameObject:
   - component: {fileID: 148971515}
   m_Layer: 0
   m_Name: Cylinder (4)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -983,7 +998,7 @@ GameObject:
   - component: {fileID: 163304802}
   m_Layer: 0
   m_Name: Cube (2)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1148,6 +1163,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: BumperSupport
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 9c9b7447d8db2e04a92a4264e0ae0665,
+        type: 3}
+      propertyPath: m_TagString
+      value: Wall
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9c9b7447d8db2e04a92a4264e0ae0665, type: 3}
 --- !u!4 &186230560 stripped
@@ -1243,6 +1263,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: BumperSupport
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 9c9b7447d8db2e04a92a4264e0ae0665,
+        type: 3}
+      propertyPath: m_TagString
+      value: Wall
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9c9b7447d8db2e04a92a4264e0ae0665, type: 3}
 --- !u!1 &201775331 stripped
@@ -1262,7 +1287,7 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 14
   m_Mesh: {fileID: -2881853311395361500, guid: b8565a0a66f854c49a153368bf672b83, type: 3}
 --- !u!1001 &202010080
@@ -1352,6 +1377,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: BumperSupport
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 9c9b7447d8db2e04a92a4264e0ae0665,
+        type: 3}
+      propertyPath: m_TagString
+      value: Wall
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9c9b7447d8db2e04a92a4264e0ae0665, type: 3}
 --- !u!1001 &202865689
@@ -1431,6 +1461,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Lava Pit
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 4db1a8586b1a3e84dae897adfe684e20,
+        type: 3}
+      propertyPath: m_TagString
+      value: Wall
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4db1a8586b1a3e84dae897adfe684e20, type: 3}
 --- !u!1 &208464480 stripped
@@ -1450,7 +1485,7 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 14
   m_Mesh: {fileID: 5425328620730146190, guid: 3a6ec6a97e27cfc4fa1199efe54b991a, type: 3}
 --- !u!1 &208709291
@@ -1467,7 +1502,7 @@ GameObject:
   - component: {fileID: 208709293}
   m_Layer: 0
   m_Name: Cylinder (9)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1633,6 +1668,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bumper3 (2)
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 35f3df6db22ae4945aca803d4fcc3822,
+        type: 3}
+      propertyPath: m_TagString
+      value: Wall
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 35f3df6db22ae4945aca803d4fcc3822, type: 3}
 --- !u!1001 &230647725
@@ -1722,6 +1762,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bumper3
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 35f3df6db22ae4945aca803d4fcc3822,
+        type: 3}
+      propertyPath: m_TagString
+      value: Wall
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 35f3df6db22ae4945aca803d4fcc3822, type: 3}
 --- !u!1 &257872089
@@ -1739,7 +1784,7 @@ GameObject:
   - component: {fileID: 257872090}
   m_Layer: 0
   m_Name: Lava (1)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4959,6 +5004,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bumper1 (3)
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: b8565a0a66f854c49a153368bf672b83,
+        type: 3}
+      propertyPath: m_TagString
+      value: Wall
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b8565a0a66f854c49a153368bf672b83, type: 3}
 --- !u!1 &291612320
@@ -4975,7 +5025,7 @@ GameObject:
   - component: {fileID: 291612321}
   m_Layer: 0
   m_Name: Cylinder (2)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5074,7 +5124,7 @@ GameObject:
   - component: {fileID: 324980257}
   m_Layer: 0
   m_Name: Cylinder (7)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5176,7 +5226,7 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 14
   m_Mesh: {fileID: 2769338655157537729, guid: 35f3df6db22ae4945aca803d4fcc3822, type: 3}
 --- !u!1001 &327968952
@@ -5251,6 +5301,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: BounceMapBorder
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: ea4bfe0d671f6bc4a91cd2f7c457e86e,
+        type: 3}
+      propertyPath: m_TagString
+      value: Wall
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ea4bfe0d671f6bc4a91cd2f7c457e86e, type: 3}
 --- !u!1 &331100031
@@ -5267,7 +5322,7 @@ GameObject:
   - component: {fileID: 331100033}
   m_Layer: 0
   m_Name: Cylinder (3)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5360,7 +5415,7 @@ GameObject:
   - component: {fileID: 336172144}
   m_Layer: 0
   m_Name: Cylinder (21)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5456,7 +5511,7 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 14
   m_Mesh: {fileID: -2881853311395361500, guid: b8565a0a66f854c49a153368bf672b83, type: 3}
 --- !u!1 &347460155
@@ -5473,7 +5528,7 @@ GameObject:
   - component: {fileID: 347460157}
   m_Layer: 0
   m_Name: Cylinder (23)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5639,6 +5694,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bumper3 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 35f3df6db22ae4945aca803d4fcc3822,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 35f3df6db22ae4945aca803d4fcc3822,
+        type: 3}
+      propertyPath: m_TagString
+      value: Wall
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 35f3df6db22ae4945aca803d4fcc3822, type: 3}
 --- !u!1 &380540660
@@ -5655,7 +5720,7 @@ GameObject:
   - component: {fileID: 380540662}
   m_Layer: 0
   m_Name: Cylinder (14)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5757,7 +5822,7 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 14
   m_Mesh: {fileID: 2769338655157537729, guid: 35f3df6db22ae4945aca803d4fcc3822, type: 3}
 --- !u!4 &415631147 stripped
@@ -5843,6 +5908,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: BumperBorder (1)
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 12c401874e1b4bf4b80b5aad0f7f9788,
+        type: 3}
+      propertyPath: m_TagString
+      value: Wall
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12c401874e1b4bf4b80b5aad0f7f9788, type: 3}
 --- !u!1 &424326822
@@ -5859,7 +5929,7 @@ GameObject:
   - component: {fileID: 424326824}
   m_Layer: 0
   m_Name: Cylinder (8)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5996,7 +6066,7 @@ GameObject:
   - component: {fileID: 431322437}
   m_Layer: 0
   m_Name: Cylinder (12)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6089,7 +6159,7 @@ GameObject:
   - component: {fileID: 446964973}
   m_Layer: 0
   m_Name: Cylinder (14)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6202,7 +6272,7 @@ GameObject:
   - component: {fileID: 454437263}
   m_Layer: 0
   m_Name: Cylinder (24)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6295,7 +6365,7 @@ GameObject:
   - component: {fileID: 460285078}
   m_Layer: 0
   m_Name: Cylinder (20)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6494,7 +6564,7 @@ GameObject:
   - component: {fileID: 473204837}
   m_Layer: 0
   m_Name: Cylinder (17)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6660,6 +6730,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: BumperSupport
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 9c9b7447d8db2e04a92a4264e0ae0665,
+        type: 3}
+      propertyPath: m_TagString
+      value: Wall
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9c9b7447d8db2e04a92a4264e0ae0665, type: 3}
 --- !u!4 &501144912 stripped
@@ -6682,7 +6757,7 @@ GameObject:
   - component: {fileID: 503181183}
   m_Layer: 0
   m_Name: Cylinder (17)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6814,7 +6889,7 @@ GameObject:
   - component: {fileID: 510235817}
   m_Layer: 0
   m_Name: Cylinder (19)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6942,7 +7017,7 @@ GameObject:
   - component: {fileID: 544204263}
   m_Layer: 0
   m_Name: Cylinder (16)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7041,7 +7116,7 @@ GameObject:
   - component: {fileID: 562017284}
   m_Layer: 0
   m_Name: Cylinder (9)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7134,7 +7209,7 @@ GameObject:
   - component: {fileID: 562768312}
   m_Layer: 0
   m_Name: Cylinder (11)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7279,7 +7354,7 @@ GameObject:
   - component: {fileID: 634023869}
   m_Layer: 0
   m_Name: Cylinder
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7372,7 +7447,7 @@ GameObject:
   - component: {fileID: 635490783}
   m_Layer: 0
   m_Name: Cylinder (15)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7465,7 +7540,7 @@ GameObject:
   - component: {fileID: 639072397}
   m_Layer: 0
   m_Name: Cube (1)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7639,7 +7714,7 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 14
   m_Mesh: {fileID: 8437364415858216185, guid: 350755996459a6f45b92d6372ffd4fd0, type: 3}
 --- !u!1 &639732925
@@ -7656,7 +7731,7 @@ GameObject:
   - component: {fileID: 639732927}
   m_Layer: 0
   m_Name: Cylinder (19)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7855,7 +7930,7 @@ GameObject:
   - component: {fileID: 665369525}
   m_Layer: 0
   m_Name: Cylinder (7)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8183,7 +8258,7 @@ GameObject:
   - component: {fileID: 716960280}
   m_Layer: 0
   m_Name: Cylinder (3)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8411,7 +8486,7 @@ GameObject:
   - component: {fileID: 811418358}
   m_Layer: 0
   m_Name: Cylinder (25)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8504,7 +8579,7 @@ GameObject:
   - component: {fileID: 814332754}
   m_Layer: 0
   m_Name: Cylinder (1)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11780,7 +11855,7 @@ GameObject:
   - component: {fileID: 845626742}
   m_Layer: 0
   m_Name: Cylinder (18)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11900,7 +11975,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh18352
+  m_Name: pb_Mesh52158
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -12144,6 +12219,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bumper3 (2)
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 35f3df6db22ae4945aca803d4fcc3822,
+        type: 3}
+      propertyPath: m_TagString
+      value: Wall
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 35f3df6db22ae4945aca803d4fcc3822, type: 3}
 --- !u!1001 &939580699
@@ -12233,6 +12313,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bumper2 (2)
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 3a6ec6a97e27cfc4fa1199efe54b991a,
+        type: 3}
+      propertyPath: m_TagString
+      value: Wall
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3a6ec6a97e27cfc4fa1199efe54b991a, type: 3}
 --- !u!4 &939580700 stripped
@@ -12307,7 +12392,7 @@ GameObject:
   - component: {fileID: 1079044883}
   m_Layer: 0
   m_Name: Cylinder (13)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12479,6 +12564,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bumper2 (2)
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 3a6ec6a97e27cfc4fa1199efe54b991a,
+        type: 3}
+      propertyPath: m_TagString
+      value: Wall
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3a6ec6a97e27cfc4fa1199efe54b991a, type: 3}
 --- !u!4 &1130233893 stripped
@@ -12501,7 +12591,7 @@ GameObject:
   - component: {fileID: 1151824105}
   m_Layer: 0
   m_Name: Cylinder (5)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12600,7 +12690,7 @@ GameObject:
   - component: {fileID: 1223373941}
   m_Layer: 0
   m_Name: Cube (3)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12755,6 +12845,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: BumperBorder
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 12c401874e1b4bf4b80b5aad0f7f9788,
+        type: 3}
+      propertyPath: m_TagString
+      value: Wall
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12c401874e1b4bf4b80b5aad0f7f9788, type: 3}
 --- !u!1001 &1231562037
@@ -12844,6 +12939,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bumper3 (2)
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 35f3df6db22ae4945aca803d4fcc3822,
+        type: 3}
+      propertyPath: m_TagString
+      value: Wall
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 35f3df6db22ae4945aca803d4fcc3822, type: 3}
 --- !u!1 &1233321435
@@ -12860,7 +12960,7 @@ GameObject:
   - component: {fileID: 1233321437}
   m_Layer: 0
   m_Name: Cylinder (11)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13026,6 +13126,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bumper2 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 3a6ec6a97e27cfc4fa1199efe54b991a,
+        type: 3}
+      propertyPath: m_TagString
+      value: Wall
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3a6ec6a97e27cfc4fa1199efe54b991a, type: 3}
 --- !u!4 &1246537191 stripped
@@ -13048,7 +13153,7 @@ GameObject:
   - component: {fileID: 1261539048}
   m_Layer: 0
   m_Name: Cylinder (22)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13214,6 +13319,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bumper1 (2)
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: b8565a0a66f854c49a153368bf672b83,
+        type: 3}
+      propertyPath: m_TagString
+      value: Wall
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b8565a0a66f854c49a153368bf672b83, type: 3}
 --- !u!1001 &1282043027
@@ -13332,7 +13442,7 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 14
   m_Mesh: {fileID: 5425328620730146190, guid: 3a6ec6a97e27cfc4fa1199efe54b991a, type: 3}
 --- !u!4 &1308579824 stripped
@@ -13355,7 +13465,7 @@ GameObject:
   - component: {fileID: 1317148837}
   m_Layer: 0
   m_Name: Cube (6)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13510,6 +13620,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Lava Pit
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 4db1a8586b1a3e84dae897adfe684e20,
+        type: 3}
+      propertyPath: m_TagString
+      value: Wall
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4db1a8586b1a3e84dae897adfe684e20, type: 3}
 --- !u!1001 &1412108141
@@ -13598,6 +13713,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Bumper2 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 3a6ec6a97e27cfc4fa1199efe54b991a,
+        type: 3}
+      propertyPath: m_TagString
+      value: Wall
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3a6ec6a97e27cfc4fa1199efe54b991a, type: 3}
@@ -13694,6 +13814,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bumper3
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 35f3df6db22ae4945aca803d4fcc3822,
+        type: 3}
+      propertyPath: m_TagString
+      value: Wall
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 35f3df6db22ae4945aca803d4fcc3822, type: 3}
 --- !u!1 &1446958374
@@ -13710,7 +13835,7 @@ GameObject:
   - component: {fileID: 1446958376}
   m_Layer: 0
   m_Name: Cylinder (18)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13882,6 +14007,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bumper3
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 35f3df6db22ae4945aca803d4fcc3822,
+        type: 3}
+      propertyPath: m_TagString
+      value: Wall
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 35f3df6db22ae4945aca803d4fcc3822, type: 3}
 --- !u!1 &1500295961
@@ -13898,7 +14028,7 @@ GameObject:
   - component: {fileID: 1500295963}
   m_Layer: 0
   m_Name: Cylinder (6)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14158,6 +14288,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: BumperSupport (1)
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 9c9b7447d8db2e04a92a4264e0ae0665,
+        type: 3}
+      propertyPath: m_TagString
+      value: Wall
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9c9b7447d8db2e04a92a4264e0ae0665, type: 3}
 --- !u!1001 &1552529048
@@ -14256,7 +14391,7 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 14
   m_Mesh: {fileID: 8437364415858216185, guid: 350755996459a6f45b92d6372ffd4fd0, type: 3}
 --- !u!1 &1557503435
@@ -14273,7 +14408,7 @@ GameObject:
   - component: {fileID: 1557503436}
   m_Layer: 0
   m_Name: Cube (5)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14365,7 +14500,7 @@ GameObject:
   - component: {fileID: 1571443563}
   m_Layer: 0
   m_Name: Cylinder (13)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14458,7 +14593,7 @@ GameObject:
   - component: {fileID: 1590600598}
   m_Layer: 0
   m_Name: Cylinder (20)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14624,6 +14759,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bumper1 (2)
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: b8565a0a66f854c49a153368bf672b83,
+        type: 3}
+      propertyPath: m_TagString
+      value: Wall
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b8565a0a66f854c49a153368bf672b83, type: 3}
 --- !u!4 &1627284378 stripped
@@ -14661,7 +14801,7 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 14
   m_Mesh: {fileID: 2769338655157537729, guid: 35f3df6db22ae4945aca803d4fcc3822, type: 3}
 --- !u!1 &1695754321
@@ -14678,7 +14818,7 @@ GameObject:
   - component: {fileID: 1695754323}
   m_Layer: 0
   m_Name: Cylinder (25)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14871,7 +15011,7 @@ GameObject:
   - component: {fileID: 1734225441}
   m_Layer: 0
   m_Name: Cylinder (22)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15126,6 +15266,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: BumperSupport (1)
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 9c9b7447d8db2e04a92a4264e0ae0665,
+        type: 3}
+      propertyPath: m_TagString
+      value: Wall
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9c9b7447d8db2e04a92a4264e0ae0665, type: 3}
 --- !u!4 &1776300430 stripped
@@ -15148,7 +15293,7 @@ GameObject:
   - component: {fileID: 1776476499}
   m_Layer: 0
   m_Name: Cylinder (10)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15241,7 +15386,7 @@ GameObject:
   - component: {fileID: 1787671720}
   m_Layer: 0
   m_Name: Cylinder (2)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15326,7 +15471,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh18024
+  m_Name: pb_Mesh51792
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -15497,7 +15642,7 @@ GameObject:
   - component: {fileID: 1808527173}
   m_Layer: 0
   m_Name: Cylinder (8)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15590,7 +15735,7 @@ GameObject:
   - component: {fileID: 1843854033}
   m_Layer: 0
   m_Name: Cylinder (24)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15683,7 +15828,7 @@ GameObject:
   - component: {fileID: 1844272451}
   m_Layer: 0
   m_Name: Cylinder (23)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15849,6 +15994,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bumper3 (2)
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 35f3df6db22ae4945aca803d4fcc3822,
+        type: 3}
+      propertyPath: m_TagString
+      value: Wall
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 35f3df6db22ae4945aca803d4fcc3822, type: 3}
 --- !u!1 &1910214797
@@ -15904,7 +16054,7 @@ GameObject:
   - component: {fileID: 1932422468}
   m_Layer: 0
   m_Name: Cylinder (4)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15997,7 +16147,7 @@ GameObject:
   - component: {fileID: 1951284730}
   m_Layer: 0
   m_Name: Cylinder (10)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -16090,7 +16240,7 @@ GameObject:
   - component: {fileID: 1955012027}
   m_Layer: 0
   m_Name: Cylinder (21)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -16256,6 +16406,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bumper3
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 35f3df6db22ae4945aca803d4fcc3822,
+        type: 3}
+      propertyPath: m_TagString
+      value: Wall
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 35f3df6db22ae4945aca803d4fcc3822, type: 3}
 --- !u!1 &1985404314 stripped
@@ -16281,7 +16436,7 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 14
   m_Mesh: {fileID: 2769338655157537729, guid: 35f3df6db22ae4945aca803d4fcc3822, type: 3}
 --- !u!1 &1985910604
@@ -16296,7 +16451,7 @@ GameObject:
   - component: {fileID: 1985910605}
   m_Layer: 15
   m_Name: Post Processing
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -16346,7 +16501,7 @@ GameObject:
   - component: {fileID: 1995969984}
   m_Layer: 0
   m_Name: Cylinder (1)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -16439,7 +16594,7 @@ GameObject:
   - component: {fileID: 2022518350}
   m_Layer: 0
   m_Name: Cylinder (5)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -16532,7 +16687,7 @@ GameObject:
   - component: {fileID: 2112367669}
   m_Layer: 0
   m_Name: Cube (4)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -16624,7 +16779,7 @@ GameObject:
   - component: {fileID: 2126155424}
   m_Layer: 0
   m_Name: Cylinder (12)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -16717,7 +16872,7 @@ GameObject:
   - component: {fileID: 2128930216}
   m_Layer: 0
   m_Name: Cylinder (16)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
