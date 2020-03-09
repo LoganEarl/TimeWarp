@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: BounceField
+  m_Shader: {fileID: -6465566751694194690, guid: 399c77b3d0016974e8720076debf3adc,
+    type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 1
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - Texture2D_8952F5BE:
+        m_Texture: {fileID: 2800000, guid: 574cb4d2e80bf624c98e5ed009f7b80e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Triplanar_CDC61A95_Texture_1:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - Vector1_18418F02: 0.005
+    - Vector1_4D75F9A0: 0.6
+    - Vector1_C1C71FA: 0.02
+    - Vector1_CE492ED: 0.3
+    - Vector1_EFB30AAF: 0.25
+    - Vector1_F43A990C: 0.125
+    m_Colors:
+    - Color_40C52DAC: {r: 0.34686118, g: 0, b: 0.3679245, a: 1}
+    - Color_C52FA3E2: {r: 0.28237322, g: 0, b: 0.3301887, a: 0}
+    - Color_EFB440CF: {r: 4.2319465, g: 0, b: 0.996655, a: 0}
+    - Vector2_A79613B9: {r: 1, g: 0.5, b: 0, a: 0}

@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Space
+  m_Shader: {fileID: -6465566751694194690, guid: 82d87c8ad13302247ad198c9d54ba40f,
+    type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs: []
+    m_Floats:
+    - Vector1_57BBEBA9: 10
+    - Vector1_7EE7B542: 0.08
+    - Vector1_CD353504: 0.1
+    m_Colors:
+    - Color_7654CB30: {r: 11.984314, g: 3.5179105, b: 0, a: 0}
+    - Color_C49149CC: {r: 0.3318374, g: 0, b: 0.5566038, a: 0}
