@@ -741,6 +741,7 @@ GameObject:
   - component: {fileID: 2599042971034976956}
   - component: {fileID: 7587466129225085350}
   - component: {fileID: -7567462374546938229}
+  - component: {fileID: 6779278631680405762}
   m_Layer: 11
   m_Name: Player
   m_TagString: Player1
@@ -801,10 +802,12 @@ MonoBehaviour:
   lookOffset: -11
   turnSpeed: 20
   moveSpeed: 20
+  lookSnap: 5
   smacktalk:
   - {fileID: 8300000, guid: cecf1cc9d0f6b1d47ab6e32994f5409c, type: 3}
   - {fileID: 8300000, guid: 4091d81ae7fb5ca49b8a5472efd7f5c6, type: 3}
   - {fileID: 8300000, guid: a822deb7d994f92439ec0c37a5616cd0, type: 3}
+  playerNumber: 0
 --- !u!54 &2599042971034976956
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -931,6 +934,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &6779278631680405762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3490668678091344035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c539a5fcf210f4594172fe99f2256c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3651122610941456513
 GameObject:
   m_ObjectHideFlags: 0

@@ -11,6 +11,8 @@ TagManager:
   - StartButton
   - ForceField
   - HUD
+  - CameraPlayer0
+  - CameraPlayer1
   layers:
   - Default
   - TransparentFX
