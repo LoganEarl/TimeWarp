@@ -28,7 +28,9 @@ public class PlayerController : MonoBehaviour, IRecordable
     [SerializeField] private float lookOffset;
     [SerializeField] private float turnSpeed, moveSpeed;
     [SerializeField] private int lookSnap = 5;
+    [SerializeField] private float lookMagnitude = 16; //how far they can look in splitscreen
     [SerializeField] private AudioClip[] smacktalk;
+    [SerializeField] private Vector3 cameraHeight = new Vector3(0, 10, 0);
 #pragma warning restore IDE0044
 
     #region Components
@@ -52,6 +54,10 @@ public class PlayerController : MonoBehaviour, IRecordable
     private Quaternion desiredRotation = Quaternion.identity;
     private PlayerSnapshot snapshot;
     private IGameMode gameMode;
+    public Vector3 CameraPosition
+    {
+        get { return position + (lookDirection * .5f) + cameraHeight; }
+    }
 
     private void Awake()
     {
@@ -118,7 +124,7 @@ public class PlayerController : MonoBehaviour, IRecordable
             }
 
             Quaternion desiredRotation;
-            bool isLooking = lookDirection.magnitude > 0.1;
+            bool isLooking = lookDirection.magnitude > 0;
             bool isMoving = velocity.magnitude > 0.2;
 
             if (isLooking) {
@@ -147,7 +153,7 @@ public class PlayerController : MonoBehaviour, IRecordable
 
                 if(targetingCursor.activeInHierarchy)
                     targetingCursor.transform.position =
-                         rigidBody.position + lookDirection * 5 + new Vector3(0, fireTransform.position.y, 0);
+                         rigidBody.position + lookDirection + new Vector3(0, fireTransform.position.y, 0);
             }
 
             if (firingGun && !gameMode.GameState.PlayersFireLocked && (FireCallback?.Invoke() ?? true))
@@ -183,13 +189,14 @@ public class PlayerController : MonoBehaviour, IRecordable
         float horizontalAim = Input.GetAxis("AimHorizontal" + playerNumber);
         float verticalAim = Input.GetAxis("AimVertical" + playerNumber);
 
-        bool hasHorizontalAim = DeltaExceeds(horizontalAim, 0f, 0.02f);
-        bool hasVerticalAim = DeltaExceeds(verticalAim, 0f, 0.02f);
+        bool hasHorizontalAim = DeltaExceeds(horizontalAim, 0f, 0.1f);
+        bool hasVerticalAim = DeltaExceeds(verticalAim, 0f, 0.1f);
 
         if ((hasHorizontalAim || hasVerticalAim) && !aimLocked) {
             lookDirection = new Vector3(horizontalAim, 0f, verticalAim);
+            lookDirection *= lookMagnitude;
         }
-        else if (lookDirection.magnitude < 0.03)
+        else if (!aimLocked)
             lookDirection.Set(0, 0, 0);
 
         float fireActivity = Input.GetAxis("Fire" + playerNumber);

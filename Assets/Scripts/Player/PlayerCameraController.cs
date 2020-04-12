@@ -4,15 +4,38 @@ using UnityEngine;
 
 public class PlayerCameraController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField]
+    private Camera[] playerCameras;
+    private PlayerController[] mainPlayers;
+    private IGameMode gameMode;
+    private bool setup = false;
+
+    public void Setup(IGameMode gameMode, PlayerController[] mainPlayers)
     {
-        
+        this.gameMode = gameMode;
+        this.mainPlayers = mainPlayers;
+        setup = true;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Stop()
     {
-        
+        setup = false;
+    }
+
+    private void Update()
+    {
+        if (setup)
+        {
+            for(int playerIndex = 0; playerIndex < playerCameras.Length && playerIndex < mainPlayers.Length; playerIndex++)
+            {
+                Vector3 delta = mainPlayers[playerIndex].CameraPosition - playerCameras[playerIndex].transform.position;
+
+                Vector3 adj = delta / 15.0f;
+                if (adj.magnitude > 0.001)
+                {
+                    playerCameras[playerIndex].transform.position += adj;
+                }
+            }
+        }
     }
 }

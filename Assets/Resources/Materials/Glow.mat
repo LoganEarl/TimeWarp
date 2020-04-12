@@ -10,7 +10,7 @@ Material:
   m_Name: Glow
   m_Shader: {fileID: -6465566751694194690, guid: ed4050f134f2967438c7abf284420c7d,
     type: 3}
-  m_ShaderKeywords: 
+  m_ShaderKeywords: ETC1_EXTERNAL_ALPHA
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -20,5 +20,8 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs: []
-    m_Floats: []
-    m_Colors: []
+    m_Floats:
+    - Vector1_7B376830: 3
+    m_Colors:
+    - _BaseColor: {r: 0, g: 0, b: 0, a: 1}
+    - _GlowColor: {r: 0, g: 17.06667, b: 191.749, a: 0}

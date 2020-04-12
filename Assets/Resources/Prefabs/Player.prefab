@@ -803,10 +803,12 @@ MonoBehaviour:
   turnSpeed: 20
   moveSpeed: 20
   lookSnap: 5
+  lookMagnitude: 16
   smacktalk:
   - {fileID: 8300000, guid: cecf1cc9d0f6b1d47ab6e32994f5409c, type: 3}
   - {fileID: 8300000, guid: 4091d81ae7fb5ca49b8a5472efd7f5c6, type: 3}
   - {fileID: 8300000, guid: a822deb7d994f92439ec0c37a5616cd0, type: 3}
+  cameraHeight: {x: 0, y: 10, z: 0}
   playerNumber: 0
 --- !u!54 &2599042971034976956
 Rigidbody:
@@ -946,6 +948,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76c539a5fcf210f4594172fe99f2256c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerCameras: []
 --- !u!1 &3651122610941456513
 GameObject:
   m_ObjectHideFlags: 0

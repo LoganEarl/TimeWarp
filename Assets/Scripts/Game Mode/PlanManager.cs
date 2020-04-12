@@ -13,6 +13,7 @@ public class PlanManager : MonoBehaviour, IGameMode
     private PlanPlayerManager[] playerManagers = null;
     private List<GameObject> playerObjects = new List<GameObject>();
     private PlanHUDController hudController;
+    private PlayerCameraController cameraController = null;
 
     private bool runningRecordingRound = false;
 
@@ -96,6 +97,7 @@ public class PlanManager : MonoBehaviour, IGameMode
         this.levelConfig = levelConfig;
         this.NumPlayers = numPlayers;
         this.MaxRounds = levelConfig.GetMaxRounds();
+        
         gameState = new StateInitializing(this);
         gameState.OnEnterState();
     }
@@ -200,6 +202,8 @@ public class PlanManager : MonoBehaviour, IGameMode
 
             SceneManager.sceneLoaded -= manager.OnSceneLoaded;
 
+            manager.cameraController?.Stop();
+
             //Begin initialization
             manager.playerManagers = new PlanPlayerManager[manager.NumPlayers];
             for (int i = 0; i < manager.NumPlayers; i++)
@@ -241,6 +245,20 @@ public class PlanManager : MonoBehaviour, IGameMode
             else
                 manager.hudController.ReloadAll();
             manager.hudController.gameObject.SetActive(true);
+
+            PlayerController[] mainPlayers = new PlayerController[manager.NumPlayers];
+            for(int i = 0; i < mainPlayers.Length; i++)
+                mainPlayers[i] = manager.playerManagers[i].MainPlayer;
+
+            if (manager.cameraController == null)
+            {
+                GameObject cameraControllerObject = GameObject.FindWithTag("SplitscreenController");
+                if (cameraControllerObject != null)
+                    manager.cameraController = cameraControllerObject.GetComponent<PlayerCameraController>();
+            }
+
+            if(manager.cameraController != null)
+                manager.cameraController.Setup(manager, mainPlayers);
         }
 
         public override bool TimeAdvancing { get => true; }
