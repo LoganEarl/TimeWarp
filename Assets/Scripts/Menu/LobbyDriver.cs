@@ -88,7 +88,6 @@ public class LobbyDriver : MonoBehaviour
     {
         if (Input.GetButtonDown("Reset"))
         {
-            //Destroy(this.gameObject, 1f);
             selectedGameMode.Reset();
             SceneManager.LoadScene("Menu", LoadSceneMode.Single);
         }
