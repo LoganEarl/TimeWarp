@@ -259,6 +259,8 @@ public class PlanManager : MonoBehaviour, IGameMode
 
             if(manager.cameraController != null)
                 manager.cameraController.Setup(manager, mainPlayers);
+
+            manager.cameraController.gameObject.SetActive(spawnNewPlayers);
         }
 
         public override bool TimeAdvancing { get => true; }
