@@ -54,6 +54,7 @@ public class PlayerController : MonoBehaviour, IRecordable
     private Color playerColor;
     private AudioSource voiceLine;
     private RandomShoot shootSound;
+    private RandomShield shieldSound;
     #endregion
 
     #region movement
@@ -270,6 +271,18 @@ public class PlayerController : MonoBehaviour, IRecordable
         GameObject shieldInstance = Instantiate(equipment, shieldTransform.position, shieldTransform.rotation) as GameObject;
         shieldInstance.layer = LayerMask.NameToLayer("ForceField" + playerNumber);
         roundClearingList.Add(shieldInstance.gameObject);
+
+        if (!talking)
+        {
+            talking = true;
+            AudioClip sound = shieldSound.GetClip();
+
+            if (sound != null)
+            {
+                voiceLine.PlayOneShot(sound);
+                Invoke("TalkingStopped", sound.length);
+            }
+        }
     }
 
     private void Shoot()
