@@ -779,7 +779,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56e17c10d0e40de48a6e0bace1cad8ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hurtSound: {fileID: 0}
 --- !u!114 &7753736104076225717
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -792,11 +791,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6998682b688e7234f9c417e41df30d51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerNumber: 0
   fireTransform: {fileID: 1051835922776050759}
+  shieldTransform: {fileID: 1726537901591723644}
   bullet: {fileID: 2718643244815117112, guid: b1230d9a4c00d824dbae22f0b48fc769, type: 3}
   targetingCursor: {fileID: 1814408534329862, guid: 3dd1434c704a6f34997c698b06c80000,
     type: 3}
-  shieldTransform: {fileID: 1726537901591723644}
   equipment: {fileID: 3812315075213835272, guid: d93afc24d46aa1c4092527ff414b1970,
     type: 3}
   equipmentGuide: {fileID: 2962610272491726437, guid: 57e007a91795fab4db920309f6fbada3,
@@ -804,10 +804,9 @@ MonoBehaviour:
   lookOffset: -11
   turnSpeed: 20
   moveSpeed: 20
+  cameraHeight: {x: 0, y: 10, z: 0}
   lookSnap: 5
   lookMagnitude: 16
-  cameraHeight: {x: 0, y: 10, z: 0}
-  playerNumber: 0
 --- !u!114 &6779278631680405762
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -838,7 +837,7 @@ MonoBehaviour:
   - 0
   clips:
   - {fileID: 8300000, guid: caed1d08b86aa654d82f3b9d2530f178, type: 3}
-  - {fileID: 0}
+  - {fileID: 8300000, guid: b70371e5e70c55f44a8757a53b55e29e, type: 3}
 --- !u!114 &7820567274737333353
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -851,8 +850,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fbd45157eb8c9f4b9afc735c76c36d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activationChance: []
-  clips: []
+  activationChance:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  clips:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!54 &2599042971034976956
 Rigidbody:
   m_ObjectHideFlags: 0

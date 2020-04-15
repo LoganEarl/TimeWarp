@@ -22,24 +22,29 @@ public class PlayerController : MonoBehaviour, IRecordable
 
     #region SerializableFields
 #pragma warning disable IDE0044
+    [SerializeField] private int playerNumber = 0;
+
     [SerializeField] private Transform fireTransform;
-    [SerializeField] private Rigidbody bullet;
-    [SerializeField] private GameObject targetingCursor;
     [SerializeField] private Transform shieldTransform;
+
+    [SerializeField] private Rigidbody bullet;
+
+    [SerializeField] private GameObject targetingCursor;
     [SerializeField] private GameObject equipment;
     [SerializeField] private GameObject equipmentGuide;
+
     [SerializeField] private float lookOffset;
-    [SerializeField] private float turnSpeed, moveSpeed;
+    [SerializeField] private float turnSpeed;
+    [SerializeField] private float moveSpeed;
+
+    [SerializeField] private Vector3 cameraHeight = new Vector3(0, 10, 0);
     [SerializeField] private int lookSnap = 5;
     [SerializeField] private float lookMagnitude = 16; //how far they can look in splitscreen
-    [SerializeField] private Vector3 cameraHeight = new Vector3(0, 10, 0);
 #pragma warning restore IDE0044
     #endregion
 
     #region Components
-    //player components/info
     private static bool talking = false;
-    [SerializeField] private int playerNumber = 0;
     private bool usingSnapshots = false;
     private bool aimLocked = false;
     private bool loadedCursor = false;
