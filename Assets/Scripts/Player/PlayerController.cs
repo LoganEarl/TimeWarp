@@ -4,20 +4,23 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour, IRecordable
 {
-    //delegates
+    #region delegates
     public delegate bool FireEventCallback();
     public FireEventCallback FireCallback { private get; set; } = null;
     public delegate bool EquipmentEventCallback();
     public EquipmentEventCallback EquipmentCallback { private get; set; } = null;
+    #endregion
 
-    //equipment info
+    #region equipment
     private bool firingGun = false;
     private bool fired = false;
     private bool usingEquipment = false;
     private bool usedEquipment = false;
     private GameObject shieldPlacer;
     private List<GameObject> roundClearingList = new List<GameObject>();
+    #endregion
 
+    #region SerializableFields
 #pragma warning disable IDE0044
     [SerializeField] private Transform fireTransform;
     [SerializeField] private Rigidbody bullet;
@@ -29,9 +32,9 @@ public class PlayerController : MonoBehaviour, IRecordable
     [SerializeField] private float turnSpeed, moveSpeed;
     [SerializeField] private int lookSnap = 5;
     [SerializeField] private float lookMagnitude = 16; //how far they can look in splitscreen
-    [SerializeField] private AudioClip[] smacktalk;
     [SerializeField] private Vector3 cameraHeight = new Vector3(0, 10, 0);
 #pragma warning restore IDE0044
+    #endregion
 
     #region Components
     //player components/info
@@ -47,7 +50,7 @@ public class PlayerController : MonoBehaviour, IRecordable
     private AudioSource voiceLine;
     #endregion
 
-    //movement
+    #region movement
     private bool isIdle = true;
     private int frameCounter = 0;
     private Vector3 position, velocity, lookDirection;
@@ -58,6 +61,7 @@ public class PlayerController : MonoBehaviour, IRecordable
     {
         get { return position + (lookDirection * .5f) + cameraHeight; }
     }
+    #endregion
 
     private void Awake()
     {
@@ -273,17 +277,17 @@ public class PlayerController : MonoBehaviour, IRecordable
         roundClearingList.Add(bulletInstance.gameObject);
 
         bool speaking = (Random.value * 100) <= 40;
-        int randomSound = Mathf.RoundToInt(Random.value * (smacktalk.Length - 1));
+        //int randomSound = Mathf.RoundToInt(Random.value * (smacktalk.Length - 1));
         
-        if (speaking)
-        {
-            if (!talking)
-            {
-                voiceLine.PlayOneShot(smacktalk[randomSound]);
-                talking = true;
-                Invoke("TalkingStopped", smacktalk[randomSound].length);
-            }
-        }
+        //if (speaking)
+        //{
+        //    if (!talking)
+        //    {
+        //        voiceLine.PlayOneShot(smacktalk[randomSound]);
+        //        talking = true;
+        //        Invoke("TalkingStopped", smacktalk[randomSound].length);
+        //    }
+        //}
     }
 
     private void TalkingStopped() { talking = false; }
