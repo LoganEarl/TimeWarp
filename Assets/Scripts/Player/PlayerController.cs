@@ -48,6 +48,7 @@ public class PlayerController : MonoBehaviour, IRecordable
     private PlayerHealth health;
     private Color playerColor;
     private AudioSource voiceLine;
+    private RandomShoot shootSound;
     #endregion
 
     #region movement
@@ -70,6 +71,7 @@ public class PlayerController : MonoBehaviour, IRecordable
         animator = GetComponentInChildren<Animator>();
         rigidBody = GetComponent<Rigidbody>();
         health = GetComponent<PlayerHealth>();
+        shootSound = GetComponent<RandomShoot>();
     }
 
     private void FixedUpdate()
@@ -276,18 +278,17 @@ public class PlayerController : MonoBehaviour, IRecordable
 
         roundClearingList.Add(bulletInstance.gameObject);
 
-        bool speaking = (Random.value * 100) <= 40;
-        //int randomSound = Mathf.RoundToInt(Random.value * (smacktalk.Length - 1));
-        
-        //if (speaking)
-        //{
-        //    if (!talking)
-        //    {
-        //        voiceLine.PlayOneShot(smacktalk[randomSound]);
-        //        talking = true;
-        //        Invoke("TalkingStopped", smacktalk[randomSound].length);
-        //    }
-        //}
+        if (!talking)
+        {
+            talking = true;
+            AudioClip sound = shootSound.GetClip();
+
+            if (sound != null)
+            {
+                voiceLine.PlayOneShot(sound);
+                Invoke("TalkingStopped", sound.length);
+            }
+        }
     }
 
     private void TalkingStopped() { talking = false; }
