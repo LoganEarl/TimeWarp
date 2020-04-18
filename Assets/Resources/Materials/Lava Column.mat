@@ -7,12 +7,12 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Lava
-  m_Shader: {fileID: -6465566751694194690, guid: 4a7748142722ee4448619a5134dfe0ba,
+  m_Name: Lava Column
+  m_Shader: {fileID: -6465566751694194690, guid: 725c27bc12c965b4eb81aa727de70763,
     type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
-  m_EnableInstancingVariants: 1
+  m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -21,9 +21,8 @@ Material:
     serializedVersion: 3
     m_TexEnvs: []
     m_Floats:
-    - Vector1_6389D6D0: 100
-    - Vector1_8E2D3905: 1
-    - Vector1_A7FF78C7: 1
-    m_Colors:
-    - Color_1BC18A7D: {r: 0, g: 0, b: 0, a: 1}
-    - Color_E2A04882: {r: 1, g: 0.21697995, b: 0, a: 1}
+    - Vector1_315C981C: 0.1
+    - Vector1_64588D01: 5
+    - Vector1_6BD9563D: 0.1
+    - Vector1_998E7CFA: 5
+    m_Colors: []

@@ -25,3 +25,5 @@ Material:
     m_Colors:
     - Color_320CA256: {r: 0, g: 0, b: 0, a: 0}
     - Color_8764BAE6: {r: 1.7394055, g: 10.716981, b: 0, a: 0}
+    - _BaseColor: {r: 0, g: 0, b: 0, a: 1}
+    - _GlowColor: {r: 0, g: 17.06667, b: 191.749, a: 0}
