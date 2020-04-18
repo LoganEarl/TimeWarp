@@ -11,6 +11,9 @@ TagManager:
   - StartButton
   - ForceField
   - HUD
+  - CameraPlayer0
+  - CameraPlayer1
+  - SplitscreenController
   layers:
   - Default
   - TransparentFX
@@ -32,7 +35,7 @@ TagManager:
   - PlayerBarrier
   - Projectile0
   - Projectile1
-  - 
+  - WorldSpaceUI
   - 
   - 
   - 

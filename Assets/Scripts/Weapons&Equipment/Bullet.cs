@@ -34,9 +34,9 @@ public class Bullet : MonoBehaviour
         if (other.tag != "Wall")
         {
             if (other.tag != "Player" + playerNumber && other.tag != "Ghost")
-                other.GetComponent<PlayerHealth>().DoDamage(bulletDmg);
+                other.GetComponent<PlayerHealth>()?.DoDamage(bulletDmg);
             else if (other.tag == "ForceField")
-                other.GetComponent<ForceField>().DoDamage();
+                other.GetComponent<ForceField>()?.DoDamage();
         }
 
         GetComponent<AudioSource>().PlayOneShot(bounceSound);

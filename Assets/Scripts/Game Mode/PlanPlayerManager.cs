@@ -11,6 +11,17 @@ public class PlanPlayerManager
 {
     private List<MatchRecordingManager> playerRecordings = new List<MatchRecordingManager>();
     private List<PlayerController> playerControllers = new List<PlayerController>();
+
+    internal PlayerController MainPlayer
+    {
+        get
+        {
+            if (playerControllers.Count > 0)
+                return playerControllers[playerControllers.Count - 1];
+            return null;
+        }
+    }
+
     internal int MaxProjectiles { get; set; } = 10;
     internal int AvailableProjectiles { set; get; }
     internal int ProjectedProjectilesRemaining(int asOfStepNumber)
