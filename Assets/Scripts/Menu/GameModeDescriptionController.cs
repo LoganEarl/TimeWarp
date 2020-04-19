@@ -21,6 +21,8 @@ public class GameModeDescriptionController : MonoBehaviour {
                 this.description = ThePlanDescription();
             else if (gameModeName.Equals("Lineage"))
                 this.description = LineageDescription();
+            else
+                this.description = QuickInstinctsDescription();
     }
 
     private string ThePlanDescription()
@@ -35,5 +37,12 @@ public class GameModeDescriptionController : MonoBehaviour {
         return "A gamemode where the objective is to keep your past selves alive, while " +
                "attempting to eliminate one of your opponents past self. If your present " +
                "self dies, time warps back, and you get a chance to save yourself.";
+    }
+
+    private string QuickInstinctsDescription()
+    {
+        return "A gamemode that leverages the time travel feature to instead allow players " +
+               "to experience a fast-paced BULLET HELL, dodging the bullets of both the enemy " +
+               "player and their opponent’s past selves to see who can survive the most rounds total.";
     }
 }
