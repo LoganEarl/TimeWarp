@@ -45,7 +45,7 @@ public class LobbyDriver : MonoBehaviour
     public void SelectTestLevelWithIndex(int level) // maybe pass in levels by an index? or by name
     {
         if (level == 1)
-            selectedLevel = new TestLevelConfig();
+            selectedLevel = new BounceLevelConfig();
         else if(level == 2)
             selectedLevel = new LevelOneConfig();
         else if(level == 3)
@@ -88,7 +88,6 @@ public class LobbyDriver : MonoBehaviour
     {
         if (Input.GetButtonDown("Reset"))
         {
-            //Destroy(this.gameObject, 1f);
             selectedGameMode.Reset();
             SceneManager.LoadScene("Menu", LoadSceneMode.Single);
         }

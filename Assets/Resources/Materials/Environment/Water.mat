@@ -37,6 +37,6 @@ Material:
     - _MAIN_LIGHT_SHADOWS: 0
     - _RECEIVE_SHADOWS_OFF: 1
     m_Colors:
-    - Color_2695B5BC: {r: 0, g: 0.5566038, b: 0.52359897, a: 0}
-    - Color_617E9801: {r: 0, g: 1, b: 1, a: 1}
-    - Color_F3A47F7C: {r: 0, g: 0.9685724, b: 1, a: 1}
+    - Color_2695B5BC: {r: 0.41656473, g: 0, b: 0.8018868, a: 0}
+    - Color_617E9801: {r: 0, g: 0.3882353, b: 0.35291383, a: 1}
+    - Color_F3A47F7C: {r: 0.9371995, g: 0.5424528, b: 1, a: 1}

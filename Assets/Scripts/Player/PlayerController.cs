@@ -4,35 +4,47 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour, IRecordable
 {
-    //delegates
+    #region delegates
     public delegate bool FireEventCallback();
     public FireEventCallback FireCallback { private get; set; } = null;
     public delegate bool EquipmentEventCallback();
     public EquipmentEventCallback EquipmentCallback { private get; set; } = null;
+    #endregion
 
-    //equipment info
+    #region equipment
     private bool firingGun = false;
     private bool fired = false;
     private bool usingEquipment = false;
     private bool usedEquipment = false;
     private GameObject shieldPlacer;
     private List<GameObject> roundClearingList = new List<GameObject>();
+    #endregion
 
+    #region SerializableFields
 #pragma warning disable IDE0044
+    [SerializeField] private int playerNumber = 0;
+
     [SerializeField] private Transform fireTransform;
-    [SerializeField] private Rigidbody bullet;
-    [SerializeField] private GameObject targetingCursor;
     [SerializeField] private Transform shieldTransform;
+
+    [SerializeField] private Rigidbody bullet;
+
+    [SerializeField] private GameObject targetingCursor;
     [SerializeField] private GameObject equipment;
     [SerializeField] private GameObject equipmentGuide;
-    [SerializeField] private float lookOffset;
-    [SerializeField] private float turnSpeed, moveSpeed;
-    [SerializeField] private AudioClip[] smacktalk;
-#pragma warning restore IDE0044
 
-    //player components/info
+    [SerializeField] private float lookOffset;
+    [SerializeField] private float turnSpeed;
+    [SerializeField] private float moveSpeed;
+
+    [SerializeField] private Vector3 cameraHeight = new Vector3(0, 10, 0);
+    [SerializeField] private int lookSnap = 5;
+    [SerializeField] private float lookMagnitude = 16; //how far they can look in splitscreen
+#pragma warning restore IDE0044
+    #endregion
+
+    #region Components
     private static bool talking = false;
-    private int playerNumber = 0;
     private bool usingSnapshots = false;
     private bool aimLocked = false;
     private bool loadedCursor = false;
@@ -41,15 +53,22 @@ public class PlayerController : MonoBehaviour, IRecordable
     private PlayerHealth health;
     private Color playerColor;
     private AudioSource voiceLine;
+    private RandomShoot shootSound;
+    private RandomShield shieldSound;
+    #endregion
 
-    //movement
+    #region movement
     private bool isIdle = true;
     private int frameCounter = 0;
-    private readonly int lookSnap = 5;
     private Vector3 position, velocity, lookDirection;
     private Quaternion desiredRotation = Quaternion.identity;
     private PlayerSnapshot snapshot;
     private IGameMode gameMode;
+    public Vector3 CameraPosition
+    {
+        get { return position + (lookDirection * .5f) + cameraHeight; }
+    }
+    #endregion
 
     private void Awake()
     {
@@ -58,6 +77,7 @@ public class PlayerController : MonoBehaviour, IRecordable
         animator = GetComponentInChildren<Animator>();
         rigidBody = GetComponent<Rigidbody>();
         health = GetComponent<PlayerHealth>();
+        shootSound = GetComponent<RandomShoot>();
     }
 
     private void FixedUpdate()
@@ -67,7 +87,7 @@ public class PlayerController : MonoBehaviour, IRecordable
             gameObject.transform.localScale = new Vector3(2, 2, 2); //unhides the player if they are hidden
 
             frameCounter++;
-            if (frameCounter > 30)
+            if (frameCounter > 30) //maxFrames or something
             {
                 frameCounter = 0;
                 roundClearingList.RemoveAll(gameObject => gameObject == null);
@@ -83,7 +103,8 @@ public class PlayerController : MonoBehaviour, IRecordable
 
             //read in the calculated values from the rigidbody
             velocity = rigidBody.velocity;
-            position = rigidBody.position;
+            position = rigidBody.position; // seperate method?
+            //end
 
             if (usingSnapshots)
                 RecordedFrame();
@@ -115,7 +136,7 @@ public class PlayerController : MonoBehaviour, IRecordable
             }
 
             Quaternion desiredRotation;
-            bool isLooking = lookDirection.magnitude > 0.1;
+            bool isLooking = lookDirection.magnitude > 0;
             bool isMoving = velocity.magnitude > 0.2;
 
             if (isLooking) {
@@ -144,7 +165,7 @@ public class PlayerController : MonoBehaviour, IRecordable
 
                 if(targetingCursor.activeInHierarchy)
                     targetingCursor.transform.position =
-                         rigidBody.position + lookDirection * 5 + new Vector3(0, fireTransform.position.y, 0);
+                         rigidBody.position + lookDirection + new Vector3(0, fireTransform.position.y, 0);
             }
 
             if (firingGun && !gameMode.GameState.PlayersFireLocked && (FireCallback?.Invoke() ?? true))
@@ -158,6 +179,9 @@ public class PlayerController : MonoBehaviour, IRecordable
             gameObject.transform.localScale = new Vector3(0, 0, 0); //hides the player without deactiviating
             if (targetingCursor != null) targetingCursor.SetActive(false);
             if (shieldPlacer != null) Destroy(shieldPlacer);
+            
+            //foreach (Transform obj in gameObject.GetComponentsInChildren<Transform>())
+            //    obj.gameObject.layer = LayerMask.NameToLayer("Player" + playerNumber);
         }
     }
 
@@ -177,13 +201,14 @@ public class PlayerController : MonoBehaviour, IRecordable
         float horizontalAim = Input.GetAxis("AimHorizontal" + playerNumber);
         float verticalAim = Input.GetAxis("AimVertical" + playerNumber);
 
-        bool hasHorizontalAim = DeltaExceeds(horizontalAim, 0f, 0.02f);
-        bool hasVerticalAim = DeltaExceeds(verticalAim, 0f, 0.02f);
+        bool hasHorizontalAim = DeltaExceeds(horizontalAim, 0f, 0.1f);
+        bool hasVerticalAim = DeltaExceeds(verticalAim, 0f, 0.1f);
 
         if ((hasHorizontalAim || hasVerticalAim) && !aimLocked) {
             lookDirection = new Vector3(horizontalAim, 0f, verticalAim);
+            lookDirection *= lookMagnitude;
         }
-        else if (lookDirection.magnitude < 0.03)
+        else if (!aimLocked)
             lookDirection.Set(0, 0, 0);
 
         float fireActivity = Input.GetAxis("Fire" + playerNumber);
@@ -244,31 +269,42 @@ public class PlayerController : MonoBehaviour, IRecordable
     private void PlaceEquipment()
     {
         GameObject shieldInstance = Instantiate(equipment, shieldTransform.position, shieldTransform.rotation) as GameObject;
+        shieldInstance.layer = LayerMask.NameToLayer("ForceField" + playerNumber);
         roundClearingList.Add(shieldInstance.gameObject);
+
+        if (!talking)
+        {
+            talking = true;
+            AudioClip sound = shieldSound.GetClip();
+
+            if (sound != null)
+            {
+                voiceLine.PlayOneShot(sound);
+                Invoke("TalkingStopped", sound.length);
+            }
+        }
     }
 
     private void Shoot()
     {
         Rigidbody bulletInstance = Instantiate(bullet, fireTransform.position, fireTransform.rotation) as Rigidbody;
         bulletInstance.GetComponent<Bullet>().bulletColor = playerColor;
+        bulletInstance.GetComponent<Bullet>().playerNumber = playerNumber;
+
+        bulletInstance.gameObject.layer = LayerMask.NameToLayer("Projectile" + playerNumber);
         bulletInstance.velocity = fireTransform.forward;
 
         roundClearingList.Add(bulletInstance.gameObject);
 
-        bool speaking = (Random.value * 100) <= 50;
-        int randomSound = Mathf.RoundToInt(Random.value * (smacktalk.Length - 1));
-
-        //foreach(AudioClip clip in smacktalk)
-        //Debug.Log("talking: " + talking + ", speaking: " + speaking + ", sound#: " + randomSound);
-
-        if (speaking)
+        if (!talking)
         {
-            if (!talking)
+            talking = true;
+            AudioClip sound = shootSound.GetClip();
+
+            if (sound != null)
             {
-                Debug.Log("I should be saying something");
-                voiceLine.PlayOneShot(smacktalk[randomSound]);
-                talking = true;
-                Invoke("TalkingStopped", smacktalk[randomSound].length);
+                voiceLine.PlayOneShot(sound);
+                Invoke("TalkingStopped", sound.length);
             }
         }
     }
@@ -311,15 +347,19 @@ public class PlayerController : MonoBehaviour, IRecordable
 
         SkinnedMeshRenderer secondaryRenderer = gameObject.GetComponentsInChildren<SkinnedMeshRenderer>()[0];
         SkinnedMeshRenderer primaryRenderer = gameObject.GetComponentsInChildren<SkinnedMeshRenderer>()[1];
+
         if (useSnapshots)
         {
-            gameObject.layer = LayerMask.NameToLayer("BlockingLayer");
+            foreach (Transform obj in gameObject.GetComponentsInChildren<Transform>())
+                obj.gameObject.layer = LayerMask.NameToLayer("Player" + playerNumber);
+
             primaryRenderer.material = Resources.Load<Material>("Materials/Player/Player" + playerNumber + "Primary");
             secondaryRenderer.material = Resources.Load<Material>("Materials/Player/Player" + playerNumber + "Secondary");
         }
         else
         {
             gameObject.layer = LayerMask.NameToLayer("Ghost");
+
             primaryRenderer.material = Resources.Load<Material>("Materials/Player/Player" + playerNumber + "PrimaryGhost");
             secondaryRenderer.material = Resources.Load<Material>("Materials/Player/Player" + playerNumber + "SecondaryGhost");
         }
