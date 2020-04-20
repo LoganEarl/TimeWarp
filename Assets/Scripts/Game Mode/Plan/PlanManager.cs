@@ -260,7 +260,7 @@ public class PlanManager : MonoBehaviour, IGameMode
         public StateSpawned(PlanManager manager) : base(manager) { MaxSteps = STATE_LENGTH; }
 
         internal override void OnEnterState()
-        {
+        { 
             manager.PlayAnnouncerRound();
         }
 
