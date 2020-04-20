@@ -2,33 +2,37 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-// Call this to play audio >> FindObjectOfType<AudioManager>().PlaySFX/PlayBGM/PlayPlayer("clipName");
+// Call this to play audio >> FindObjectOfType<AudioManager>().PlaySFX/PlayBGM/PlayVoice("enter clipName");
 
 public class AudioManager : MonoBehaviour {
-    public static AudioManager instance;
 
-    private static readonly string FirstPlay = "FirstPlay";
-    private static readonly string BGMPref = "BGMPref";
-    private static readonly string SFXPref = "SFXPref";
-    private static readonly string PlayerPref = "PlayerPref";
-    private int firstPlayInt;
+    private static AudioManager instance;
+
+    private static float BGM_DEFAULT_VOLUME = .1f;
+    private static float SFX_DEFAULT_VOLUME = .3f;
+    private static float VOICE_DEFAULT_VOLUME = .5f;
+
     [SerializeField]
-    private Sound[] bgm, sfx, player;
+    private GameObject OptionsMenu;
     [SerializeField]
-    private Slider bgmVolumeSlider, sfxVolumeSlider, playerVolumeSlider;
-    private float bgmFloat, sfxFloat, playerFloat;
+    private Sound[] bgm, sfx, voice;
+    [SerializeField]
+    private Slider bgmVolumeSlider, sfxVolumeSlider, voiceVolumeSlider;
+
+    void Awake()
+    {
+        CheckInstance();
+    }
 
     void Start()
     {
-        checkInstance();
         LoadAllAudioSources(bgm);
         LoadAllAudioSources(sfx);
-        LoadAllAudioSources(player);
-        //LoadAudioSettings();
+        LoadAllAudioSources(voice);
         PlayBGM("Theme");
     }
     
-    public void checkInstance()
+    private void CheckInstance()
     {
         if (instance == null)
             instance = this;
@@ -48,55 +52,23 @@ public class AudioManager : MonoBehaviour {
             s.source = gameObject.AddComponent<AudioSource>();
             s.source.clip = s.clip;
             if (type == bgm)
-                s.source.volume = bgmVolumeSlider.value;
+                s.source.volume = BGM_DEFAULT_VOLUME;
             else if (type == sfx)
-                s.source.volume = sfxVolumeSlider.value;
+                s.source.volume = SFX_DEFAULT_VOLUME;
             else
-                s.source.volume = playerVolumeSlider.value;
+                s.source.volume = VOICE_DEFAULT_VOLUME;
             s.source.loop = s.loop;
         }
     }
 
-    private void LoadAudioSettings()
+    public static AudioManager GetInstance()
     {
-        firstPlayInt = PlayerPrefs.GetInt(FirstPlay);
-
-        if (firstPlayInt == 0)
-        {
-            bgmFloat = .1f;
-            sfxFloat = .5f;
-            playerFloat = .3f;
-            bgmVolumeSlider.value = bgmFloat;
-            sfxVolumeSlider.value = sfxFloat;
-            playerVolumeSlider.value = playerFloat;
-            PlayerPrefs.SetFloat(BGMPref, bgmFloat);
-            PlayerPrefs.SetFloat(SFXPref, sfxFloat);
-            PlayerPrefs.SetFloat(PlayerPref, playerFloat);
-            PlayerPrefs.SetInt(FirstPlay, -1);
-        }
-
-        else
-        {
-            bgmFloat = PlayerPrefs.GetFloat(BGMPref);
-            bgmVolumeSlider.value = bgmFloat;
-            sfxFloat = PlayerPrefs.GetFloat(SFXPref);
-            sfxVolumeSlider.value = sfxFloat;
-            playerFloat = PlayerPrefs.GetFloat(PlayerPref);
-            playerVolumeSlider.value = playerFloat;
-        }
+        return instance;
     }
-    
-    public void SaveAudioSettings()
+
+    public GameObject GetOptionsMenu()
     {
-        PlayerPrefs.SetFloat(BGMPref, bgmVolumeSlider.value);
-        PlayerPrefs.SetFloat(SFXPref, sfxVolumeSlider.value);
-        PlayerPrefs.SetFloat(PlayerPref, playerVolumeSlider.value);
-    }
-    
-    void OnApplicationFocus(bool focus)
-    {
-        if (!focus)
-            SaveAudioSettings();
+        return OptionsMenu;
     }
 
     public void PlaySFX (string clipName)
@@ -109,9 +81,9 @@ public class AudioManager : MonoBehaviour {
         Play(bgm, clipName);
     }
 
-    public void PlayPlayer (string clipName)
+    public void PlayVoice (string clipName)
     {
-        Play(player, clipName);
+        Play(voice, clipName);
     }
 
     private void Play(Sound[] type, string clipName)
@@ -119,7 +91,7 @@ public class AudioManager : MonoBehaviour {
         Sound s = Array.Find(type, sound => sound.name == clipName);
         if (s == null)
         {
-            Debug.LogWarning("Sound: " + clipName + " not found!");
+            //Debug.LogWarning("Sound: " + clipName + " not found!");
             return;
         }
         s.source.Play();
@@ -137,11 +109,9 @@ public class AudioManager : MonoBehaviour {
             s.source.volume = sfxVolumeSlider.value;
         }
 
-        foreach (Sound s in player)
+        foreach (Sound s in voice)
         {
-            s.source.volume = playerVolumeSlider.value;
+            s.source.volume = voiceVolumeSlider.value;
         }
-
-        //SaveAudioSettings();
     }
 }

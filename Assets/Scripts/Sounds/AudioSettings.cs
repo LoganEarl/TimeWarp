@@ -1,45 +1,28 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
+
+/*
+ * Attach this to the GameObject to bring up Options Prefab for Options Menu
+ */
 
 public class AudioSettings : MonoBehaviour
 {
-    private static readonly string BGMPref = "BGMPref";
-    private static readonly string SFXPref = "SFXPref";
-    private static readonly string PlayerPref = "PlayerPref";
+    GameObject myGameObject;
+    GameObject myOptionsMenu;
     
-    private Sound[] bgm, sfx, player;
-    private float bgmFloat, sfxFloat, playerFloat;
-
-    //public AudioManager audioManager;
-
     void Awake()
     {
-        LoadPreviousAudioSettings();
-        UpdateAudioSettings();
-    }
-    
-    private void LoadPreviousAudioSettings()
-    {
-        bgmFloat = PlayerPrefs.GetFloat(BGMPref);
-        sfxFloat = PlayerPrefs.GetFloat(SFXPref);
-        playerFloat = PlayerPrefs.GetFloat(PlayerPref);
+        myGameObject = GameObject.Find("AudioManager");
+        myOptionsMenu = AudioManager.GetInstance().GetOptionsMenu();
     }
 
-    public void UpdateAudioSettings()
+    public void EnableOptionsMenu()
     {
-        foreach (Sound s in bgm)
-        {
-            s.source.volume = bgmFloat;
-        }
+        myOptionsMenu.SetActive(true);
 
-        foreach (Sound s in sfx)
-        {
-            s.source.volume = sfxFloat;
-        }
+    }
 
-        foreach (Sound s in player)
-        {
-            s.source.volume = playerFloat;
-        }
+    public void DisableOptionsMenu()
+    {
+        myOptionsMenu.SetActive(false);
     }
 }
