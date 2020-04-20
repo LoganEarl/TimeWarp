@@ -27,9 +27,10 @@ public class PlanAmmoBar : MonoBehaviour
 
     public void Update()
     {
-        int maxShots = attachedGameMode.MaxShots(playerNumber);
-        int shotsRemaining = attachedGameMode.ShotsRemaining(playerNumber);
-        int projectedShotsRemaining = attachedGameMode.ProjectedShotsRemaining(playerNumber);
+        int step = attachedGameMode.GameState.StepNumber;
+        int maxShots = attachedGameMode.GetPlayerManager(playerNumber).GetMaxProjectiles();
+        int shotsRemaining = attachedGameMode.GetPlayerManager(playerNumber).GetAvailableProjectiles();
+        int projectedShotsRemaining = attachedGameMode.GetPlayerManager(playerNumber).GetProjectedProjectilesRemaining(step);
 
         float shotsScalar = shotsRemaining / (float)maxShots;
         float projectedScalar = projectedShotsRemaining / (float)maxShots;

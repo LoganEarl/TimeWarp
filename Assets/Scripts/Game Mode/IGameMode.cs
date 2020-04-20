@@ -5,7 +5,6 @@ using UnityEngine;
 
 public interface IGameMode
 {
-    //this will be added to later
     void Begin();
     void Setup(int numPlayers, ILevelConfig levelConfig);
     void Reset();
@@ -14,6 +13,5 @@ public interface IGameMode
     int MaxRounds { get; }
     IGameState GameState { get; }
     GameObject GameObject { get; }
-
-    int EquipmentRemaining(int playerNumber);
+    PlayerManager GetPlayerManager(int playerNum);
 }

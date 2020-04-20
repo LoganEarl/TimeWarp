@@ -13,6 +13,7 @@ public class LobbyDriver : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private Button startButton;
     [SerializeField] private PlanManager planGameMode;
+    [SerializeField] private InstinctManager instinctGameMode;
 
     private ILevelConfig selectedLevel = null;
     private IGameMode selectedGameMode = null;
@@ -41,6 +42,12 @@ public class LobbyDriver : MonoBehaviour
         CheckLoadButtonAvailability();
     }
 
+    public void SelectInstinctGameMode()
+    {
+        selectedGameMode = instinctGameMode;
+        CheckLoadButtonAvailability();
+    }
+
     public void SelectTestLevelWithIndex(int level) // maybe pass in levels by an index? or by name
     {
         if (level == 1)
@@ -49,16 +56,6 @@ public class LobbyDriver : MonoBehaviour
             selectedLevel = new LevelOneConfig();
         else if(level == 3)
             selectedLevel = null;
-
-        CheckLoadButtonAvailability();
-    }
-
-    public void SelectGameMode(string gameModeName)
-    {
-        if (gameModeName.Equals("Plan"))
-            selectedGameMode = planGameMode;
-        else
-            selectedGameMode = null;
 
         CheckLoadButtonAvailability();
     }

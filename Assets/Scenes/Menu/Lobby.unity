@@ -1536,7 +1536,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Quick Instincts
+  m_Text: Instinct
 --- !u!222 &497134150
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1633,6 +1633,7 @@ RectTransform:
   m_LocalScale: {x: 0.75000405, y: 0.75000405, z: 0}
   m_Children:
   - {fileID: 1413856015}
+  - {fileID: 983033193}
   m_Father: {fileID: 817549668}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
@@ -2088,7 +2089,6 @@ RectTransform:
   - {fileID: 368642661}
   - {fileID: 670443558}
   - {fileID: 655778968}
-  - {fileID: 1584544901}
   m_Father: {fileID: 1597818430}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2605,7 +2605,7 @@ GameObject:
   - component: {fileID: 983033194}
   - component: {fileID: 983033198}
   m_Layer: 0
-  m_Name: QuickInstinctsButton
+  m_Name: InstinctButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2620,15 +2620,15 @@ RectTransform:
   m_GameObject: {fileID: 983033192}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 0}
   m_Children:
   - {fileID: 497134148}
-  m_Father: {fileID: 1584544901}
-  m_RootOrder: 0
+  m_Father: {fileID: 655778968}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -67.99964}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &983033194
@@ -2694,8 +2694,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 683105504}
-        m_MethodName: SelectGameMode
-        m_Mode: 5
+        m_MethodName: SelectInstinctGameMode
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -8482,8 +8482,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 683105504}
-        m_MethodName: SelectGameMode
-        m_Mode: 5
+        m_MethodName: SelectPlanGameMode
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -9402,42 +9402,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1564657803}
   m_CullTransparentMesh: 0
---- !u!1 &1584544900
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1584544901}
-  m_Layer: 0
-  m_Name: QuickInstinctsGameModeMenuButton
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1584544901
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1584544900}
-  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.75000405, y: 0.75000405, z: 0}
-  m_Children:
-  - {fileID: 983033193}
-  m_Father: {fileID: 817549668}
-  m_RootOrder: 9
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -350, y: -156}
-  m_SizeDelta: {x: 67.400085, y: -392.91998}
-  m_Pivot: {x: 1, y: 0.5}
 --- !u!1 &1597818429
 GameObject:
   m_ObjectHideFlags: 0
@@ -9527,6 +9491,7 @@ MonoBehaviour:
   animator: {fileID: 0}
   startButton: {fileID: 94222587}
   planGameMode: {fileID: 0}
+  instinctGameMode: {fileID: 0}
 --- !u!95 &1597818434
 Animator:
   serializedVersion: 3
