@@ -22,8 +22,6 @@ public class PlayerController : MonoBehaviour, IRecordable
 
     #region SerializableFields
 #pragma warning disable IDE0044
-    [SerializeField] private int playerNumber = 0;
-
     [SerializeField] private Transform fireTransform;
     [SerializeField] private Transform shieldTransform;
 

@@ -48,8 +48,8 @@ public class PlayerHealth : MonoBehaviour
         if (damage > 0)
         {
             Health -= damage;
-            float temp = audio.volume;
-            audio.PlayOneShot(hurtSound, 0.3f);
+            //float temp = audio.volume;
+            //audio.PlayOneShot(hurtSound, 0.3f);
             
         }
     }

@@ -55,7 +55,7 @@ public class LobbyDriver : MonoBehaviour
         else if(level == 2)
             selectedLevel = new LevelOneConfig();
         else if(level == 3)
-            selectedLevel = null;
+            selectedLevel = null; //TODO pavel needs to make a level config for this new one
 
         CheckLoadButtonAvailability();
     }
