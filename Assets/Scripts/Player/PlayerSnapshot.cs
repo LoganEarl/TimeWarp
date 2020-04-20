@@ -11,6 +11,7 @@ public class PlayerSnapshot
     public bool Firing { get; }             //if triggered the fire button this frame
     public bool UsingEquipment { get; }     //if triggered the equipment button this frame
     public bool UsedEquipment { get; }      //if released the equipment button this frame
+
     //eventually have endpoints for actions taken.
     public PlayerSnapshot(
         Vector3 translation, 

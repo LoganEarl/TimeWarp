@@ -1,56 +1,41 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-
-/*
+﻿/*
  * Class is responsible for managing all the recordings and instances of a single player
  * Knows the shared equipment and ammo numbers and has access to MatchRecordingManagers for each round
  * Must be synchronized with the match counter
  */
 
-public class PlanPlayerManager
+public class PlanPlayerManager: PlayerManager
 {
-    private List<MatchRecordingManager> playerRecordings = new List<MatchRecordingManager>();
-    private List<PlayerController> playerControllers = new List<PlayerController>();
-
-    internal PlayerController MainPlayer
+    internal PlanPlayerManager(int availableProjectiles, int availableEquipment)
     {
-        get
-        {
-            if (playerControllers.Count > 0)
-                return playerControllers[playerControllers.Count - 1];
-            return null;
-        }
+        this.maxProjectiles = availableProjectiles;
+        this.availableProjectiles = availableProjectiles;
+        this.maxEquipment = availableEquipment;
+        this.availableEquipment = availableEquipment;
     }
 
-    internal int MaxProjectiles { get; set; } = 10;
-    internal int AvailableProjectiles { set; get; }
-    internal int ProjectedProjectilesRemaining(int asOfStepNumber)
+    private int maxProjectiles = 10;
+    internal override int GetMaxProjectiles(int roundNumber)
     {
-        int usage = MaxProjectiles - AvailableProjectiles;               //what we already used
-        foreach (MatchRecordingManager recording in playerRecordings)   //what we are going to use in the future
-            usage += recording.RecordedFireEventsAfter(asOfStepNumber);
-
-        usage = MaxProjectiles - usage;                                 //what we have overall
-
-        if (usage < 0)
-            usage = 0;
-        return usage;
+        return maxProjectiles;
     }
-    internal int MaxEquipment { get; set; } = 1;
-    internal int AvailableEquipment { set; get; }
-    internal int ProjectedEquipmentRemaining(int asOfStepNumber)
+    private int availableProjectiles;
+    internal override int GetAvailableProjectiles(int roundNumber)
     {
-        int usage = MaxEquipment - AvailableEquipment;                  //what we already used
-        foreach (MatchRecordingManager recording in playerRecordings)   //what we are going to use in the future
-            usage += recording.RecordedEquipmentEventsAfter(asOfStepNumber);
-
-        usage = MaxEquipment - usage;                                   //what we have overall
-
-        if (usage < 0)
-            usage = 0;
-        return usage;
+        return availableProjectiles;
     }
 
+    private int maxEquipment = 1;
+    internal override int GetMaxEquipment(int roundNumber)
+    {
+        return maxEquipment;
+    }
+    private int availableEquipment = 1;
+    internal override int GetAvailableEquipment(int roundNumber)
+    {
+        return availableEquipment;
+    }
+   
     internal int NumberRecordingsAlive
     {
         get
@@ -85,23 +70,8 @@ public class PlanPlayerManager
         }
     }
 
-    internal PlanPlayerManager(int availableProjectiles, int availableEquipment)
-    {
-        MaxProjectiles = availableProjectiles;
-        AvailableProjectiles = availableProjectiles;
-        MaxEquipment = availableEquipment;
-        AvailableEquipment = availableEquipment;
-    }
-
-    public GameObject GetPlayerObject(int roundNumber)
-    {
-        if (roundNumber < 0 || roundNumber >= playerControllers.Count)
-            throw new System.Exception("Passed in illegal round number to GetPlayerObject:" + roundNumber);
-        return playerControllers[roundNumber].gameObject;
-    }
-
     //add another controlled player instance
-    internal void AppendNewRecording(PlayerController controller)
+    internal override void AppendNewRecording(PlayerController controller)
     {
         playerControllers.Add(controller);
         controller.FireCallback = OnPlayerFireEvent;
@@ -109,49 +79,19 @@ public class PlanPlayerManager
         playerRecordings.Add(new MatchRecordingManager(controller));
     }
 
-    //called each frame to make players record/reproduce data for that frame
-    internal void Step(int stepNumber)
-    {
-        foreach (MatchRecordingManager recording in playerRecordings)
-        {
-            recording.AppendNextSnapshot(stepNumber);
-            recording.UtilizeFrame(stepNumber);
-        }
-    }
-
-    //finishes recordings and attaches newest generation to replays
-    internal void FinishSequence()
-    {
-        foreach (MatchRecordingManager recording in playerRecordings)
-            recording.Finish();
-        foreach (PlayerController controller in playerControllers)
-            controller.SetUseSnapshots(true);
-    }
-
-    internal void ResetAll()
+    internal override void ResetAll()
     {
         foreach (PlayerController controller in playerControllers)
             controller.OnReset();
-        AvailableProjectiles = MaxProjectiles;
-        AvailableEquipment = MaxEquipment;
-    }
-
-    internal void DestroyAll()
-    {
-        foreach (PlayerController controller in playerControllers)
-            Object.Destroy(controller.gameObject);
-    }
-
-    internal bool RecordExistsForMatch(int matchNum)
-    {
-        return playerRecordings.Count > matchNum && matchNum >= 0;
+        availableProjectiles = maxProjectiles;
+        availableEquipment = maxEquipment;
     }
 
     internal bool OnPlayerFireEvent()
     {
-        if (AvailableProjectiles > 0)
+        if (availableProjectiles > 0)
         {
-            AvailableProjectiles--;
+            availableProjectiles--;
             return true;
         }
         return false;
@@ -159,9 +99,9 @@ public class PlanPlayerManager
 
     internal bool OnPlayerEquipmentEvent()
     {
-        if (AvailableEquipment > 0)
+        if (availableEquipment > 0)
         {
-            AvailableEquipment--;
+            availableEquipment--;
             return true;
         }
         return false;

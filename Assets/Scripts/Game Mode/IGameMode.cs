@@ -13,6 +13,5 @@ public interface IGameMode
     int MaxRounds { get; }
     IGameState GameState { get; }
     GameObject GameObject { get; }
-
-    int EquipmentRemaining(int playerNumber);
+    PlayerManager GetPlayerManager(int playerNum);
 }

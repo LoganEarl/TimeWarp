@@ -65,7 +65,7 @@ public class PlanHUDController : MonoBehaviour
                     playerHealthAreas[playerNum].transform,
                     false));
                 loadedPlayerHealthBars[playerNum][roundNum].transform.localPosition = relativePosition;
-                GameObject currentPlayer = planManager.GetPlayerObject(playerNum, roundNum);
+                GameObject currentPlayer = planManager.GetPlayerManager(playerNum).GetPlayerObject(roundNum);
                 HealthBar toSetup = loadedPlayerHealthBars[playerNum][roundNum].GetComponent<HealthBar>();
                 toSetup.Setup(planManager, currentPlayer, playerNum, roundNum);
             }

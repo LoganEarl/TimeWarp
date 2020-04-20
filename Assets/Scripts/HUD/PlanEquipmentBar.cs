@@ -26,13 +26,14 @@ public class PlanEquipmentBar : MonoBehaviour
     {
         if (setup)
         {
-            if (instantiatedPrefabs.Length != gameMode.MaxEquipment(playerNumber))
+            PlayerManager manager = gameMode.GetPlayerManager(playerNumber);
+            if (instantiatedPrefabs.Length != gameMode.GetPlayerManager(playerNumber).GetMaxEquipment())
                 ReloadDisplay();
             for(int i = 0; i < instantiatedPrefabs.Length; i++)
             {
                 int colorIndex = 0;
-                if (i >= gameMode.ProjectedEquipmentRemaining(playerNumber)) colorIndex++;
-                if (i >= gameMode.EquipmentRemaining(playerNumber)) colorIndex++;
+                if (i >= manager.GetProjectedEquipmentRemaining(0,gameMode.GameState.StepNumber)) colorIndex++;
+                if (i >= manager.GetAvailableEquipment()) colorIndex++;
                 spriteRenderers[i].color = colorSelections[i].colors[colorIndex];
             }
         }
@@ -44,7 +45,7 @@ public class PlanEquipmentBar : MonoBehaviour
         {
             foreach (GameObject obj in instantiatedPrefabs)
                 Destroy(obj);
-            int numSprites = gameMode.MaxEquipment(playerNumber);
+            int numSprites = gameMode.GetPlayerManager(playerNumber).GetMaxEquipment();
             instantiatedPrefabs = new GameObject[numSprites];
             colorSelections = new ColorSelection[numSprites];
             spriteRenderers = new SpriteRenderer[numSprites];

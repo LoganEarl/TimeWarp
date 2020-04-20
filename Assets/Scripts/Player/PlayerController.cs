@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour, IRecordable
 {
+  
     //delegates
     public delegate bool FireEventCallback();
     public FireEventCallback FireCallback { private get; set; } = null;
@@ -36,7 +37,11 @@ public class PlayerController : MonoBehaviour, IRecordable
     #region Components
     //player components/info
     private static bool talking = false;
-    [SerializeField] private int playerNumber = 0;
+    private int playerNumber { get; set; } = 0;
+    private int sourceRoundNum = 0;
+    private string ghostLayerName = "Ghost";
+    private string PlayerLayerName { get => "Player" + playerNumber; }
+    private string currentLayer = "Unset";
     private bool usingSnapshots = false;
     private bool aimLocked = false;
     private bool loadedCursor = false;
@@ -70,7 +75,7 @@ public class PlayerController : MonoBehaviour, IRecordable
 
     private void FixedUpdate()
     {
-        if (!health.Dead && gameMode.GameState.PlayersVisible)
+        if (!health.Dead && gameMode.GameState.GetPlayerVisible(playerNumber, sourceRoundNum))
         {
             gameObject.transform.localScale = new Vector3(2, 2, 2); //unhides the player if they are hidden
 
@@ -94,12 +99,14 @@ public class PlayerController : MonoBehaviour, IRecordable
             position = rigidBody.position; // seperate method?
             //end
 
+            SetLayer(gameMode.GameState.GetPlayerCanTakeDamage(playerNumber, sourceRoundNum) ? PlayerLayerName : ghostLayerName);
+
             if (usingSnapshots)
                 RecordedFrame();
             else
             {
                 ControlledFrame();
-                if (gameMode.GameState.PlayersPositionsLocked)
+                if (gameMode.GameState.GetPlayerPositionsLocked(playerNumber, sourceRoundNum))
                 {
                     velocity = new Vector3();
                     isIdle = true;
@@ -144,7 +151,7 @@ public class PlayerController : MonoBehaviour, IRecordable
                 moddedDirection.y = 0;
 
                 desiredRotation = Quaternion.LookRotation(moddedDirection, Vector3.up);
-                if (!gameMode.GameState.PlayersLookLocked)
+                if (!gameMode.GameState.GetPlayerLookLocked(playerNumber, sourceRoundNum))
                     rigidBody.MoveRotation(desiredRotation);
             }
 
@@ -156,10 +163,15 @@ public class PlayerController : MonoBehaviour, IRecordable
                          rigidBody.position + lookDirection + new Vector3(0, fireTransform.position.y, 0);
             }
 
-            if (firingGun && !gameMode.GameState.PlayersFireLocked && (FireCallback?.Invoke() ?? true))
+            if (firingGun && 
+                !gameMode.GameState.GetPlayerFireLocked(playerNumber, sourceRoundNum) && 
+                (FireCallback?.Invoke() ?? true))
                 Shoot();
 
-            if (!usingEquipment && usedEquipment && !gameMode.GameState.PlayersFireLocked && (EquipmentCallback?.Invoke() ?? true))
+            if (!usingEquipment && 
+                usedEquipment && 
+                !gameMode.GameState.GetPlayerFireLocked(playerNumber, sourceRoundNum) && 
+                (EquipmentCallback?.Invoke() ?? true))
                 PlaceEquipment();
         }
         else
@@ -212,7 +224,10 @@ public class PlayerController : MonoBehaviour, IRecordable
             fired = false;
 
         usedEquipment = false;
-        if (!usingEquipment && equipmentActivity > 0f && !gameMode.GameState.PlayersFireLocked && gameMode.EquipmentRemaining(playerNumber) != 0)
+        if (!usingEquipment && 
+            equipmentActivity > 0f && 
+            !gameMode.GameState.GetPlayerFireLocked(playerNumber, sourceRoundNum) && 
+            gameMode.GetPlayerManager(playerNumber).GetAvailableEquipment(sourceRoundNum) != 0)
         {
             usingEquipment = true;
             PlacingEquipmentGuide();
@@ -286,6 +301,18 @@ public class PlayerController : MonoBehaviour, IRecordable
         }
     }
 
+    private void SetLayer(string newLayer)
+    {
+        if(currentLayer != newLayer)
+        {
+            gameObject.layer = LayerMask.NameToLayer(newLayer);
+            foreach (Transform obj in gameObject.GetComponentsInChildren<Transform>())
+                obj.gameObject.layer = LayerMask.NameToLayer(newLayer);
+            currentLayer = newLayer;
+        }
+
+    }
+
     private void TalkingStopped() { talking = false; }
 
     private void DestroyAllPlayerCreations()
@@ -298,6 +325,7 @@ public class PlayerController : MonoBehaviour, IRecordable
     public void SetPlayerInformation(int playerNumber, int sourceRoundNum, Vector3 initialPosition, IGameMode gameMode)
     {
         this.playerNumber = playerNumber;
+        this.sourceRoundNum = sourceRoundNum;
 
         Collider[] setColliderTags = GetComponentsInChildren<Collider>();
         foreach (Collider collider in setColliderTags)
@@ -327,16 +355,11 @@ public class PlayerController : MonoBehaviour, IRecordable
 
         if (useSnapshots)
         {
-            foreach (Transform obj in gameObject.GetComponentsInChildren<Transform>())
-                obj.gameObject.layer = LayerMask.NameToLayer("Player" + playerNumber);
-
             primaryRenderer.material = Resources.Load<Material>("Materials/Player/Player" + playerNumber + "Primary");
             secondaryRenderer.material = Resources.Load<Material>("Materials/Player/Player" + playerNumber + "Secondary");
         }
         else
         {
-            gameObject.layer = LayerMask.NameToLayer("Ghost");
-
             primaryRenderer.material = Resources.Load<Material>("Materials/Player/Player" + playerNumber + "PrimaryGhost");
             secondaryRenderer.material = Resources.Load<Material>("Materials/Player/Player" + playerNumber + "SecondaryGhost");
         }

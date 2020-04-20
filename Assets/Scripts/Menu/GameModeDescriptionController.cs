@@ -21,6 +21,9 @@ public class GameModeDescriptionController : MonoBehaviour {
                 this.description = ThePlanDescription();
             else if (gameModeName.Equals("Lineage"))
                 this.description = LineageDescription();
+            else if (gameModeName.Equals("Instinct"))
+                this.description = InstinctDescription();
+                   
     }
 
     private string ThePlanDescription()
@@ -35,5 +38,12 @@ public class GameModeDescriptionController : MonoBehaviour {
         return "A gamemode where the objective is to keep your past selves alive, while " +
                "attempting to eliminate one of your opponents past self. If your present " +
                "self dies, time warps back, and you get a chance to save yourself.";
+    }
+
+    private string InstinctDescription()
+    {
+        return "Only your current self, and that of your enemy matter. Say alive as you " +
+            "both gain more an more iterations, and the field grows thick with the " +
+            "projectiles of your past selves.";
     }
 }

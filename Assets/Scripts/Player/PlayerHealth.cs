@@ -8,6 +8,9 @@ public class PlayerHealth : MonoBehaviour
 
     public int TimeAlive { get; private set; }
     public int MaxHealth { get; set; } = 3;
+    public delegate void OnHealthChange(int newHealth, int maxHealth, GameObject player);
+
+    private List<OnHealthChange> healthListeners = new List<OnHealthChange>();
 
     private int health = 3;
     private bool dead = false;
@@ -22,6 +25,8 @@ public class PlayerHealth : MonoBehaviour
             if (value < 0) value = 0;
             health = value;
             Dead = Health <= 0;
+            foreach (OnHealthChange listener in healthListeners)
+                listener.Invoke(health, MaxHealth, gameObject);
         }
     }
     public bool Dead {
@@ -46,7 +51,7 @@ public class PlayerHealth : MonoBehaviour
             Health -= damage;
             float temp = audio.volume;
             audio.PlayOneShot(hurtSound, 0.3f);
-            //audio.volume = temp;
+            
         }
     }
 
@@ -64,5 +69,16 @@ public class PlayerHealth : MonoBehaviour
     {
         FullHeal();
         audio = GetComponent<AudioSource>();
+    }
+
+    public void AddHealthChangeListener(OnHealthChange listener)
+    {
+        if (!healthListeners.Contains(listener))
+            healthListeners.Add(listener);
+    }
+
+    public void RemoveHealthChangeListener(OnHealthChange toRemove)
+    {
+        healthListeners.Remove(toRemove);
     }
 }

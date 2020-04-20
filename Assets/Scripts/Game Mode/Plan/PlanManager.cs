@@ -12,7 +12,6 @@ public class PlanManager : MonoBehaviour, IGameMode
 
     private Dictionary<string, GameObject> loadedPlayerModels = new Dictionary<string, GameObject>();
     private PlanPlayerManager[] playerManagers = null;
-    private List<GameObject> playerObjects = new List<GameObject>();
     private PlanHUDController hudController;
     private PlayerCameraController cameraController = null;
 
@@ -39,53 +38,11 @@ public class PlanManager : MonoBehaviour, IGameMode
     private PlanGameState gameState;
     public IGameState GameState { get => gameState; }
 
-    public int MaxShots(int playerNumber)
+    public PlayerManager GetPlayerManager(int playerNum)
     {
-        if (playerNumber < 0 || playerNumber >= playerManagers.Length)
-            return 0;
-        return playerManagers[playerNumber].MaxProjectiles;
-    }
-
-    public int MaxEquipment(int playerNumber)
-    {
-        if (playerNumber < 0 || playerNumber >= playerManagers.Length)
-            return 0;
-        return playerManagers[playerNumber].MaxEquipment;
-    }
-
-    public int ShotsRemaining(int playerNumber)
-    {
-        if (playerNumber < 0 || playerNumber >= playerManagers.Length)
-            return 0;
-        return playerManagers[playerNumber].AvailableProjectiles;
-    }
-
-    public int ProjectedShotsRemaining(int playerNumber)
-    {
-        if (playerNumber < 0 || playerNumber >= playerManagers.Length)
-            return 0;
-        return playerManagers[playerNumber].ProjectedProjectilesRemaining(GameState.StepNumber);
-    }
-
-    public int EquipmentRemaining(int playerNumber)
-    {
-        if (playerNumber < 0 || playerNumber >= playerManagers.Length)
-            return 0;
-        return playerManagers[playerNumber].AvailableEquipment;
-    }
-
-    public int ProjectedEquipmentRemaining(int playerNumber)
-    {
-        if (playerNumber < 0 || playerNumber >= playerManagers.Length)
-            return 0;
-        return playerManagers[playerNumber].ProjectedEquipmentRemaining(GameState.StepNumber);
-    }
-
-    public GameObject GetPlayerObject(int playerNum, int roundNum)
-    {
-        if (playerNum < 0 || playerNum >= NumPlayers || roundNum < 0 || roundNum > RoundNumber)
-            throw new System.Exception("Passed illegal playernum or roundNumber to getPlayerObject");
-        return playerManagers[playerNum].GetPlayerObject(roundNum);
+        if (playerNum < 0 || playerManagers == null || playerManagers.Length <= playerNum)
+            throw new System.Exception("Illegal playernum passed to GetPlayerManager");
+        return playerManagers[playerNum];
     }
 
     public void PlayAnnouncerRound()
@@ -199,10 +156,14 @@ public class PlanManager : MonoBehaviour, IGameMode
         private protected virtual void OnTick() { }
 
         public virtual int StepNumber { get; private set; }
-        public virtual bool PlayersVisible { get => false; }
-        public virtual bool PlayersPositionsLocked { get => true; }
-        public virtual bool PlayersLookLocked { get => true; }
-        public virtual bool PlayersFireLocked { get => true; }
+        public virtual bool GetPlayerVisible(int playerNum, int roundNum) => false;
+        public virtual bool GetPlayerPositionsLocked(int playerNum, int roundNum) => true;
+        public virtual bool GetPlayerLookLocked(int playerNum, int roundNum) => true;
+        public virtual bool GetPlayerFireLocked(int playerNum, int roundNum) => true;
+        public virtual bool GetPlayerCanTakeDamage(int playerNum, int roundNum)
+        {
+            return roundNum < manager.RoundNumber || manager.runningRecordingRound;
+        }
         public virtual bool TimeAdvancing { get => false; }
         public virtual int MaxSteps { get; private protected set; } = 1;
         public virtual float SecondsRemaining { get => (MaxSteps - StepNumber) * Time.fixedDeltaTime; }
@@ -222,8 +183,6 @@ public class PlanManager : MonoBehaviour, IGameMode
             if (manager.playerManagers != null)
                 foreach (PlanPlayerManager manager in manager.playerManagers)
                     manager.DestroyAll();
-
-            manager.playerObjects = new List<GameObject>();
 
             SceneManager.sceneLoaded -= manager.OnSceneLoaded;
 
@@ -311,8 +270,8 @@ public class PlanManager : MonoBehaviour, IGameMode
         }
 
         private protected override PlanGameState NextState { get => new StatePlaying(manager); }
-        public override bool PlayersVisible { get => true; }
-        public override bool PlayersLookLocked { get => false; }
+        public override bool GetPlayerVisible(int playerNum, int roundNum) => true;
+        public override bool GetPlayerLookLocked(int playerNum, int roundNum) => false;
         public override bool TimeAdvancing { get => true; }
     }
 
@@ -353,10 +312,10 @@ public class PlanManager : MonoBehaviour, IGameMode
             }
         }
 
-        public override bool PlayersVisible { get => true; }
-        public override bool PlayersPositionsLocked { get => false; }
-        public override bool PlayersLookLocked { get => false; }
-        public override bool PlayersFireLocked { get => false; }
+        public override bool GetPlayerVisible(int playerNum, int roundNum) => true;
+        public override bool GetPlayerPositionsLocked(int playerNum, int roundNum) => false;
+        public override bool GetPlayerLookLocked(int playerNum, int roundNum) => false;
+        public override bool GetPlayerFireLocked(int playerNum, int roundNum) => false;
         public override bool TimeAdvancing { get => true; }
     }
 
@@ -393,7 +352,6 @@ public class PlanManager : MonoBehaviour, IGameMode
             }
 
             GameObject player = Instantiate(playerPrefab);
-            playerObjects.Add(player);
             PlayerController playerController = player.GetComponent<PlayerController>();
             playerController.SetPlayerInformation(
                 curPlayer,
@@ -429,8 +387,8 @@ public class PlanManager : MonoBehaviour, IGameMode
 
         for (int i = 0; i < NumPlayers; i++)
         {
-            int remainingAmmo = playerManagers[i].AvailableProjectiles;
-            int remainingEquip = playerManagers[i].AvailableEquipment;
+            int remainingAmmo = playerManagers[i].GetAvailableProjectiles();
+            int remainingEquip = playerManagers[i].GetAvailableEquipment();
             int remainingPlayers = playerManagers[i].NumberRecordingsAlive;
             int remainingHealth = playerManagers[i].TotalHealthRemaining;
             int totalTimeAlive = playerManagers[i].TotalTimeAlive;
