@@ -20,7 +20,7 @@ public class AudioManager : MonoBehaviour {
     [SerializeField]
     private Slider bgmVolumeSlider, sfxVolumeSlider, voiceVolumeSlider;
 
-    private Boolean voiceClipCurrentlyPlaying = false;
+    private bool voiceClipCurrentlyPlaying = false;
 
     void Awake()
     {
@@ -93,10 +93,7 @@ public class AudioManager : MonoBehaviour {
     {
         Sound soundClip = Array.Find(type, sound => sound.name == clipName);
         if (soundClip == null)
-        {
-            //Debug.LogWarning("Sound: " + clipName + " not found!");
             return;
-        }
 
         if (type == voice && !voiceClipCurrentlyPlaying)
             PlayVoice(soundClip);
@@ -107,6 +104,7 @@ public class AudioManager : MonoBehaviour {
     private IEnumerator PlayVoice(Sound soundClip)
     {
         voiceClipCurrentlyPlaying = true;
+        soundClip.source.Play();
         yield return new WaitWhile(() => soundClip.source.isPlaying);
         voiceClipCurrentlyPlaying = false;
     }
