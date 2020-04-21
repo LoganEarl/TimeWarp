@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    [SerializeField] private AudioClip bounceSound;
     [SerializeField] private float bulletSpeed = 25;
     [SerializeField] private int bulletDmg = 1;
     [SerializeField] private int bouncesLeft = 4;
