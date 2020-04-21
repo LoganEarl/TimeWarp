@@ -5,15 +5,16 @@ using UnityEngine;
 public abstract class RandomSound : MonoBehaviour
 {
     [SerializeField] private float[] activationChance;
-    [SerializeField] private AudioClip[] clips;
+    [SerializeField] private string[] clipNames;
 
-    public AudioClip GetClip()
+
+    public string GetClip()
     {
-        int randomSound = Mathf.RoundToInt(Random.value * (clips.Length - 1));
+        int randomSound = Mathf.RoundToInt(Random.value * (clipNames.Length - 1));
         bool speaking = (Random.value * 100) <= activationChance[randomSound];
 
         if (speaking)
-            return clips[randomSound];
+            return "Player" + clipNames[randomSound];
         else
             return null;
     }

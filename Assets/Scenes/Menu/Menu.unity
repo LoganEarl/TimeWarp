@@ -922,6 +922,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8959061903505908661, guid: 925e509a1dd6d5f438efa8f6b49c884d,
+        type: 3}
+      propertyPath: sfx.Array.data[2].volume
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8959061903505908661, guid: 925e509a1dd6d5f438efa8f6b49c884d,
+        type: 3}
+      propertyPath: sfx.Array.data[3].volume
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 8959061903505908663, guid: 925e509a1dd6d5f438efa8f6b49c884d,
         type: 3}
       propertyPath: m_Name
@@ -1509,7 +1519,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 245.20013, y: -65.34182}
+  m_AnchoredPosition: {x: 245.20013, y: -65.34183}
   m_SizeDelta: {x: -40, y: -339.92}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!1 &1071742714
