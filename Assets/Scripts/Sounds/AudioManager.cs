@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,6 +19,8 @@ public class AudioManager : MonoBehaviour {
     private Sound[] bgm, sfx, voice;
     [SerializeField]
     private Slider bgmVolumeSlider, sfxVolumeSlider, voiceVolumeSlider;
+
+    private Boolean voiceClipCurrentlyPlaying = false;
 
     void Awake()
     {
@@ -88,13 +91,24 @@ public class AudioManager : MonoBehaviour {
 
     private void Play(Sound[] type, string clipName)
     {
-        Sound s = Array.Find(type, sound => sound.name == clipName);
-        if (s == null)
+        Sound soundClip = Array.Find(type, sound => sound.name == clipName);
+        if (soundClip == null)
         {
             //Debug.LogWarning("Sound: " + clipName + " not found!");
             return;
         }
-        s.source.Play();
+
+        if (type == voice && !voiceClipCurrentlyPlaying)
+            PlayVoice(soundClip);
+        else if(type == sfx || type == bgm)
+            soundClip.source.Play();
+    }
+
+    private IEnumerator PlayVoice(Sound soundClip)
+    {
+        voiceClipCurrentlyPlaying = true;
+        yield return new WaitWhile(() => soundClip.source.isPlaying);
+        voiceClipCurrentlyPlaying = false;
     }
 
     public void UpdateVolume()
