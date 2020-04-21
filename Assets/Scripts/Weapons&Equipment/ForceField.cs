@@ -5,7 +5,7 @@ using UnityEngine;
 public class ForceField : BasicForceField
 {
     [SerializeField] private int shieldHealth = 3;
-    [SerializeField] private readonly Color[] damagedColor;
+    [SerializeField] private Color[] damagedColor;
 
     private new void Start()
     {
@@ -21,6 +21,6 @@ public class ForceField : BasicForceField
             foreach (Transform go in GetComponentsInParent<Transform>())
                 Destroy(go.gameObject);
         else
-            GetComponent<MeshRenderer>().material.SetColor("_Color", damagedColor[shieldHealth + 1]);
+            GetComponent<MeshRenderer>().material.SetColor("_Color", damagedColor[shieldHealth]);
     }
 }
