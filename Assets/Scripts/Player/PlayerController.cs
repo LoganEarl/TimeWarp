@@ -282,7 +282,11 @@ public class PlayerController : MonoBehaviour, IRecordable
     private void PlaceEquipment()
     {
         GameObject shieldInstance = Instantiate(equipment, shieldTransform.position, shieldTransform.rotation) as GameObject;
-        shieldInstance.layer = LayerMask.NameToLayer("ForceField" + playerNumber);
+        int destLayer = LayerMask.NameToLayer("ForceField" + playerNumber);
+        MeshCollider[] colliders = shieldInstance.GetComponentsInChildren<MeshCollider>();
+        shieldInstance.layer = destLayer;
+        foreach (MeshCollider collider in colliders)
+            collider.gameObject.layer = destLayer;
         roundClearingList.Add(shieldInstance.gameObject);
 
         if (!talking)
