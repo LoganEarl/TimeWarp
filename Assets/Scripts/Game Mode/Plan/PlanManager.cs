@@ -49,6 +49,7 @@ public class PlanManager : MonoBehaviour, IGameMode
     {
         if (RoundNumber != MaxRounds)
         {
+            //FindObjectOfType<AudioManager>().PlayVoice("AnnouncerRound");
             audioSource.PlayOneShot(announcerClips[5]);
             Invoke("PlayRoundNumber", announcerClips[5].length);
         }
@@ -59,6 +60,8 @@ public class PlanManager : MonoBehaviour, IGameMode
     public void PlayAnnouncerFight()
     {
         audioSource.PlayOneShot(announcerClips[7]);
+        //FindObjectOfType<AudioManager>().PlayVoice("AnnouncerOne");
+
     }
 
     private void PlayRoundNumber()

@@ -10,7 +10,7 @@ public class AudioManager : MonoBehaviour {
     private static AudioManager instance;
 
     private static float BGM_DEFAULT_VOLUME = .1f;
-    private static float SFX_DEFAULT_VOLUME = .3f;
+    private static float SFX_DEFAULT_VOLUME = .2f;
     private static float VOICE_DEFAULT_VOLUME = .5f;
 
     [SerializeField]
@@ -96,7 +96,7 @@ public class AudioManager : MonoBehaviour {
             return;
 
         if (type == voice && !voiceClipCurrentlyPlaying)
-            PlayVoice(soundClip);
+            StartCoroutine(PlayVoice(soundClip));
         else if(type == sfx || type == bgm)
             soundClip.source.Play();
     }
