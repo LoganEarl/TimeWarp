@@ -8367,5 +8367,15 @@ PrefabInstance:
       propertyPath: m_TagString
       value: CameraPlayer1
       objectReference: {fileID: 0}
+    - target: {fileID: 2755922759287521169, guid: 75b7a1636365e0c49aedb43d9107e715,
+        type: 3}
+      propertyPath: m_ShowCustomSorter
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2755922759287521169, guid: 75b7a1636365e0c49aedb43d9107e715,
+        type: 3}
+      propertyPath: m_ShowToolkit
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 75b7a1636365e0c49aedb43d9107e715, type: 3}

@@ -46,6 +46,6 @@ Material:
     - _Surface: 0
     - _ZWrite: 1
     m_Colors:
-    - Color_9DB68CB1: {r: 0, g: 0.25898004, b: 1, a: 1}
+    - Color_9DB68CB1: {r: 0, g: 0.56467104, b: 1, a: 1}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}

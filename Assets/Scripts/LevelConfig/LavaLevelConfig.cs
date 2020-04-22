@@ -2,30 +2,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LevelOneConfig : ILevelConfig
+public class LavaLevelConfig : ILevelConfig
 {
     private static readonly Vector3[][] playerSpawns = new Vector3[][] {
         new Vector3[]
         {
-            new Vector3(-16,.1f,0),
-            new Vector3(-16,.1f,-7),
-            new Vector3(-16,.1f,7),
-            new Vector3(-6,.1f,9),
-            new Vector3(-6,.1f,-9)
+            new Vector3(-17,0.1f,0),
+            new Vector3(-17,0.1f,-7),
+            new Vector3(-17,0.1f,7),
+            new Vector3(-7,0.1f,8),
+            new Vector3(-7,0.1f,-8)
         },
         new Vector3[]
         {
-            new Vector3(16,1,0),
-            new Vector3(16,1,7),
-            new Vector3(16,1,-7),
-            new Vector3(6,1,-9),
-            new Vector3(6,1,9)
+            new Vector3(17,0.1f,0),
+            new Vector3(17,0.1f,7),
+            new Vector3(17,0.1f,-7),
+            new Vector3(7,0.1f,-8),
+            new Vector3(7,0.1f,8)
         }
     };
 
     public string GetSceneName()
     {
-        return "FirstMap";
+        return "LavaMap";
     }
 
     public int GetMaxRounds()

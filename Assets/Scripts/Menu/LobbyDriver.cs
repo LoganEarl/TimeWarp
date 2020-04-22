@@ -53,9 +53,9 @@ public class LobbyDriver : MonoBehaviour
         if (level == 1)
             selectedLevel = new BounceLevelConfig();
         else if(level == 2)
-            selectedLevel = new LevelOneConfig();
+            selectedLevel = new HexLevelConfig();
         else if(level == 3)
-            selectedLevel = null; //TODO pavel needs to make a level config for this new one
+            selectedLevel = new LavaLevelConfig();
 
         CheckLoadButtonAvailability();
     }
