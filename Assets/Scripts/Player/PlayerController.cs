@@ -173,14 +173,14 @@ public class PlayerController : MonoBehaviour, IRecordable
                          rigidBody.position + lookDirection + new Vector3(0, fireTransform.position.y, 0);
             }
 
-            if (firingGun && 
-                !gameMode.GameState.GetPlayerFireLocked(playerNumber, sourceRoundNum) && 
+            if (!gameMode.GameState.GetPlayerFireLocked(playerNumber, sourceRoundNum) &&
+                firingGun &&
                 (FireCallback?.Invoke() ?? true))
                 Shoot();
 
-            if (!usingEquipment && 
-                usedEquipment && 
-                !gameMode.GameState.GetPlayerFireLocked(playerNumber, sourceRoundNum) && 
+            if (!gameMode.GameState.GetPlayerFireLocked(playerNumber, sourceRoundNum) &&
+                usedEquipment &&
+                !usingEquipment &&
                 (EquipmentCallback?.Invoke() ?? true))
                 PlaceEquipment();
         }
@@ -289,17 +289,7 @@ public class PlayerController : MonoBehaviour, IRecordable
             collider.gameObject.layer = destLayer;
         roundClearingList.Add(shieldInstance.gameObject);
 
-        if (!talking)
-        {
-            talking = true;
-            AudioClip sound = shieldSound.GetClip();
-
-            if (sound != null)
-            {
-                voiceLine.PlayOneShot(sound);
-                Invoke("TalkingStopped", sound.length);
-            }
-        }
+        FindObjectOfType<AudioManager>().PlayVoice(shieldSound.GetClip());
     }
 
     private void Shoot()
@@ -312,18 +302,8 @@ public class PlayerController : MonoBehaviour, IRecordable
         bulletInstance.velocity = fireTransform.forward;
 
         roundClearingList.Add(bulletInstance.gameObject);
-
-        if (!talking)
-        {
-            talking = true;
-            AudioClip sound = shootSound.GetClip();
-
-            if (sound != null)
-            {
-                voiceLine.PlayOneShot(sound);
-                Invoke("TalkingStopped", sound.length);
-            }
-        }
+        
+        FindObjectOfType<AudioManager>().PlayVoice(shootSound.GetClip());
     }
 
     private void SetLayer(string newLayer)

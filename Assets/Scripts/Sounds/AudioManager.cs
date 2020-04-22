@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Audio;
 
 // Call this to play audio >> FindObjectOfType<AudioManager>().PlaySFX/PlayBGM/PlayVoice("enter clipName");
 
@@ -9,9 +10,9 @@ public class AudioManager : MonoBehaviour {
 
     private static AudioManager instance;
 
-    private static float BGM_DEFAULT_VOLUME = .1f;
-    private static float SFX_DEFAULT_VOLUME = .2f;
-    private static float VOICE_DEFAULT_VOLUME = .5f;
+    private static readonly float BGM_DEFAULT_VOLUME = .1f;
+    private static readonly float SFX_DEFAULT_VOLUME = .1f;
+    private static readonly float VOICE_DEFAULT_VOLUME = .5f;
 
     [SerializeField]
     private GameObject OptionsMenu;
@@ -54,13 +55,25 @@ public class AudioManager : MonoBehaviour {
         {
             s.source = gameObject.AddComponent<AudioSource>();
             s.source.clip = s.clip;
+
             if (type == bgm)
+            {
                 s.source.volume = BGM_DEFAULT_VOLUME;
+                bgmVolumeSlider.value = BGM_DEFAULT_VOLUME;
+                s.source.loop = true;
+            }
             else if (type == sfx)
+            {
                 s.source.volume = SFX_DEFAULT_VOLUME;
+                sfxVolumeSlider.value = SFX_DEFAULT_VOLUME;
+            }
             else
+            {
                 s.source.volume = VOICE_DEFAULT_VOLUME;
-            s.source.loop = s.loop;
+                voiceVolumeSlider.value = VOICE_DEFAULT_VOLUME;
+            }
+
+            //s.source.loop = s.loop;
         }
     }
 
@@ -89,15 +102,21 @@ public class AudioManager : MonoBehaviour {
         Play(voice, clipName);
     }
 
+    public float GetClipLength(string clipName)
+    {
+        Sound tempSound = Array.Find(voice, sound => sound.name == clipName);
+        return tempSound.clip.length;
+    }
+
     private void Play(Sound[] type, string clipName)
     {
         Sound soundClip = Array.Find(type, sound => sound.name == clipName);
         if (soundClip == null)
             return;
 
-        if (type == voice && !voiceClipCurrentlyPlaying)
+        if (type == voice && !voiceClipCurrentlyPlaying && !clipName.StartsWith("Announcer"))
             StartCoroutine(PlayVoice(soundClip));
-        else if(type == sfx || type == bgm)
+        else if(type == sfx || type == bgm || clipName.StartsWith("Announcer"))
             soundClip.source.Play();
     }
 
@@ -111,19 +130,22 @@ public class AudioManager : MonoBehaviour {
 
     public void UpdateVolume()
     {
-        foreach(Sound s in bgm)
+        foreach (Sound s in bgm)
         {
-            s.source.volume = bgmVolumeSlider.value;
+            if(s.source != null)
+                s.source.volume = bgmVolumeSlider.value;
         }
 
         foreach (Sound s in sfx)
         {
-            s.source.volume = sfxVolumeSlider.value;
+            if (s.source != null)
+                s.source.volume = sfxVolumeSlider.value;
         }
 
         foreach (Sound s in voice)
         {
-            s.source.volume = voiceVolumeSlider.value;
+            if (s.source != null)
+                s.source.volume = voiceVolumeSlider.value;
         }
     }
 }

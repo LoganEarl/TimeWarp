@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    [SerializeField] private AudioClip bounceSound;
     [SerializeField] private float bulletSpeed = 25;
     [SerializeField] private int bulletDmg = 1;
     [SerializeField] private int bouncesLeft = 4;
@@ -16,6 +15,8 @@ public class Bullet : MonoBehaviour
     
     private void Start() {
         bulletInstance = GetComponent<Rigidbody>();
+
+        FindObjectOfType<AudioManager>().PlaySFX("WeaponLaserShot1");
 
         GetComponent<MeshRenderer>().material.SetColor("_GlowColor", bulletColor);
         GetComponent<TrailRenderer>().material.SetColor("_GlowColor", bulletColor);
@@ -39,15 +40,11 @@ public class Bullet : MonoBehaviour
                 other.GetComponent<ForceField>()?.DoDamage();
         }
 
-        GetComponent<AudioSource>().PlayOneShot(bounceSound);
+        FindObjectOfType<AudioManager>().PlaySFX("WeaponLaserRicochet");
 
         if ((other.tag == "Wall") && bouncesLeft != 0)
             bouncesLeft--;
         else if (other.tag != "Player" + playerNumber)
             Destroy(gameObject);
-    }
-
-    private void OnDestroy() {
-        GetComponent<AudioSource>().PlayOneShot(bounceSound);
     }
 }

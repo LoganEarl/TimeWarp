@@ -16,7 +16,7 @@ public class PlanManager : MonoBehaviour, IGameMode
     private PlayerCameraController cameraController = null;
     private PauseOverlay pauseOverlayController = null;
 
-    private AudioSource audioSource;
+    private AudioManager audioManager;
 
     private bool runningRecordingRound = false;
 
@@ -48,23 +48,26 @@ public class PlanManager : MonoBehaviour, IGameMode
 
     public void PlayAnnouncerRound()
     {
+        if (audioManager == null)
+            audioManager = FindObjectOfType<AudioManager>();
+
         if (RoundNumber != MaxRounds)
         {
-            audioSource.PlayOneShot(announcerClips[5]);
-            Invoke("PlayRoundNumber", announcerClips[5].length);
+            audioManager.PlayVoice("AnnouncerRound");
+            Invoke("PlayRoundNumber", audioManager.GetClipLength("AnnouncerRound"));
         }
         else
-            audioSource.PlayOneShot(announcerClips[6]);
+            audioManager.PlayVoice("AnnouncerFinalRound");
     }
 
     public void PlayAnnouncerFight()
     {
-        audioSource.PlayOneShot(announcerClips[7]);
+        audioManager.PlayVoice("AnnouncerFight");
     }
 
     private void PlayRoundNumber()
     {
-        audioSource.PlayOneShot(announcerClips[RoundNumber]);
+        audioManager.PlayVoice("Announcer" + (RoundNumber + 1));
     }
 
     public GameObject GameObject
@@ -110,7 +113,6 @@ public class PlanManager : MonoBehaviour, IGameMode
     {
         DontDestroyOnLoad(this);
         gameState = new StateInitializing(this);
-        audioSource = GetComponent<AudioSource>();
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -250,6 +252,11 @@ public class PlanManager : MonoBehaviour, IGameMode
             manager.cameraController?.gameObject.SetActive(spawnNewPlayers);
         }
 
+        internal override void OnLeaveState()
+        {
+            manager.PlayAnnouncerRound();
+        }
+
         public override bool TimeAdvancing { get => true; }
         private protected override PlanGameState NextState { get => new StateSpawned(manager); }
         public override float SecondsRemaining { get => (MaxSteps - StepNumber + nextState.MaxSteps) * Time.fixedDeltaTime; }
@@ -261,12 +268,7 @@ public class PlanManager : MonoBehaviour, IGameMode
         private static readonly int STATE_LENGTH = 2 * 50;
 
         public StateSpawned(PlanManager manager) : base(manager) { MaxSteps = STATE_LENGTH; }
-
-        internal override void OnEnterState()
-        {
-            manager.PlayAnnouncerRound();
-        }
-
+        
         internal override void OnLeaveState()
         {
             manager.PlayAnnouncerFight();
