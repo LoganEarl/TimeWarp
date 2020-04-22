@@ -248,7 +248,7 @@ MonoBehaviour:
   voice:
   - name: AnnouncerRound
     clip: {fileID: 8300000, guid: a0ce0db683543b640a6cd76ef0da9ad4, type: 3}
-    volume: 0.132
+    volume: 0
     loop: 0
     source: {fileID: 0}
   - name: AnnouncerFinalRound

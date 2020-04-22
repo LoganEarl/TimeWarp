@@ -14,6 +14,7 @@ public class PlanManager : MonoBehaviour, IGameMode
     private PlanPlayerManager[] playerManagers = null;
     private PlanHUDController hudController;
     private PlayerCameraController cameraController = null;
+    private PauseOverlay pauseOverlayController = null;
 
     private AudioSource audioSource;
 
@@ -49,7 +50,6 @@ public class PlanManager : MonoBehaviour, IGameMode
     {
         if (RoundNumber != MaxRounds)
         {
-            //FindObjectOfType<AudioManager>().PlayVoice("AnnouncerRound");
             audioSource.PlayOneShot(announcerClips[5]);
             Invoke("PlayRoundNumber", announcerClips[5].length);
         }
@@ -60,8 +60,6 @@ public class PlanManager : MonoBehaviour, IGameMode
     public void PlayAnnouncerFight()
     {
         audioSource.PlayOneShot(announcerClips[7]);
-        //FindObjectOfType<AudioManager>().PlayVoice("AnnouncerOne");
-
     }
 
     private void PlayRoundNumber()
@@ -226,6 +224,8 @@ public class PlanManager : MonoBehaviour, IGameMode
 
             foreach (PlanPlayerManager manager in manager.playerManagers)
                 manager.ResetAll();
+
+            manager.LoadPauseOverlay();
 
             if (manager.hudController == null)
                 manager.LoadHUD();
@@ -418,6 +418,20 @@ public class PlanManager : MonoBehaviour, IGameMode
             throw new System.Exception("Unable to find ScoreOverlay component. Have you renamed/moved it?");
         loaded = Instantiate(loaded);
         loaded.GetComponent<ScoreOverlay>().Setup(scoreListings, this);
+    }
+
+    private void LoadPauseOverlay()
+    {
+        if (pauseOverlayController != null)
+            Destroy(pauseOverlayController.gameObject);
+
+        string pauseOverlayPrefabPath = "Prefabs/Overlay/PauseOverlay";
+        GameObject load = Resources.Load(pauseOverlayPrefabPath) as GameObject;
+        if (load == null)
+            throw new System.Exception("Unable to find PauseOverlay prefab");
+        load = Instantiate(load);
+        pauseOverlayController = load.GetComponent<PauseOverlay>();
+        pauseOverlayController.Setup(this);
     }
 }
 
