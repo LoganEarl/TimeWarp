@@ -20,6 +20,8 @@ public class AudioManager : MonoBehaviour {
     private Sound[] bgm, sfx, voice;
     [SerializeField]
     private Slider bgmVolumeSlider, sfxVolumeSlider, voiceVolumeSlider;
+    [SerializeField]
+    private Toggle friendlyFireToggle;
 
     private bool voiceClipCurrentlyPlaying = false;
 
@@ -47,6 +49,11 @@ public class AudioManager : MonoBehaviour {
         }
 
         DontDestroyOnLoad(gameObject);
+    }
+
+    public bool GetFriendlyFire()
+    {
+        return friendlyFireToggle.isOn;
     }
 
     private void LoadAllAudioSources(Sound[] type)
