@@ -223,7 +223,7 @@ GameObject:
   - component: {fileID: 9212376}
   m_Layer: 0
   m_Name: Barrier West Field
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -880,7 +880,7 @@ GameObject:
   - component: {fileID: 80027488}
   m_Layer: 0
   m_Name: Barrier East Field
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2011,7 +2011,7 @@ GameObject:
   - component: {fileID: 194377199}
   - component: {fileID: 194377198}
   - component: {fileID: 194377197}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Cube (29)
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -2103,7 +2103,7 @@ GameObject:
   - component: {fileID: 194596994}
   - component: {fileID: 194596993}
   - component: {fileID: 194596992}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Cube (35)
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -2760,7 +2760,7 @@ GameObject:
   - component: {fileID: 285147652}
   - component: {fileID: 285147651}
   - component: {fileID: 285147650}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Cube (34)
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -2872,7 +2872,7 @@ GameObject:
   - component: {fileID: 306365056}
   m_Layer: 0
   m_Name: Plane
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2912,7 +2912,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 306365054}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -3921,7 +3921,6 @@ GameObject:
   - component: {fileID: 452581177}
   - component: {fileID: 452581176}
   - component: {fileID: 452581175}
-  - component: {fileID: 452581174}
   m_Layer: 0
   m_Name: Barrier West Beam Top
   m_TagString: Untagged
@@ -3929,19 +3928,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!65 &452581174
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 452581173}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &452581175
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -4745,7 +4731,7 @@ GameObject:
   - component: {fileID: 520168859}
   m_Layer: 0
   m_Name: Barrier North Field
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6733,7 +6719,6 @@ GameObject:
   - component: {fileID: 718895341}
   - component: {fileID: 718895340}
   - component: {fileID: 718895339}
-  - component: {fileID: 718895338}
   m_Layer: 0
   m_Name: Barrier North Beam Bottom
   m_TagString: Untagged
@@ -6741,19 +6726,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!65 &718895338
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 718895337}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &718895339
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -6844,7 +6816,7 @@ GameObject:
   - component: {fileID: 740103075}
   - component: {fileID: 740103074}
   - component: {fileID: 740103073}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Cube (32)
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -7911,7 +7883,7 @@ GameObject:
   - component: {fileID: 809181542}
   - component: {fileID: 809181541}
   - component: {fileID: 809181540}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Cube (31)
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -8348,6 +8320,85 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1132979223}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &834274037
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2755922758117170646, guid: 75b7a1636365e0c49aedb43d9107e715,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -31.88831
+      objectReference: {fileID: 0}
+    - target: {fileID: 2755922758117170646, guid: 75b7a1636365e0c49aedb43d9107e715,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -30.923729
+      objectReference: {fileID: 0}
+    - target: {fileID: 2755922758117170646, guid: 75b7a1636365e0c49aedb43d9107e715,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -27.595978
+      objectReference: {fileID: 0}
+    - target: {fileID: 2755922758117170646, guid: 75b7a1636365e0c49aedb43d9107e715,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2755922758117170646, guid: 75b7a1636365e0c49aedb43d9107e715,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2755922758117170646, guid: 75b7a1636365e0c49aedb43d9107e715,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2755922758117170646, guid: 75b7a1636365e0c49aedb43d9107e715,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2755922758117170646, guid: 75b7a1636365e0c49aedb43d9107e715,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 2755922758117170646, guid: 75b7a1636365e0c49aedb43d9107e715,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2755922758117170646, guid: 75b7a1636365e0c49aedb43d9107e715,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2755922758117170646, guid: 75b7a1636365e0c49aedb43d9107e715,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2755922758117170649, guid: 75b7a1636365e0c49aedb43d9107e715,
+        type: 3}
+      propertyPath: m_Name
+      value: SplitscreenOverlay
+      objectReference: {fileID: 0}
+    - target: {fileID: 2755922758117170649, guid: 75b7a1636365e0c49aedb43d9107e715,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2755922758318517896, guid: 75b7a1636365e0c49aedb43d9107e715,
+        type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 716227093}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 75b7a1636365e0c49aedb43d9107e715, type: 3}
 --- !u!1 &834480889
 GameObject:
   m_ObjectHideFlags: 0
@@ -10076,72 +10127,6 @@ MonoBehaviour:
   blendDistance: 0
   weight: 0.579
   priority: 0
---- !u!1 &994749739
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 994749742}
-  - component: {fileID: 994749741}
-  - component: {fileID: 994749740}
-  m_Layer: 0
-  m_Name: EventSystem
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &994749740
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 994749739}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_HorizontalAxis: Horizontal0
-  m_VerticalAxis: Vertical0
-  m_SubmitButton: Submit0
-  m_CancelButton: Cancel0
-  m_InputActionsPerSecond: 10
-  m_RepeatDelay: 0.5
-  m_ForceModuleActive: 0
---- !u!114 &994749741
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 994749739}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_FirstSelected: {fileID: 0}
-  m_sendNavigationEvents: 1
-  m_DragThreshold: 10
---- !u!4 &994749742
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 994749739}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 24
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &997454992 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 268754705953990590, guid: 3e939c899e3a14340b246ac29d8cc9c5,
@@ -10166,7 +10151,7 @@ GameObject:
   - component: {fileID: 1000829094}
   - component: {fileID: 1000829093}
   - component: {fileID: 1000829092}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Cube (28)
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -11306,7 +11291,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1157132950}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: Invisible Player Barriers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11348,7 +11333,6 @@ GameObject:
   - component: {fileID: 1162129323}
   - component: {fileID: 1162129322}
   - component: {fileID: 1162129321}
-  - component: {fileID: 1162129320}
   m_Layer: 0
   m_Name: Barrier East Beam Top
   m_TagString: Untagged
@@ -11356,19 +11340,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!65 &1162129320
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1162129319}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1162129321
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -11441,7 +11412,7 @@ GameObject:
   - component: {fileID: 1163879470}
   - component: {fileID: 1163879469}
   - component: {fileID: 1163879468}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Cube (28)
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -12571,7 +12542,6 @@ GameObject:
   - component: {fileID: 1285536815}
   - component: {fileID: 1285536814}
   - component: {fileID: 1285536813}
-  - component: {fileID: 1285536812}
   m_Layer: 0
   m_Name: Barrier West Beam Bottom
   m_TagString: Untagged
@@ -12579,19 +12549,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!65 &1285536812
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1285536811}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1285536813
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -15081,7 +15038,6 @@ GameObject:
   - component: {fileID: 1596657099}
   - component: {fileID: 1596657098}
   - component: {fileID: 1596657097}
-  - component: {fileID: 1596657096}
   m_Layer: 0
   m_Name: Barrier North Beam Top
   m_TagString: Untagged
@@ -15089,19 +15045,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!65 &1596657096
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1596657095}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1596657097
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -16026,7 +15969,7 @@ GameObject:
   - component: {fileID: 1682933968}
   - component: {fileID: 1682933967}
   - component: {fileID: 1682933966}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Cube (28)
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -16117,7 +16060,6 @@ GameObject:
   - component: {fileID: 1692814939}
   - component: {fileID: 1692814938}
   - component: {fileID: 1692814937}
-  - component: {fileID: 1692814936}
   m_Layer: 0
   m_Name: Barrier South Beam Bottom
   m_TagString: Untagged
@@ -16125,19 +16067,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!65 &1692814936
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1692814935}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1692814937
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -16525,7 +16454,7 @@ GameObject:
   - component: {fileID: 1741157741}
   - component: {fileID: 1741157740}
   - component: {fileID: 1741157739}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Cube (30)
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -18102,7 +18031,6 @@ GameObject:
   - component: {fileID: 1843757654}
   - component: {fileID: 1843757653}
   - component: {fileID: 1843757652}
-  - component: {fileID: 1843757651}
   m_Layer: 0
   m_Name: Barrier East Beam Bottom
   m_TagString: Untagged
@@ -18110,19 +18038,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!65 &1843757651
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1843757650}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1843757652
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -18799,6 +18714,72 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3e939c899e3a14340b246ac29d8cc9c5, type: 3}
+--- !u!1 &1914573789
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1914573792}
+  - component: {fileID: 1914573791}
+  - component: {fileID: 1914573790}
+  m_Layer: 0
+  m_Name: EventSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1914573790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1914573789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalAxis: Horizontal0
+  m_VerticalAxis: Vertical0
+  m_SubmitButton: Submit0
+  m_CancelButton: Cancel0
+  m_InputActionsPerSecond: 10
+  m_RepeatDelay: 0.5
+  m_ForceModuleActive: 0
+--- !u!114 &1914573791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1914573789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_FirstSelected: {fileID: 0}
+  m_sendNavigationEvents: 1
+  m_DragThreshold: 10
+--- !u!4 &1914573792
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1914573789}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 24
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1918255382 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 268754705953990590, guid: 3e939c899e3a14340b246ac29d8cc9c5,
@@ -19450,7 +19431,6 @@ GameObject:
   - component: {fileID: 1986099549}
   - component: {fileID: 1986099548}
   - component: {fileID: 1986099547}
-  - component: {fileID: 1986099546}
   m_Layer: 0
   m_Name: Barrier South Beam Top
   m_TagString: Untagged
@@ -19458,19 +19438,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!65 &1986099546
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1986099545}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1986099547
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -19543,7 +19510,7 @@ GameObject:
   - component: {fileID: 1988728624}
   - component: {fileID: 1988728623}
   - component: {fileID: 1988728622}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Cube (33)
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -20364,7 +20331,6 @@ GameObject:
   - component: {fileID: 2070341151}
   - component: {fileID: 2070341150}
   - component: {fileID: 2070341149}
-  - component: {fileID: 2070341148}
   m_Layer: 0
   m_Name: Barrier South Field
   m_TagString: Untagged
@@ -20372,20 +20338,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!64 &2070341148
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2070341147}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &2070341149
 MeshRenderer:
   m_ObjectHideFlags: 0

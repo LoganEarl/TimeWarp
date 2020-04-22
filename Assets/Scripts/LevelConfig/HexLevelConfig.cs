@@ -2,30 +2,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BounceLevelConfig: ILevelConfig
+public class HexLevelConfig : ILevelConfig
 {
     private static readonly Vector3[][] playerSpawns = new Vector3[][] {
         new Vector3[]
         {
-            new Vector3(-17.25f,.1f,9.25f),
-            new Vector3(-17.25f,.1f,-9.25f),
-            new Vector3(-15f,.1f,0),
-            new Vector3(-7f,.1f,8),
-            new Vector3(2,.1f,5)
+            new Vector3(-18,.1f,0),
+            new Vector3(-18,.1f,-6),
+            new Vector3(-18,.1f,6),
+            new Vector3(-12,.1f,8),
+            new Vector3(-12,.1f,-8)
         },
         new Vector3[]
         {
-            new Vector3(17.25f,.1f,-9.25f),
-            new Vector3(17.25f,.1f,9.25f),
-            new Vector3(15f,.1f,0),
-            new Vector3(7f,.1f,-8),
-            new Vector3(-2,.1f,-5)
+            new Vector3(18,1,0),
+            new Vector3(18,1,6),
+            new Vector3(18,1,-6),
+            new Vector3(12,1,-8),
+            new Vector3(12,1,8)
         }
     };
 
     public string GetSceneName()
     {
-        return "BounceMap";
+        return "HexMap";
     }
 
     public int GetMaxRounds()
