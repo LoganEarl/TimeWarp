@@ -9998,7 +9998,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9242646d7cde44246b4b64c378428e07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
+  animator: {fileID: 1597818434}
   startButton: {fileID: 94222587}
   planGameMode: {fileID: 0}
   instinctGameMode: {fileID: 0}
