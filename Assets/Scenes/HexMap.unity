@@ -8387,11 +8387,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SplitscreenOverlay
       objectReference: {fileID: 0}
-    - target: {fileID: 2755922758117170649, guid: 75b7a1636365e0c49aedb43d9107e715,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2755922758318517896, guid: 75b7a1636365e0c49aedb43d9107e715,
         type: 3}
       propertyPath: m_Camera
