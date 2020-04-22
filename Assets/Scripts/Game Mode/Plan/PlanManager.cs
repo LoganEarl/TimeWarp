@@ -34,6 +34,7 @@ public class PlanManager : MonoBehaviour, IGameMode
     }
     public int NumPlayers { get; private set; }
     public int MaxRounds { get; private set; } = 1;
+    public bool FriendlyFire;
     public int RoundNumber { get; private set; } = -1;      //starts at -1, but first match is 0.
                                                             //This is so NextMatch() doesnt need edge case checks
     private PlanGameState gameState;

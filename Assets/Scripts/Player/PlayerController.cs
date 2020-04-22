@@ -44,6 +44,7 @@ public class PlayerController : MonoBehaviour, IRecordable
     #region Components
     private static bool talking = false;
     private int playerNumber { get; set; } = 0;
+    public bool friendlyFire { private get; set; }
     private int sourceRoundNum = 0;
     private string ghostLayerName = "Ghost";
     private string PlayerLayerName { get => "Player" + playerNumber; }
@@ -55,7 +56,7 @@ public class PlayerController : MonoBehaviour, IRecordable
     private Rigidbody rigidBody;
     private PlayerHealth health;
     private Color playerColor;
-    private AudioSource voiceLine;
+    private AudioManager audioManager;
     private RandomShoot shootSound;
     private RandomShield shieldSound;
     #endregion
@@ -76,11 +77,13 @@ public class PlayerController : MonoBehaviour, IRecordable
     private void Awake()
     {
         lookDirection = new Vector3(0, 0, 1);
-        voiceLine = GetComponent<AudioSource>();
+        audioManager = FindObjectOfType<AudioManager>();
         animator = GetComponentInChildren<Animator>();
         rigidBody = GetComponent<Rigidbody>();
         health = GetComponent<PlayerHealth>();
         shootSound = GetComponent<RandomShoot>();
+
+        friendlyFire = audioManager.GetFriendlyFire();
     }
 
     private void FixedUpdate()
@@ -289,21 +292,24 @@ public class PlayerController : MonoBehaviour, IRecordable
             collider.gameObject.layer = destLayer;
         roundClearingList.Add(shieldInstance.gameObject);
 
-        FindObjectOfType<AudioManager>().PlayVoice(shieldSound.GetClip());
+        audioManager.PlayVoice(shieldSound.GetClip());
     }
 
     private void Shoot()
     {
         Rigidbody bulletInstance = Instantiate(bullet, fireTransform.position, fireTransform.rotation) as Rigidbody;
         bulletInstance.GetComponent<Bullet>().bulletColor = playerColor;
-        bulletInstance.GetComponent<Bullet>().playerNumber = playerNumber;
+        //bulletInstance.GetComponent<Bullet>().playerNumber = playerNumber;
 
-        bulletInstance.gameObject.layer = LayerMask.NameToLayer("Projectile" + playerNumber);
+        string bulletLayer = "Projectile";
+        if (!friendlyFire) bulletLayer += playerNumber;
+
+        bulletInstance.gameObject.layer = LayerMask.NameToLayer(bulletLayer);
         bulletInstance.velocity = fireTransform.forward;
 
         roundClearingList.Add(bulletInstance.gameObject);
         
-        FindObjectOfType<AudioManager>().PlayVoice(shootSound.GetClip());
+        audioManager.PlayVoice(shootSound.GetClip());
     }
 
     private void SetLayer(string newLayer)
