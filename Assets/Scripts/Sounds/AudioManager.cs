@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Audio;
 
 // Call this to play audio >> FindObjectOfType<AudioManager>().PlaySFX/PlayBGM/PlayVoice("enter clipName");
 
@@ -8,9 +10,9 @@ public class AudioManager : MonoBehaviour {
 
     private static AudioManager instance;
 
-    private static float BGM_DEFAULT_VOLUME = .1f;
-    private static float SFX_DEFAULT_VOLUME = .3f;
-    private static float VOICE_DEFAULT_VOLUME = .5f;
+    private static readonly float BGM_DEFAULT_VOLUME = .1f;
+    private static readonly float SFX_DEFAULT_VOLUME = .1f;
+    private static readonly float VOICE_DEFAULT_VOLUME = .5f;
 
     [SerializeField]
     private GameObject OptionsMenu;
@@ -18,6 +20,10 @@ public class AudioManager : MonoBehaviour {
     private Sound[] bgm, sfx, voice;
     [SerializeField]
     private Slider bgmVolumeSlider, sfxVolumeSlider, voiceVolumeSlider;
+    [SerializeField]
+    private Toggle friendlyFireToggle;
+
+    private bool voiceClipCurrentlyPlaying = false;
 
     void Awake()
     {
@@ -45,19 +51,36 @@ public class AudioManager : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
     }
 
+    public bool GetFriendlyFire()
+    {
+        return friendlyFireToggle.isOn;
+    }
+
     private void LoadAllAudioSources(Sound[] type)
     {
         foreach (Sound s in type)
         {
             s.source = gameObject.AddComponent<AudioSource>();
             s.source.clip = s.clip;
+
             if (type == bgm)
+            {
                 s.source.volume = BGM_DEFAULT_VOLUME;
+                bgmVolumeSlider.value = BGM_DEFAULT_VOLUME;
+                s.source.loop = true;
+            }
             else if (type == sfx)
+            {
                 s.source.volume = SFX_DEFAULT_VOLUME;
+                sfxVolumeSlider.value = SFX_DEFAULT_VOLUME;
+            }
             else
+            {
                 s.source.volume = VOICE_DEFAULT_VOLUME;
-            s.source.loop = s.loop;
+                voiceVolumeSlider.value = VOICE_DEFAULT_VOLUME;
+            }
+
+            //s.source.loop = s.loop;
         }
     }
 
@@ -86,32 +109,50 @@ public class AudioManager : MonoBehaviour {
         Play(voice, clipName);
     }
 
+    public float GetClipLength(string clipName)
+    {
+        Sound tempSound = Array.Find(voice, sound => sound.name == clipName);
+        return tempSound.clip.length;
+    }
+
     private void Play(Sound[] type, string clipName)
     {
-        Sound s = Array.Find(type, sound => sound.name == clipName);
-        if (s == null)
-        {
-            //Debug.LogWarning("Sound: " + clipName + " not found!");
+        Sound soundClip = Array.Find(type, sound => sound.name == clipName);
+        if (soundClip == null)
             return;
-        }
-        s.source.Play();
+
+        if (type == voice && !voiceClipCurrentlyPlaying && !clipName.StartsWith("Announcer"))
+            StartCoroutine(PlayVoice(soundClip));
+        else if(type == sfx || type == bgm || clipName.StartsWith("Announcer"))
+            soundClip.source.Play();
+    }
+
+    private IEnumerator PlayVoice(Sound soundClip)
+    {
+        voiceClipCurrentlyPlaying = true;
+        soundClip.source.Play();
+        yield return new WaitWhile(() => soundClip.source.isPlaying);
+        voiceClipCurrentlyPlaying = false;
     }
 
     public void UpdateVolume()
     {
-        foreach(Sound s in bgm)
+        foreach (Sound s in bgm)
         {
-            s.source.volume = bgmVolumeSlider.value;
+            if(s.source != null)
+                s.source.volume = bgmVolumeSlider.value;
         }
 
         foreach (Sound s in sfx)
         {
-            s.source.volume = sfxVolumeSlider.value;
+            if (s.source != null)
+                s.source.volume = sfxVolumeSlider.value;
         }
 
         foreach (Sound s in voice)
         {
-            s.source.volume = voiceVolumeSlider.value;
+            if (s.source != null)
+                s.source.volume = voiceVolumeSlider.value;
         }
     }
 }

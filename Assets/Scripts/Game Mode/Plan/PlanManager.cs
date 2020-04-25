@@ -14,8 +14,9 @@ public class PlanManager : MonoBehaviour, IGameMode
     private PlanPlayerManager[] playerManagers = null;
     private PlanHUDController hudController;
     private PlayerCameraController cameraController = null;
+    private PauseOverlay pauseOverlayController = null;
 
-    private AudioSource audioSource;
+    private AudioManager audioManager;
 
     private bool runningRecordingRound = false;
 
@@ -33,6 +34,7 @@ public class PlanManager : MonoBehaviour, IGameMode
     }
     public int NumPlayers { get; private set; }
     public int MaxRounds { get; private set; } = 1;
+    public bool FriendlyFire;
     public int RoundNumber { get; private set; } = -1;      //starts at -1, but first match is 0.
                                                             //This is so NextMatch() doesnt need edge case checks
     private PlanGameState gameState;
@@ -47,23 +49,26 @@ public class PlanManager : MonoBehaviour, IGameMode
 
     public void PlayAnnouncerRound()
     {
+        if (audioManager == null)
+            audioManager = FindObjectOfType<AudioManager>();
+
         if (RoundNumber != MaxRounds)
         {
-            audioSource.PlayOneShot(announcerClips[5]);
-            Invoke("PlayRoundNumber", announcerClips[5].length);
+            audioManager.PlayVoice("AnnouncerRound");
+            Invoke("PlayRoundNumber", audioManager.GetClipLength("AnnouncerRound"));
         }
         else
-            audioSource.PlayOneShot(announcerClips[6]);
+            audioManager.PlayVoice("AnnouncerFinalRound");
     }
 
     public void PlayAnnouncerFight()
     {
-        audioSource.PlayOneShot(announcerClips[7]);
+        audioManager.PlayVoice("AnnouncerFight");
     }
 
     private void PlayRoundNumber()
     {
-        audioSource.PlayOneShot(announcerClips[RoundNumber]);
+        audioManager.PlayVoice("Announcer" + (RoundNumber + 1));
     }
 
     public GameObject GameObject
@@ -109,7 +114,6 @@ public class PlanManager : MonoBehaviour, IGameMode
     {
         DontDestroyOnLoad(this);
         gameState = new StateInitializing(this);
-        audioSource = GetComponent<AudioSource>();
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -224,6 +228,8 @@ public class PlanManager : MonoBehaviour, IGameMode
             foreach (PlanPlayerManager manager in manager.playerManagers)
                 manager.ResetAll();
 
+            manager.LoadPauseOverlay();
+
             if (manager.hudController == null)
                 manager.LoadHUD();
             else
@@ -247,6 +253,11 @@ public class PlanManager : MonoBehaviour, IGameMode
             manager.cameraController?.gameObject.SetActive(spawnNewPlayers);
         }
 
+        internal override void OnLeaveState()
+        {
+            manager.PlayAnnouncerRound();
+        }
+
         public override bool TimeAdvancing { get => true; }
         private protected override PlanGameState NextState { get => new StateSpawned(manager); }
         public override float SecondsRemaining { get => (MaxSteps - StepNumber + nextState.MaxSteps) * Time.fixedDeltaTime; }
@@ -258,12 +269,7 @@ public class PlanManager : MonoBehaviour, IGameMode
         private static readonly int STATE_LENGTH = 2 * 50;
 
         public StateSpawned(PlanManager manager) : base(manager) { MaxSteps = STATE_LENGTH; }
-
-        internal override void OnEnterState()
-        { 
-            manager.PlayAnnouncerRound();
-        }
-
+        
         internal override void OnLeaveState()
         {
             manager.PlayAnnouncerFight();
@@ -415,6 +421,20 @@ public class PlanManager : MonoBehaviour, IGameMode
             throw new System.Exception("Unable to find ScoreOverlay component. Have you renamed/moved it?");
         loaded = Instantiate(loaded);
         loaded.GetComponent<ScoreOverlay>().Setup(scoreListings, this);
+    }
+
+    private void LoadPauseOverlay()
+    {
+        if (pauseOverlayController != null)
+            Destroy(pauseOverlayController.gameObject);
+
+        string pauseOverlayPrefabPath = "Prefabs/Overlay/PauseOverlay";
+        GameObject load = Resources.Load(pauseOverlayPrefabPath) as GameObject;
+        if (load == null)
+            throw new System.Exception("Unable to find PauseOverlay prefab");
+        load = Instantiate(load);
+        pauseOverlayController = load.GetComponent<PauseOverlay>();
+        pauseOverlayController.Setup(this);
     }
 }
 

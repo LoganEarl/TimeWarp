@@ -11,7 +11,7 @@ public class BounceLevelConfig: ILevelConfig
             new Vector3(-17.25f,.1f,-9.25f),
             new Vector3(-15f,.1f,0),
             new Vector3(-7f,.1f,8),
-            new Vector3(2,.1f,6)
+            new Vector3(2,.1f,5)
         },
         new Vector3[]
         {
@@ -19,7 +19,7 @@ public class BounceLevelConfig: ILevelConfig
             new Vector3(17.25f,.1f,9.25f),
             new Vector3(15f,.1f,0),
             new Vector3(7f,.1f,-8),
-            new Vector3(-2,.1f,-6)
+            new Vector3(-2,.1f,-5)
         }
     };
 

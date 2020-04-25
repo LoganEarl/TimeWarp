@@ -4,18 +4,18 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    [SerializeField] private AudioClip bounceSound;
     [SerializeField] private float bulletSpeed = 25;
     [SerializeField] private int bulletDmg = 1;
     [SerializeField] private int bouncesLeft = 4;
 
     public Color bulletColor { private get; set; }
-    public int playerNumber { private get; set; }
 
     private Rigidbody bulletInstance;
     
     private void Start() {
         bulletInstance = GetComponent<Rigidbody>();
+
+        FindObjectOfType<AudioManager>().PlaySFX("WeaponLaserShot1");
 
         GetComponent<MeshRenderer>().material.SetColor("_GlowColor", bulletColor);
         GetComponent<TrailRenderer>().material.SetColor("_GlowColor", bulletColor);
@@ -33,21 +33,25 @@ public class Bullet : MonoBehaviour
 
         if (other.tag != "Wall")
         {
-            if (other.tag != "Player" + playerNumber && other.tag != "Ghost")
-                other.GetComponent<PlayerHealth>()?.DoDamage(bulletDmg);
+            if (other.tag.StartsWith("Player"))
+            {
+                PlayerHealth pHealth = other.GetComponent<PlayerHealth>();
+
+                if (pHealth == null)
+                    pHealth = other.GetComponentInParent<PlayerHealth>();
+
+                pHealth?.DoDamage(bulletDmg);
+                Destroy(gameObject);
+            }
             else if (other.tag == "ForceField")
                 other.GetComponent<ForceField>()?.DoDamage();
         }
 
-        GetComponent<AudioSource>().PlayOneShot(bounceSound);
+        FindObjectOfType<AudioManager>().PlaySFX("WeaponLaserRicochet");
 
         if ((other.tag == "Wall") && bouncesLeft != 0)
             bouncesLeft--;
-        else if (other.tag != "Player" + playerNumber)
+        else if (!other.tag.StartsWith("Player"))
             Destroy(gameObject);
-    }
-
-    private void OnDestroy() {
-        GetComponent<AudioSource>().PlayOneShot(bounceSound);
     }
 }

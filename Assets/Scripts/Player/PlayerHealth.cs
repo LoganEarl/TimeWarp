@@ -12,7 +12,6 @@ public class PlayerHealth : MonoBehaviour
 
     private int health = 3;
     private bool dead = false;
-    private AudioSource audioSource;
     private RandomHurt hurtSound;
 
     public int Health {
@@ -48,9 +47,7 @@ public class PlayerHealth : MonoBehaviour
         if (damage > 0)
         {
             Health -= damage;
-            //float temp = audio.volume;
-            //audio.PlayOneShot(hurtSound, 0.3f);
-            
+            FindObjectOfType<AudioManager>().PlayVoice(hurtSound.GetClip());
         }
     }
 
@@ -67,7 +64,6 @@ public class PlayerHealth : MonoBehaviour
     public void Awake()
     {
         FullHeal();
-        audioSource = GetComponent<AudioSource>();
         hurtSound = GetComponent<RandomHurt>();
     }
 
