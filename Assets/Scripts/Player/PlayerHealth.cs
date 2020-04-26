@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
+    [SerializeField] GameObject deadPlayer;
+
     public int TimeAlive { get; private set; }
     public int MaxHealth { get; set; } = 3;
     public delegate void OnHealthChange(int newHealth, int maxHealth, GameObject player);
@@ -49,6 +51,9 @@ public class PlayerHealth : MonoBehaviour
             Health -= damage;
             FindObjectOfType<AudioManager>().PlayVoice(hurtSound.GetClip());
         }
+        Debug.Log("Player Health: " + Health);
+        if(Health <= 0)
+            Instantiate(deadPlayer, transform.position, transform.rotation);
     }
 
     public void FullHeal()

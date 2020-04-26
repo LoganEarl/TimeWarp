@@ -14,6 +14,7 @@ TagManager:
   - CameraPlayer0
   - CameraPlayer1
   - SplitscreenController
+  - DeadPlayer
   layers:
   - Default
   - TransparentFX
