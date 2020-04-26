@@ -15,6 +15,7 @@ public class PlayerHealth : MonoBehaviour
     private int health = 3;
     private bool dead = false;
     private RandomHurt hurtSound;
+    private Color playerColor;
 
     public int Health {
         get {
@@ -51,9 +52,12 @@ public class PlayerHealth : MonoBehaviour
             Health -= damage;
             FindObjectOfType<AudioManager>().PlayVoice(hurtSound.GetClip());
         }
-        Debug.Log("Player Health: " + Health);
-        if(Health <= 0)
-            Instantiate(deadPlayer, transform.position, transform.rotation);
+
+        if (Health <= 0)
+        {
+            GameObject deadBody = Instantiate(deadPlayer, transform.position, transform.rotation);
+            //deadBody.GetComponent<PlayerDeath>().playerColor = playerColor;
+        }
     }
 
     public void FullHeal()
@@ -70,6 +74,8 @@ public class PlayerHealth : MonoBehaviour
     {
         FullHeal();
         hurtSound = GetComponent<RandomHurt>();
+        //deadPlayer.GetComponentsInChildren<SkinnedMeshRenderer>()[1].material =
+        //    gameObject.GetComponentsInChildren<SkinnedMeshRenderer>()[1].material;
     }
 
     public void AddHealthChangeListener(OnHealthChange listener)

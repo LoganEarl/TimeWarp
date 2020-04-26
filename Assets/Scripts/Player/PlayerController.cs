@@ -299,7 +299,6 @@ public class PlayerController : MonoBehaviour, IRecordable
     {
         Rigidbody bulletInstance = Instantiate(bullet, fireTransform.position, fireTransform.rotation) as Rigidbody;
         bulletInstance.GetComponent<Bullet>().bulletColor = playerColor;
-        //bulletInstance.GetComponent<Bullet>().playerNumber = playerNumber;
 
         string bulletLayer = "Projectile";
         if (!friendlyFire) bulletLayer += playerNumber;

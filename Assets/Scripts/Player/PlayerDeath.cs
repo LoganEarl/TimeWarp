@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class PlayerDeath : MonoBehaviour
 {
-    public Vector3 explosionPos;
+    public Vector3 explosionPos { private get; set; }
+    public Color playerColor { private get; set; }
+
 
     private float radius = 5.0F;
     private float power = 10.0F;
 
     void Awake()
     {
-
         Destroy(GetComponentsInChildren<SkinnedMeshRenderer>()[0].gameObject);
         Destroy(transform.GetChild(0).gameObject);
         Destroy(GetComponentsInChildren<AudioSource>()[0].gameObject);
@@ -20,7 +21,6 @@ public class PlayerDeath : MonoBehaviour
         Destroy(GetComponentsInChildren<AudioSource>()[3].gameObject);
 
         Transform[] allTransforms = GetComponentsInChildren<Transform>();
-
 
         foreach (Transform child in allTransforms)
         {
