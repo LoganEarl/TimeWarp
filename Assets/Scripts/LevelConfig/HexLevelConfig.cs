@@ -35,7 +35,7 @@ public class HexLevelConfig : ILevelConfig
 
     public string GetPlayerModelName(int playerNum, int matchNum)
     {
-        return "Prefabs/Player";
+        return "Prefabs/Player/Player";
     }
 
     public Vector3 GetPlayerSpawnPosition(int playerNum, int matchNum)

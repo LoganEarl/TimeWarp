@@ -4,21 +4,26 @@ using UnityEngine;
 
 public class PlayerDeath : MonoBehaviour
 {
-    public Vector3 explosionPos { private get; set; }
-    public Color playerColor { private get; set; }
+    [SerializeField] private float timeToFade = 2.0f;
 
+    public Vector3 ExplosionPos { private get; set; }
+    public Material PlayerMaterial { get; set; }
 
-    private float radius = 5.0F;
-    private float power = 10.0F;
+    private readonly float radius = 50.0f;
+    private readonly float power = 10.0f;
+
+    private new SkinnedMeshRenderer renderer;
 
     void Awake()
     {
-        Destroy(GetComponentsInChildren<SkinnedMeshRenderer>()[0].gameObject);
+        renderer = GetComponentsInChildren<SkinnedMeshRenderer>()[1];
+
         Destroy(transform.GetChild(0).gameObject);
         Destroy(GetComponentsInChildren<AudioSource>()[0].gameObject);
         Destroy(GetComponentsInChildren<AudioSource>()[1].gameObject);
         Destroy(GetComponentsInChildren<AudioSource>()[2].gameObject);
         Destroy(GetComponentsInChildren<AudioSource>()[3].gameObject);
+        Destroy(GetComponentsInChildren<SkinnedMeshRenderer>()[0].gameObject);
 
         Transform[] allTransforms = GetComponentsInChildren<Transform>();
 
@@ -34,18 +39,38 @@ public class PlayerDeath : MonoBehaviour
 
             child.parent = null;
 
-            Destroy(child.gameObject, 5f);
+            Destroy(child.gameObject, 3f);
         }
+    }
 
+    private void Start()
+    {
+        renderer.material = PlayerMaterial;
         ApplyExplosion();
+    }
+
+    private void FixedUpdate()
+    {
+        if (PlayerMaterial != null)
+        {
+            renderer.material = PlayerMaterial;
+
+            PlayerMaterial.SetFloat(
+                "_Alpha", Mathf.Lerp(
+                    PlayerMaterial.GetFloat("_Alpha"),
+                    0f,
+                    timeToFade * Time.deltaTime
+                )
+            );
+        }
     }
 
     void ApplyExplosion()
     {
-        if(explosionPos == null) explosionPos = transform.position;
+        if(ExplosionPos == null) ExplosionPos = transform.position;
 
-        Collider[] colliders = Physics.OverlapSphere(explosionPos, radius);
-
+        Collider[] colliders = Physics.OverlapSphere(ExplosionPos, radius);
+            
         foreach (Collider hit in colliders)
         {
             if (hit.tag == "DeadPlayer")
@@ -53,7 +78,7 @@ public class PlayerDeath : MonoBehaviour
                 Rigidbody rb = hit.GetComponent<Rigidbody>();
 
                 if (rb != null)
-                    rb.AddExplosionForce(power, explosionPos, radius, 3.0F);
+                    rb.AddExplosionForce(power, ExplosionPos, radius, 3.0F);
             }
         }
     }

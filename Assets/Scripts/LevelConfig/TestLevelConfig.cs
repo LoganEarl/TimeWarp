@@ -11,7 +11,7 @@ public class TestLevelConfig : ILevelConfig
 
     public string GetPlayerModelName(int playerNum, int matchNum)
     {
-        return "Prefabs/Player";
+        return "Prefabs/Player/Player";
     }
 
     public int GetMaxRounds()

@@ -82,6 +82,7 @@ public class PlayerController : MonoBehaviour, IRecordable
         rigidBody = GetComponent<Rigidbody>();
         health = GetComponent<PlayerHealth>();
         shootSound = GetComponent<RandomShoot>();
+        shieldSound = GetComponent<RandomShield>();
 
         friendlyFire = audioManager.GetFriendlyFire();
     }
@@ -382,6 +383,11 @@ public class PlayerController : MonoBehaviour, IRecordable
         DestroyAllPlayerCreations();
         health.FullHeal();
         health.ResetStatistics();
+    }
+    
+    public void AddToRoundClearingList(GameObject obj)
+    {
+        roundClearingList.Add(obj);
     }
 
     public void OnDestroy() => DestroyAllPlayerCreations();

@@ -56,7 +56,12 @@ public class PlayerHealth : MonoBehaviour
         if (Health <= 0)
         {
             GameObject deadBody = Instantiate(deadPlayer, transform.position, transform.rotation);
-            //deadBody.GetComponent<PlayerDeath>().playerColor = playerColor;
+            Material pMaterial = 
+                gameObject.GetComponentsInChildren<SkinnedMeshRenderer>()[1].material;
+
+            deadBody.GetComponent<PlayerDeath>().PlayerMaterial = pMaterial;
+
+            GetComponent<PlayerController>().AddToRoundClearingList(deadBody);
         }
     }
 
@@ -74,8 +79,6 @@ public class PlayerHealth : MonoBehaviour
     {
         FullHeal();
         hurtSound = GetComponent<RandomHurt>();
-        //deadPlayer.GetComponentsInChildren<SkinnedMeshRenderer>()[1].material =
-        //    gameObject.GetComponentsInChildren<SkinnedMeshRenderer>()[1].material;
     }
 
     public void AddHealthChangeListener(OnHealthChange listener)

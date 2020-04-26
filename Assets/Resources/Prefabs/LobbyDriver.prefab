@@ -63,16 +63,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnerController: {fileID: 7306439072910383384}
-  announcerClips:
-  - {fileID: 8300000, guid: 0245d1b8461c76a40bb738525c39b910, type: 3}
-  - {fileID: 8300000, guid: a6feb14e39095ad4186d4ec31d7b4577, type: 3}
-  - {fileID: 8300000, guid: e887690d9b528e34384568bda41005ac, type: 3}
-  - {fileID: 8300000, guid: 8e12c75c14ced4c42a2209c4dce2b9a1, type: 3}
-  - {fileID: 8300000, guid: 1cfa3472db0de354eb788c79f2b0b5c1, type: 3}
-  - {fileID: 8300000, guid: a0ce0db683543b640a6cd76ef0da9ad4, type: 3}
-  - {fileID: 8300000, guid: ea304a9e710a91b4a860fdd54dacb683, type: 3}
-  - {fileID: 8300000, guid: a0b731f3339bc394198e7a1f83a386c4, type: 3}
-  roundLengthSeconds: 20
+  roundLengthSeconds: 5
 --- !u!95 &7058409687327364151
 Animator:
   serializedVersion: 3
