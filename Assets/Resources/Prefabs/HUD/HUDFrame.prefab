@@ -83,6 +83,7 @@ GameObject:
   - component: {fileID: 2850436710253763024}
   - component: {fileID: 2850436710253763027}
   - component: {fileID: 8442504810713840206}
+  - component: {fileID: 5189202453800651219}
   m_Layer: 5
   m_Name: HUDFrame
   m_TagString: HUD
@@ -188,6 +189,32 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 61b5bfdac6d5c7b4c94e7ae2e8033665, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerHealthAreas:
+  - {fileID: 1631802937875301048}
+  - {fileID: 2617784336009755090}
+  playerHealthBarPrefabs:
+  - {fileID: 2748537045897236391, guid: e2114f37b0fc4e84fa669d6b57464861, type: 3}
+  - {fileID: 5498466196369494912, guid: 9213c29dbc5d29b4ca2924b1a3f188d6, type: 3}
+  playerAmmoBars:
+  - {fileID: 657676280010367740}
+  - {fileID: 7806067856046131739}
+  timer: {fileID: 8602348515948361566}
+  roundNumber: {fileID: 3612735744898032436}
+  equipmentBars:
+  - {fileID: 637454761009580048}
+  - {fileID: 8763014848689712686}
+--- !u!114 &5189202453800651219
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2850436710253763026}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 840656b6502df5f42ab705ad0f3c751e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   playerHealthAreas:

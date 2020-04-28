@@ -9,13 +9,13 @@ public class PlanHUDController : MonoBehaviour
     [SerializeField]
     private GameObject[] playerHealthBarPrefabs;
     [SerializeField]
-    private PlanAmmoBar[] playerAmmoBars;
+    private AmmoBar[] playerAmmoBars;
     [SerializeField]
     private Timer timer;
     [SerializeField]
     private RoundNumber roundNumber;
     [SerializeField]
-    private PlanEquipmentBar[] equipmentBars;
+    private EquipmentBar[] equipmentBars;
 
     private PlanManager planManager;
 
@@ -67,7 +67,7 @@ public class PlanHUDController : MonoBehaviour
                 loadedPlayerHealthBars[playerNum][roundNum].transform.localPosition = relativePosition;
                 GameObject currentPlayer = planManager.GetPlayerManager(playerNum).GetPlayerObject(roundNum);
                 HealthBar toSetup = loadedPlayerHealthBars[playerNum][roundNum].GetComponent<HealthBar>();
-                toSetup.Setup(planManager, currentPlayer, playerNum, roundNum);
+                toSetup.Setup(planManager, currentPlayer, playerNum, roundNum, HealthBar.DisplayMode.SCALE_WITH_TIME);
             }
         }
     }
@@ -79,7 +79,7 @@ public class PlanHUDController : MonoBehaviour
                 Destroy(bar);
         Destroy(timer.gameObject);
         Destroy(roundNumber.gameObject);
-        foreach (PlanEquipmentBar bar in equipmentBars)
-            Destroy(bar);
+        foreach (EquipmentBar bar in equipmentBars)
+            Destroy(bar.gameObject);
     }
 }

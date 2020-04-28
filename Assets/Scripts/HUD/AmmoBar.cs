@@ -5,9 +5,9 @@ using UnityEngine.UI;
 using TMPro;
 
 
-public class PlanAmmoBar : MonoBehaviour
+public class AmmoBar : MonoBehaviour
 {
-    private PlanManager attachedGameMode;
+    private IGameMode attachedGameMode;
     private int playerNumber;
     private bool setup = false;
 
@@ -18,7 +18,7 @@ public class PlanAmmoBar : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI textAmmo;
 
-    public void Setup(PlanManager attachedGameMode, int playerNumber)
+    public void Setup(IGameMode attachedGameMode, int playerNumber)
     {
         this.playerNumber = playerNumber;
         this.attachedGameMode = attachedGameMode;

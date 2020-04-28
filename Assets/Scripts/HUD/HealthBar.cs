@@ -20,9 +20,16 @@ public class HealthBar : MonoBehaviour
     private Image fillImage;
     private Image borderImage;
     private Color defaultColor;
+    private DisplayMode displayMode;
 
-    public void Setup(IGameMode attachedGameMode, GameObject attachedPlayer, int playerNumber, int roundNumber)
+    public enum DisplayMode
     {
+        SCALE_WITH_TIME, SCALE_WITH_DAMAGE
+    }
+
+    public void Setup(IGameMode attachedGameMode, GameObject attachedPlayer, int playerNumber, int roundNumber, DisplayMode displayMode)
+    {
+        this.displayMode = displayMode;
         this.attachedGameMode = attachedGameMode;
         this.playerNumber = playerNumber;
         this.roundNumber = roundNumber;
@@ -40,10 +47,10 @@ public class HealthBar : MonoBehaviour
     {
         if (setup)
         {
-            Color targetColor;
+            Color? targetColor = null;
             if (playerHealth.Dead)
                 targetColor = Color.black;
-            else
+            else if(displayMode == DisplayMode.SCALE_WITH_TIME)
             {
                 int maxSteps = attachedGameMode.GameState.MaxSteps;
                 int curStep = attachedGameMode.GameState.StepNumber;
@@ -53,12 +60,26 @@ public class HealthBar : MonoBehaviour
                 gameObject.transform.localScale = new Vector2(scale, 1);
 
                 float healthScale = playerHealth.Health / (float)playerHealth.MaxHealth;
-                healthScale = -1 * (healthScale - 1) * (healthScale - 1) + 1; //correct for the bad way humans see color
+                healthScale = ColorCorrectScale(healthScale);
+                targetColor = defaultColor * healthScale;
+            } else if(displayMode == DisplayMode.SCALE_WITH_DAMAGE)
+            {
+                float healthScale = playerHealth.Health / (float)playerHealth.MaxHealth;
+                float scale = 0.2f + 0.8f * healthScale;
+                gameObject.transform.localScale = new Vector2(scale, 1);
+
+                float colorScale = ColorCorrectScale(healthScale);
                 targetColor = defaultColor * healthScale;
             }
-            if (!targetColor.Equals(fillImage.color))
-                fillImage.color = targetColor;
+
+            if (!fillImage.color.Equals(targetColor ?? defaultColor))
+                fillImage.color = targetColor ?? defaultColor;
         }
 
+    }
+
+    private float ColorCorrectScale(float rawScale)
+    {
+        return -1 * (rawScale - 1) * (rawScale - 1) + 1; //correct for the bad way humans see color
     }
 }

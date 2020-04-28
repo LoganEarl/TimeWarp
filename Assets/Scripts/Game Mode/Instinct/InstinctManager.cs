@@ -6,9 +6,13 @@ public class InstinctManager : MonoBehaviour, IGameMode
 {
     private ILevelConfig levelConfig = null;
 
+    [SerializeField] private int projectilesPerRound = 5;
+    [SerializeField] private int equipmentPerRound = 1;
     [SerializeField] private SpawnerController spawnerController;
+    [SerializeField] private AudioClip[] announcerClips;
     private PlayerCameraController cameraController = null;
-    //TODO [SerializeField] private AudioClip[] announcerClips;
+    private InstinctHUDController hudController;
+    
 
     private Dictionary<string, GameObject> loadedPlayerModels = new Dictionary<string, GameObject>();
     private InstinctPlayerManager[] playerManagers = null;
@@ -176,7 +180,7 @@ public class InstinctManager : MonoBehaviour, IGameMode
             manager.playerManagers = new InstinctPlayerManager[manager.NumPlayers];
             for (int i = 0; i < manager.NumPlayers; i++)
             {
-                manager.playerManagers[i] = new InstinctPlayerManager(18, 1, i);
+                manager.playerManagers[i] = new InstinctPlayerManager(i, manager.projectilesPerRound, manager.equipmentPerRound);
                 manager.playerManagers[i].PlayerKilledListener = manager.OnPlayerKilled;
             }
         }

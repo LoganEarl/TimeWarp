@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlanEquipmentBar : MonoBehaviour
+public class EquipmentBar : MonoBehaviour
 {
     [SerializeField]
     private GameObject equipmentPrefab;
@@ -12,10 +12,10 @@ public class PlanEquipmentBar : MonoBehaviour
     private SpriteRenderer[] spriteRenderers = new SpriteRenderer[0];
 
     private int playerNumber;
-    private PlanManager gameMode;
+    private IGameMode gameMode;
     private bool setup = false;
 
-    public void Setup(PlanManager gameMode, int playerNumber)
+    public void Setup(IGameMode gameMode, int playerNumber)
     {
         this.playerNumber = playerNumber;
         this.gameMode = gameMode;
