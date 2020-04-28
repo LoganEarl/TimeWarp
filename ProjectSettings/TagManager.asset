@@ -14,6 +14,7 @@ TagManager:
   - CameraPlayer0
   - CameraPlayer1
   - SplitscreenController
+  - DeadPlayer
   layers:
   - Default
   - TransparentFX
@@ -31,13 +32,13 @@ TagManager:
   - Player1
   - ForceField0
   - ForceField1
-  - PostProcess
+  - DeadPlayers
   - PlayerBarrier
   - Projectile0
   - Projectile1
   - Projectile
+  - PostProcess
   - WorldSpaceUI
-  - 
   - 
   - 
   - 

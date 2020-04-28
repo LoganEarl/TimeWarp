@@ -781,6 +781,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7058409687327364150, guid: b2a11edd8e06d864e8fe6112ee8bf7b4,
         type: 3}
+      propertyPath: m_RootOrder
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 7058409687327364150, guid: b2a11edd8e06d864e8fe6112ee8bf7b4,
+        type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
@@ -2097,6 +2102,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8959061903505908660, guid: 925e509a1dd6d5f438efa8f6b49c884d,
         type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8959061903505908660, guid: 925e509a1dd6d5f438efa8f6b49c884d,
+        type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
@@ -2114,6 +2124,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: AudioManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 8959061903758702224, guid: 925e509a1dd6d5f438efa8f6b49c884d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8959061903795066776, guid: 925e509a1dd6d5f438efa8f6b49c884d,
         type: 3}
@@ -2180,6 +2195,16 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 741370962}
+    - target: {fileID: 8959061904425419581, guid: 925e509a1dd6d5f438efa8f6b49c884d,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8959061904425419581, guid: 925e509a1dd6d5f438efa8f6b49c884d,
+        type: 3}
+      propertyPath: m_SortingLayerID
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8959061904471146097, guid: 925e509a1dd6d5f438efa8f6b49c884d,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -8529,7 +8554,7 @@ Canvas:
   m_GameObject: {fileID: 1338695645}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
+  m_RenderMode: 1
   m_Camera: {fileID: 741370962}
   m_PlaneDistance: 100
   m_PixelPerfect: 0

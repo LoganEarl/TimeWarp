@@ -82,6 +82,7 @@ public class PlayerController : MonoBehaviour, IRecordable
         rigidBody = GetComponent<Rigidbody>();
         health = GetComponent<PlayerHealth>();
         shootSound = GetComponent<RandomShoot>();
+        shieldSound = GetComponent<RandomShield>();
 
         friendlyFire = audioManager.GetFriendlyFire();
     }
@@ -299,7 +300,6 @@ public class PlayerController : MonoBehaviour, IRecordable
     {
         Rigidbody bulletInstance = Instantiate(bullet, fireTransform.position, fireTransform.rotation) as Rigidbody;
         bulletInstance.GetComponent<Bullet>().bulletColor = playerColor;
-        //bulletInstance.GetComponent<Bullet>().playerNumber = playerNumber;
 
         string bulletLayer = "Projectile";
         if (!friendlyFire) bulletLayer += playerNumber;
@@ -383,6 +383,11 @@ public class PlayerController : MonoBehaviour, IRecordable
         DestroyAllPlayerCreations();
         health.FullHeal();
         health.ResetStatistics();
+    }
+    
+    public void AddToRoundClearingList(GameObject obj)
+    {
+        roundClearingList.Add(obj);
     }
 
     public void OnDestroy() => DestroyAllPlayerCreations();

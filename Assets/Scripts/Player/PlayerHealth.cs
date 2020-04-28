@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
+    [SerializeField] GameObject deadPlayer;
+
     public int TimeAlive { get; private set; }
     public int MaxHealth { get; set; } = 3;
     public delegate void OnHealthChange(int newHealth, int maxHealth, GameObject player);
@@ -13,6 +15,7 @@ public class PlayerHealth : MonoBehaviour
     private int health = 3;
     private bool dead = false;
     private RandomHurt hurtSound;
+    private Color playerColor;
 
     public int Health {
         get {
@@ -48,6 +51,17 @@ public class PlayerHealth : MonoBehaviour
         {
             Health -= damage;
             FindObjectOfType<AudioManager>().PlayVoice(hurtSound.GetClip());
+        }
+
+        if (Health <= 0)
+        {
+            GameObject deadBody = Instantiate(deadPlayer, transform.position, transform.rotation);
+            Material pMaterial = 
+                gameObject.GetComponentsInChildren<SkinnedMeshRenderer>()[1].material;
+
+            deadBody.GetComponent<PlayerDeath>().PlayerMaterial = pMaterial;
+
+            GetComponent<PlayerController>().AddToRoundClearingList(deadBody);
         }
     }
 
