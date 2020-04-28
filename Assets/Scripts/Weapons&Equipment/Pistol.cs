@@ -11,29 +11,30 @@ public class Pistol : MonoBehaviour, IWeapon
     [SerializeField] public float FireRate { get; } = 0.25f;
 
     public Transform FireTransform { get; private set; }
-    private AudioManager audioManager;
+    private bool friendlyFire;
 
     public bool HasProjectile { get; } = true;
 
     void Awake()
     {
         FireTransform = transform.GetChild(0);
-        audioManager = FindObjectOfType<AudioManager>();
+        friendlyFire = FindObjectOfType<AudioManager>().FriendlyFire;
     }
 
-    public GameObject Fire(int playerNumber, Color playerColor)
+    public GameObject[] Fire(int playerNumber, Color playerColor)
     {
         GameObject projectileInstance = Instantiate(projectile, FireTransform.position, FireTransform.rotation) as GameObject;
         projectileInstance.GetComponent<Bullet>().BulletColor = playerColor;
+        
+        projectileInstance.gameObject.layer = 
+            LayerMask.NameToLayer(
+                friendlyFire ? projectileLayer : projectileLayer + playerNumber
+            );
 
-        string layer = projectileLayer;
-        if (!audioManager.GetFriendlyFire()) layer += playerNumber;
-
-        projectileInstance.gameObject.layer = LayerMask.NameToLayer(layer);
         projectileInstance.GetComponent<Rigidbody>().velocity = FireTransform.forward;
 
-        audioManager.PlaySFX(firingSound);
+        FindObjectOfType<AudioManager>().PlaySFX(firingSound);
 
-        return projectileInstance;
+        return new GameObject[] { projectileInstance };
     }
 }

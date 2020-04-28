@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour, IRecordable
     #region equipment
     private bool firingGun = false;
     private bool fired = false;
+    private bool FiringReset { set => fired = false; }
     private bool usingEquipment = false;
     private bool usedEquipment = false;
     private GameObject shieldPlacer;
@@ -290,17 +291,10 @@ public class PlayerController : MonoBehaviour, IRecordable
 
     private void Shoot()
     {
-        if (Weapon.HasProjectile)
-        {
-            GameObject projectile = Weapon.Fire(PlayerNumber, playerColor);
-            roundClearingList.Add(projectile);
-        }
-        else Weapon.Fire(PlayerNumber, playerColor);
-        
+        roundClearingList.AddRange(Weapon.Fire(PlayerNumber, playerColor));
         audioManager.PlayVoice(shootSound.GetClip());
     }
 
-    private void FiringReset() { fired = false; }
 
     private void SetLayer(string newLayer)
     {

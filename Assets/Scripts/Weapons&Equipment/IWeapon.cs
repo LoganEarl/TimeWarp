@@ -8,5 +8,5 @@ public interface IWeapon
     float FireRate { get; }
     Transform FireTransform { get; }
     
-    GameObject Fire(int playerNumber, Color playerColor);
+    GameObject[] Fire(int playerNumber, Color playerColor);
 }
