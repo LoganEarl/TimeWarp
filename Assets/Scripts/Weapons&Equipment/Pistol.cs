@@ -8,7 +8,7 @@ public class Pistol : MonoBehaviour, IWeapon
     [SerializeField] private string projectileLayer = "Projectile";
 
     [SerializeField] private string firingSound = "WeaponLaserShot1";
-    [SerializeField] public float FireRate { get; } = 0.25f;
+    [SerializeField] public float FireRate { get; } = 0.4f;
 
     public Transform FireTransform { get; private set; }
     private bool friendlyFire;
@@ -17,7 +17,7 @@ public class Pistol : MonoBehaviour, IWeapon
 
     void Awake()
     {
-        FireTransform = transform.GetChild(0);
+        FireTransform = transform.childCount > 0 ? transform.GetChild(0) : transform;
         friendlyFire = FindObjectOfType<AudioManager>().FriendlyFire;
     }
 

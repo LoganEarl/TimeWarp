@@ -14,7 +14,6 @@ public class PlayerController : MonoBehaviour, IRecordable
     #region equipment
     private bool firingGun = false;
     private bool fired = false;
-    private bool FiringReset { set => fired = false; }
     private bool usingEquipment = false;
     private bool usedEquipment = false;
     private GameObject shieldPlacer;
@@ -42,7 +41,7 @@ public class PlayerController : MonoBehaviour, IRecordable
 
     #region Components
     private int PlayerNumber { get; set; } = 0;
-    private IWeapon Weapon { get; set; }
+    public IWeapon Weapon { get; private set; }
     private int sourceRoundNum = 0;
     private string ghostLayerName = "Ghost";
     private string PlayerLayerName { get => "Player" + PlayerNumber; }
@@ -57,24 +56,32 @@ public class PlayerController : MonoBehaviour, IRecordable
     private AudioManager audioManager;
     private RandomShoot shootSound;
     private RandomShield shieldSound;
+    public bool IsVisible {
+        get => gameMode.GameState.GetPlayerVisible(PlayerNumber, sourceRoundNum);
+        set {
+            if (value) gameObject.transform.localScale = new Vector3(2, 2, 2);
+            else gameObject.transform.localScale = new Vector3(0, 0, 0);
+        }
+    }
     #endregion
 
     #region movement
     private bool isIdle = true;
     private int frameCounter = 0;
-    private Vector3 position, velocity, lookDirection;
+    private Vector3 position, velocity;
+    public Vector3 LookDirection { get; set; }
     private Quaternion desiredRotation = Quaternion.identity;
     private PlayerSnapshot snapshot;
     private IGameMode gameMode;
     public Vector3 CameraPosition
     {
-        get { return position + (lookDirection * .5f) + cameraHeight; }
+        get { return position + (LookDirection * .5f) + cameraHeight; }
     }
     #endregion
 
     private void Awake()
     {
-        lookDirection = new Vector3(0, 0, 1);
+        LookDirection = new Vector3(0, 0, 1);
         audioManager = FindObjectOfType<AudioManager>();
         animator = GetComponentInChildren<Animator>();
         rigidBody = GetComponent<Rigidbody>();
@@ -82,14 +89,13 @@ public class PlayerController : MonoBehaviour, IRecordable
         shootSound = GetComponent<RandomShoot>();
         shieldSound = GetComponent<RandomShield>();
         Weapon = GetComponentInChildren<IWeapon>();
+        IsVisible = false;
     }
 
     private void FixedUpdate()
     {
-        if (!health.Dead && gameMode.GameState.GetPlayerVisible(PlayerNumber, sourceRoundNum))
+        if (!health.Dead && IsVisible)
         {
-            gameObject.transform.localScale = new Vector3(2, 2, 2); //unhides the player if they are hidden
-
             frameCounter++;
             if (frameCounter > 30) //maxFrames or something
             {
@@ -101,9 +107,8 @@ public class PlayerController : MonoBehaviour, IRecordable
             {
                 loadedCursor = true;
                 targetingCursor = Instantiate(targetingCursor);
+                targetingCursor.GetComponent<PlayerCursor>().Player = this;
             }
-            else if (usingSnapshots)
-                Destroy(targetingCursor);
 
             //read in the calculated values from the rigidbody
             velocity = rigidBody.velocity;
@@ -142,11 +147,11 @@ public class PlayerController : MonoBehaviour, IRecordable
             }
 
             Quaternion desiredRotation;
-            bool isLooking = lookDirection.magnitude > 0;
+            bool isLooking = LookDirection.magnitude > 0.1;
             bool isMoving = velocity.magnitude > 0.2;
 
             if (isLooking) {
-                Vector3 moddedDirection = Quaternion.AngleAxis(lookOffset, Vector3.up) * lookDirection;
+                Vector3 moddedDirection = Quaternion.AngleAxis(lookOffset, Vector3.up) * LookDirection;
 
                 float lookAngle = Vector3.Angle(Vector3.forward, moddedDirection) % 45;
                 if (lookAngle > lookSnap) lookAngle -= 45;
@@ -166,14 +171,6 @@ public class PlayerController : MonoBehaviour, IRecordable
                     rigidBody.MoveRotation(desiredRotation);
             }
 
-            if (targetingCursor != null) { 
-                targetingCursor.SetActive(isLooking && !usingSnapshots);
-
-                if(targetingCursor.activeInHierarchy)
-                    targetingCursor.transform.position =
-                         rigidBody.position + lookDirection + new Vector3(0, Weapon.FireTransform.position.y, 0);
-            }
-
             if (!gameMode.GameState.GetPlayerFireLocked(PlayerNumber, sourceRoundNum) &&
                 firingGun &&
                 (FireCallback?.Invoke() ?? true))
@@ -185,12 +182,16 @@ public class PlayerController : MonoBehaviour, IRecordable
                 (EquipmentCallback?.Invoke() ?? true))
                 PlaceEquipment();
         }
-        else
-        {
-            gameObject.transform.localScale = new Vector3(0, 0, 0); //hides the player without deactiviating
-            if (targetingCursor != null) targetingCursor.SetActive(false);
-            if (shieldPlacer != null) Destroy(shieldPlacer);
-        }
+
+        IsVisible = IsVisible;
+
+        if(targetingCursor != null)
+            targetingCursor.SetActive(
+                !health.Dead &&
+                IsVisible &&
+                LookDirection.magnitude > 0 &&
+                !usingSnapshots
+                );
     }
 
     private void ControlledFrame()
@@ -212,12 +213,13 @@ public class PlayerController : MonoBehaviour, IRecordable
         bool hasHorizontalAim = DeltaExceeds(horizontalAim, 0f, 0.1f);
         bool hasVerticalAim = DeltaExceeds(verticalAim, 0f, 0.1f);
 
-        if ((hasHorizontalAim || hasVerticalAim) && !aimLocked) {
-            lookDirection = new Vector3(horizontalAim, 0f, verticalAim);
-            lookDirection *= lookMagnitude;
+        if ((hasHorizontalAim || hasVerticalAim) && !aimLocked)
+        {
+            LookDirection = new Vector3(horizontalAim, 0f, verticalAim);
+            LookDirection *= lookMagnitude;
         }
         else if (!aimLocked)
-            lookDirection.Set(0, 0, 0);
+            LookDirection = Vector3.zero;
 
         float fireActivity = Input.GetAxis("Fire" + PlayerNumber);
         float equipmentActivity = Input.GetAxis("Equipment" + PlayerNumber);
@@ -253,6 +255,8 @@ public class PlayerController : MonoBehaviour, IRecordable
             aimLocked = !aimLocked;
     }
 
+    private void FiringReset() { fired = false; }
+
     private static bool DeltaExceeds(float value, float target, float delta)
     {
         var actualDifference = Mathf.Abs(value - target);
@@ -263,7 +267,7 @@ public class PlayerController : MonoBehaviour, IRecordable
     {
         position = snapshot.Translation;
         velocity = snapshot.Velocity;
-        lookDirection = snapshot.LookDirection;
+        LookDirection = snapshot.LookDirection;
         firingGun = snapshot.Firing;
         usingEquipment = snapshot.UsingEquipment;
         usedEquipment = snapshot.UsedEquipment;
@@ -274,6 +278,7 @@ public class PlayerController : MonoBehaviour, IRecordable
     {
         shieldPlacer = Instantiate(equipmentGuide, shieldTransform);
         shieldPlacer.transform.localScale = new Vector3(.1f, .1f, .1f);
+        roundClearingList.Add(shieldPlacer);
     }
 
     private void PlaceEquipment()
@@ -294,7 +299,6 @@ public class PlayerController : MonoBehaviour, IRecordable
         roundClearingList.AddRange(Weapon.Fire(PlayerNumber, playerColor));
         audioManager.PlayVoice(shootSound.GetClip());
     }
-
 
     private void SetLayer(string newLayer)
     {
@@ -331,7 +335,7 @@ public class PlayerController : MonoBehaviour, IRecordable
 
     public PlayerSnapshot GetSnapshot()
     {
-        return new PlayerSnapshot(position, velocity, lookDirection, firingGun, usingEquipment, usedEquipment, isIdle);
+        return new PlayerSnapshot(position, velocity, LookDirection, firingGun, usingEquipment, usedEquipment, isIdle);
     }
 
     public void SetSnapshot(PlayerSnapshot playerSnapshot)
@@ -350,6 +354,7 @@ public class PlayerController : MonoBehaviour, IRecordable
         {
             primaryRenderer.material = Resources.Load<Material>("Materials/Player/Player" + PlayerNumber + "Primary");
             secondaryRenderer.material = Resources.Load<Material>("Materials/Player/Player" + PlayerNumber + "Secondary");
+            Destroy(targetingCursor);
         }
         else
         {
