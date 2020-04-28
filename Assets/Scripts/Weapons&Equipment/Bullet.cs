@@ -8,17 +8,16 @@ public class Bullet : MonoBehaviour
     [SerializeField] private int bulletDmg = 1;
     [SerializeField] private int bouncesLeft = 4;
 
-    public Color bulletColor { private get; set; }
+    public Color BulletColor { private get; set; }
 
     private Rigidbody bulletInstance;
     
     private void Start() {
         bulletInstance = GetComponent<Rigidbody>();
 
-        FindObjectOfType<AudioManager>().PlaySFX("WeaponLaserShot1");
 
-        GetComponent<MeshRenderer>().material.SetColor("_GlowColor", bulletColor);
-        GetComponent<TrailRenderer>().material.SetColor("_GlowColor", bulletColor);
+        GetComponent<MeshRenderer>().material.SetColor("_GlowColor", BulletColor);
+        GetComponent<TrailRenderer>().material.SetColor("_GlowColor", BulletColor);
     }
 
     private void FixedUpdate() {
