@@ -45,30 +45,6 @@ public class PlanManager : MonoBehaviour, IGameMode
         return playerManagers[playerNum];
     }
 
-    public void PlayAnnouncerRound()
-    {
-        if (audioManager == null)
-            audioManager = FindObjectOfType<AudioManager>();
-
-        if (RoundNumber != MaxRounds)
-        {
-            audioManager.PlayVoice("AnnouncerRound");
-            Invoke("PlayRoundNumber", audioManager.GetClipLength("AnnouncerRound"));
-        }
-        else
-            audioManager.PlayVoice("AnnouncerFinalRound");
-    }
-
-    public void PlayAnnouncerFight()
-    {
-        audioManager.PlayVoice("AnnouncerFight");
-    }
-
-    private void PlayRoundNumber()
-    {
-        audioManager.PlayVoice("Announcer" + (RoundNumber + 1));
-    }
-
     public GameObject GameObject
     {
         get { return gameObject; }
@@ -433,6 +409,30 @@ public class PlanManager : MonoBehaviour, IGameMode
         load = Instantiate(load);
         pauseOverlayController = load.GetComponent<PauseOverlay>();
         pauseOverlayController.Setup(this);
+    }
+
+    private void PlayAnnouncerRound()
+    {
+        if (audioManager == null)
+            audioManager = FindObjectOfType<AudioManager>();
+
+        if (RoundNumber != MaxRounds)
+        {
+            audioManager.PlayVoice("AnnouncerRound");
+            Invoke("PlayRoundNumber", audioManager.GetClipLength("AnnouncerRound"));
+        }
+        else
+            audioManager.PlayVoice("AnnouncerFinalRound");
+    }
+
+    private void PlayAnnouncerFight()
+    {
+        audioManager.PlayVoice("AnnouncerFight");
+    }
+
+    private void PlayRoundNumber()
+    {
+        audioManager.PlayVoice("Announcer" + (RoundNumber + 1));
     }
 }
 

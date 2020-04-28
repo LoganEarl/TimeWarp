@@ -9,10 +9,11 @@ public class InstinctManager : MonoBehaviour, IGameMode
     [SerializeField] private int projectilesPerRound = 5;
     [SerializeField] private int equipmentPerRound = 1;
     [SerializeField] private SpawnerController spawnerController;
-    [SerializeField] private AudioClip[] announcerClips;
+
     private PlayerCameraController cameraController = null;
     private InstinctHUDController hudController;
-    
+    private AudioManager audioManager;
+    private PauseOverlay pauseOverlayController = null;
 
     private Dictionary<string, GameObject> loadedPlayerModels = new Dictionary<string, GameObject>();
     private InstinctPlayerManager[] playerManagers = null;
@@ -71,6 +72,8 @@ public class InstinctManager : MonoBehaviour, IGameMode
         this.levelConfig = levelConfig;
         this.NumPlayers = numPlayers;
         this.MaxRounds = levelConfig.GetMaxRounds();
+
+        this.playerDeaths.Clear();
 
         gameState = new StateInitializing(this);
         gameState.OnEnterState();
@@ -211,12 +214,13 @@ public class InstinctManager : MonoBehaviour, IGameMode
             foreach (InstinctPlayerManager manager in manager.playerManagers)
                 manager.ResetAll();
 
-            //TODO when we have a hud controller for this
-            //if (manager.hudController == null)
-            //    manager.LoadHUD();
-            //else
-            //    manager.hudController.ReloadAll();
-            //manager.hudController.gameObject.SetActive(true);
+            manager.LoadPauseOverlay();
+
+            if (manager.hudController == null)
+                manager.LoadHUD();
+            else
+                manager.hudController.ReloadAll();
+            manager.hudController.gameObject.SetActive(true);
 
             PlayerController[] mainPlayers = new PlayerController[manager.NumPlayers];
             for (int i = 0; i < mainPlayers.Length; i++)
@@ -231,6 +235,13 @@ public class InstinctManager : MonoBehaviour, IGameMode
 
             if (manager.cameraController != null)
                 manager.cameraController.Setup(manager, mainPlayers);
+
+            manager.cameraController?.gameObject.SetActive(true);
+        }
+
+        internal override void OnLeaveState()
+        {
+            manager.PlayAnnouncerRound();
         }
 
         public override bool TimeAdvancing { get => true; }
@@ -245,16 +256,9 @@ public class InstinctManager : MonoBehaviour, IGameMode
 
         public StateSpawned(InstinctManager manager) : base(manager) { MaxSteps = STATE_LENGTH; }
 
-        internal override void OnEnterState()
-        {
-            //TODO when we have sounds implemented 
-            //manager.PlayAnnouncerRound();
-        }
-
         internal override void OnLeaveState()
         {
-            //TODO when we have sounds implemented 
-            //manager.PlayAnnouncerFight();
+            manager.PlayAnnouncerFight();
         }
 
         private protected override InstinctGameState NextState { get => new StatePlaying(manager); }
@@ -360,11 +364,58 @@ public class InstinctManager : MonoBehaviour, IGameMode
 
     private void LoadHUD()
     {
-        //TODO implement this
+        if (hudController != null)
+            Destroy(hudController.gameObject);
+
+        string canvasPath = "Prefabs/HUD/HUDFrame";
+        GameObject loaded = Resources.Load(canvasPath) as GameObject;
+        if (loaded == null)
+            throw new System.Exception("Unable to find HUDFrame component. Have you renamed/moved it?");
+        loaded = Instantiate(loaded);
+        hudController = loaded.GetComponent<InstinctHUDController>();
+        hudController.Setup(this);
     }
 
     private void OnPlayerKilled(int playerNum)
     {
         playerDeaths.Add(playerNum, new DeathSignature(RoundNumber, GameState.StepNumber));
+    }
+
+    private void LoadPauseOverlay()
+    {
+        if (pauseOverlayController != null)
+            Destroy(pauseOverlayController.gameObject);
+
+        string pauseOverlayPrefabPath = "Prefabs/Overlay/PauseOverlay";
+        GameObject load = Resources.Load(pauseOverlayPrefabPath) as GameObject;
+        if (load == null)
+            throw new System.Exception("Unable to find PauseOverlay prefab");
+        load = Instantiate(load);
+        pauseOverlayController = load.GetComponent<PauseOverlay>();
+        pauseOverlayController.Setup(this);
+    }
+
+    private void PlayAnnouncerRound()
+    {
+        if (audioManager == null)
+            audioManager = FindObjectOfType<AudioManager>();
+
+        if (RoundNumber != MaxRounds)
+        {
+            audioManager.PlayVoice("AnnouncerRound");
+            Invoke("PlayRoundNumber", audioManager.GetClipLength("AnnouncerRound"));
+        }
+        else
+            audioManager.PlayVoice("AnnouncerFinalRound");
+    }
+
+    private void PlayAnnouncerFight()
+    {
+        audioManager.PlayVoice("AnnouncerFight");
+    }
+
+    private void PlayRoundNumber()
+    {
+        audioManager.PlayVoice("Announcer" + (RoundNumber + 1));
     }
 }

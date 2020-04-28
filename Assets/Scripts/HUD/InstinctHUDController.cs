@@ -19,7 +19,7 @@ public class InstinctHUDController : MonoBehaviour
 
     private InstinctManager instinctManager;
 
-    private GameObject[] loadedPlayerHealthBars;
+    private GameObject[] loadedPlayerHealthBars = { };
 
     public void Setup(InstinctManager instinctManager)
     {

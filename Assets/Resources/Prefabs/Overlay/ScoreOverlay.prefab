@@ -1055,7 +1055,7 @@ GameObject:
   - component: {fileID: 3435695003100896334}
   - component: {fileID: 400791200822242198}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: FrameP0Score
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
