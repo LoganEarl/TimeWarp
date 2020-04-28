@@ -1,20 +1,26 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PauseOverlay : MonoBehaviour {
 
     [SerializeField]
     private GameObject pauseOverlay;
+    [SerializeField]
+    private EventSystem eventSystem;
+    [SerializeField]
+    private Button selectButton;
 
     private IGameMode sourceGameMode;
-    private bool GameIsPaused;
+    private bool gameIsPaused;
     
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.P))
-            if (!GameIsPaused)
+            if (!gameIsPaused)
                 PauseGame();
             else
                 ResumeGame();
@@ -25,23 +31,31 @@ public class PauseOverlay : MonoBehaviour {
         this.sourceGameMode = iGameMode;
     }
 
-    public bool GetPausedState()
+    public bool GameIsPaused()
     {
-        return GameIsPaused;
+        return gameIsPaused;
     }
 
     public void ResumeGame()
     {
+        selectButton.Select();
+        gameIsPaused = false;
+        StartCoroutine(UnPause());
+    }
+
+    IEnumerator UnPause()
+    {
+        yield return new WaitForSecondsRealtime(.7f);
         pauseOverlay.SetActive(false);
         Time.timeScale = 1f;
-        GameIsPaused = false;
     }
 
     public void PauseGame()
     {
-        pauseOverlay.SetActive(true);
         Time.timeScale = 0f;
-        GameIsPaused = true;
+        gameIsPaused = true;
+        pauseOverlay.SetActive(true);
+        StartCoroutine(HighlightButton());
     }
 
     public void RestartGame()
@@ -57,5 +71,12 @@ public class PauseOverlay : MonoBehaviour {
         Destroy(sourceGameMode.GameObject);
         ResumeGame();
         SceneManager.LoadScene("Menu", LoadSceneMode.Single);
+    }
+
+    IEnumerator HighlightButton()
+    {
+        eventSystem.SetSelectedGameObject(null);
+        yield return null;
+        eventSystem.SetSelectedGameObject(eventSystem.firstSelectedGameObject);
     }
 }

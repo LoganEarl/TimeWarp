@@ -330,6 +330,7 @@ public class PlanManager : MonoBehaviour, IGameMode
         internal override void OnEnterState()
         {
             manager.hudController.gameObject.SetActive(false);
+            Destroy(manager.pauseOverlayController.gameObject);
             manager.LoadScoreScreen();
         }
 
