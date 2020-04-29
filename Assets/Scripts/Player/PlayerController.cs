@@ -88,8 +88,8 @@ public class PlayerController : MonoBehaviour, IRecordable
         health = GetComponent<PlayerHealth>();
         shootSound = GetComponent<RandomShoot>();
         shieldSound = GetComponent<RandomShield>();
-        Weapon = GetComponentInChildren<IWeapon>();
-        IsVisible = false;
+        Weapon = GetComponentsInChildren<IWeapon>()[0];
+        animator.SetInteger("WeaponType", Weapon.WeaponType);
     }
 
     private void FixedUpdate()
@@ -300,13 +300,26 @@ public class PlayerController : MonoBehaviour, IRecordable
         audioManager.PlayVoice(shootSound.GetClip());
     }
 
+    private void ChangeWeapon(string weaponName)
+    {
+        Transform newWeapon = transform.Find(weaponName + "Transform");
+
+        transform.Find(Weapon.WeaponName + "Transform").gameObject.SetActive(false);
+        newWeapon.gameObject.SetActive(true);
+        Weapon = (IWeapon) newWeapon.GetComponentInChildren(System.Type.GetType(weaponName));
+
+        animator.SetInteger("WeaponType", Weapon.WeaponType);
+    }
+
     private void SetLayer(string newLayer)
     {
         if(currentLayer != newLayer)
         {
             gameObject.layer = LayerMask.NameToLayer(newLayer);
+
             foreach (Transform obj in gameObject.GetComponentsInChildren<Transform>())
                 obj.gameObject.layer = LayerMask.NameToLayer(newLayer);
+
             currentLayer = newLayer;
         }
 

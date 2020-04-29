@@ -4,7 +4,8 @@ using UnityEngine;
 
 public interface IWeapon
 {
-    bool HasProjectile { get; }
+    string WeaponName { get; }
+    int WeaponType { get; }
     float FireRate { get; }
     Transform FireTransform { get; }
     

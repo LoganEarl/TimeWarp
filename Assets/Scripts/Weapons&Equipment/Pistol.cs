@@ -10,10 +10,10 @@ public class Pistol : MonoBehaviour, IWeapon
     [SerializeField] private string firingSound = "WeaponLaserShot1";
     [SerializeField] public float FireRate { get; } = 0.4f;
 
+    public string WeaponName { get; } = "Pistol";
+    public int WeaponType { get; } = 0;
     public Transform FireTransform { get; private set; }
     private bool friendlyFire;
-
-    public bool HasProjectile { get; } = true;
 
     void Awake()
     {
