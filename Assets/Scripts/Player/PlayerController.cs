@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour, IRecordable
     #region SerializableFields
 #pragma warning disable IDE0044
     [SerializeField] private Transform shieldTransform;
-
+    [SerializeField] private Transform weaponsTransform;
 
     [SerializeField] private GameObject targetingCursor;
     [SerializeField] private GameObject equipment;
@@ -253,6 +253,19 @@ public class PlayerController : MonoBehaviour, IRecordable
 
         if (Input.GetButtonDown("AimLock" + PlayerNumber))
             aimLocked = !aimLocked;
+
+        if (Input.GetButtonDown("ChangeToPistol" + PlayerNumber))
+        {
+            if (Input.GetAxis("ChangeToPistol" + PlayerNumber) > 0)
+                ChangeWeapon("Pistol");
+        }
+        else if (Input.GetButtonDown("ChangeToSniperOrShotgun" + PlayerNumber))
+        {
+            if (Input.GetAxis("ChangeToSniperOrShotgun" + PlayerNumber) > 0)
+                ChangeWeapon("Sniper");
+            else if (Input.GetAxis("ChangeToSniperOrShotgun" + PlayerNumber) < 0)
+                ChangeWeapon("Shotgun");
+        }
     }
 
     private void FiringReset() { fired = false; }
@@ -302,9 +315,9 @@ public class PlayerController : MonoBehaviour, IRecordable
 
     private void ChangeWeapon(string weaponName)
     {
-        Transform newWeapon = transform.Find(weaponName + "Transform");
+        Transform newWeapon = weaponsTransform.Find(weaponName + "Transform");
 
-        transform.Find(Weapon.WeaponName + "Transform").gameObject.SetActive(false);
+        weaponsTransform.Find(Weapon.WeaponName + "Transform").gameObject.SetActive(false);
         newWeapon.gameObject.SetActive(true);
         Weapon = (IWeapon) newWeapon.GetComponentInChildren(System.Type.GetType(weaponName));
 

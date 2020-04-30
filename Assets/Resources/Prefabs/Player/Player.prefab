@@ -827,6 +827,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shieldTransform: {fileID: 1726537901591723644}
+  weaponsTransform: {fileID: 5604768586197034703}
   targetingCursor: {fileID: 1814408534329862, guid: 3dd1434c704a6f34997c698b06c80000,
     type: 3}
   equipment: {fileID: 3812315075213835272, guid: d93afc24d46aa1c4092527ff414b1970,
@@ -2846,7 +2847,7 @@ PrefabInstance:
     - target: {fileID: 4683087434611666986, guid: 48b66697210ef034b86f3469ffd19b19,
         type: 3}
       propertyPath: m_Name
-      value: pistol
+      value: Pistol
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 48b66697210ef034b86f3469ffd19b19, type: 3}
