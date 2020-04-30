@@ -37,6 +37,9 @@ public class PlayerHealth : MonoBehaviour
         private set {
             dead = value;
             gameObject.SetActive(!dead);
+
+            if (dead) gameObject.transform.localScale = new Vector3(0, 0, 0);
+            else gameObject.transform.localScale = new Vector3(2, 2, 2);
         }
     }
 

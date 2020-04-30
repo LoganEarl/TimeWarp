@@ -115,7 +115,6 @@ public class PlanManager : MonoBehaviour, IGameMode
         {
             this.manager = manager;
         }
-
         private protected abstract PlanGameState NextState { get; }
         internal virtual void OnEnterState() { }
         internal virtual void OnLeaveState() { }
@@ -171,6 +170,8 @@ public class PlanManager : MonoBehaviour, IGameMode
             for (int i = 0; i < manager.NumPlayers; i++)
                 manager.playerManagers[i] = new PlanPlayerManager(18, 1);
         }
+
+        public override bool GetPlayerVisible(int playerNum, int roundNum) => false;
         private protected override PlanGameState NextState { get => new StateSpawning(true, manager); }
     }
 
@@ -213,7 +214,7 @@ public class PlanManager : MonoBehaviour, IGameMode
             PlayerController[] mainPlayers = new PlayerController[manager.NumPlayers];
             for(int i = 0; i < mainPlayers.Length; i++)
                 mainPlayers[i] = manager.playerManagers[i].MainPlayer;
-
+            
             if (manager.cameraController == null)
             {
                 GameObject cameraControllerObject = GameObject.FindWithTag("SplitscreenController");
@@ -232,6 +233,7 @@ public class PlanManager : MonoBehaviour, IGameMode
             manager.PlayAnnouncerRound();
         }
 
+        public override bool GetPlayerVisible(int playerNum, int roundNum) => false;
         public override bool TimeAdvancing { get => true; }
         private protected override PlanGameState NextState { get => new StateSpawned(manager); }
         public override float SecondsRemaining { get => (MaxSteps - StepNumber + nextState.MaxSteps) * Time.fixedDeltaTime; }
@@ -243,7 +245,7 @@ public class PlanManager : MonoBehaviour, IGameMode
         private static readonly int STATE_LENGTH = 2 * 50;
 
         public StateSpawned(PlanManager manager) : base(manager) { MaxSteps = STATE_LENGTH; }
-        
+
         internal override void OnLeaveState()
         {
             manager.PlayAnnouncerFight();
@@ -309,6 +311,7 @@ public class PlanManager : MonoBehaviour, IGameMode
             manager.LoadScoreScreen();
         }
 
+        public override bool GetPlayerVisible(int playerNum, int roundNum) => false;
         private protected override PlanGameState NextState { get => new StateInitializing(manager); }
     }
 

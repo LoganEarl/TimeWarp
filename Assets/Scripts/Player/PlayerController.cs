@@ -22,10 +22,8 @@ public class PlayerController : MonoBehaviour, IRecordable
 
     #region SerializableFields
 #pragma warning disable IDE0044
-    [SerializeField] private Transform fireTransform;
     [SerializeField] private Transform shieldTransform;
 
-    [SerializeField] private Rigidbody bullet;
 
     [SerializeField] private GameObject targetingCursor;
     [SerializeField] private GameObject equipment;
@@ -42,12 +40,11 @@ public class PlayerController : MonoBehaviour, IRecordable
     #endregion
 
     #region Components
-    private static bool talking = false;
-    private int playerNumber { get; set; } = 0;
-    public bool friendlyFire { private get; set; }
+    private int PlayerNumber { get; set; } = 0;
+    public IWeapon Weapon { get; private set; }
     private int sourceRoundNum = 0;
     private string ghostLayerName = "Ghost";
-    private string PlayerLayerName { get => "Player" + playerNumber; }
+    private string PlayerLayerName { get => "Player" + PlayerNumber; }
     private string currentLayer = "Unset";
     private bool usingSnapshots = false;
     private bool aimLocked = false;
@@ -59,40 +56,46 @@ public class PlayerController : MonoBehaviour, IRecordable
     private AudioManager audioManager;
     private RandomShoot shootSound;
     private RandomShield shieldSound;
+    public bool IsVisible {
+        get => gameMode.GameState.GetPlayerVisible(PlayerNumber, sourceRoundNum);
+        set {
+            if (value) gameObject.transform.localScale = new Vector3(2, 2, 2);
+            else gameObject.transform.localScale = new Vector3(0, 0, 0);
+        }
+    }
     #endregion
 
     #region movement
     private bool isIdle = true;
     private int frameCounter = 0;
-    private Vector3 position, velocity, lookDirection;
+    private Vector3 position, velocity;
+    public Vector3 LookDirection { get; set; }
     private Quaternion desiredRotation = Quaternion.identity;
     private PlayerSnapshot snapshot;
     private IGameMode gameMode;
     public Vector3 CameraPosition
     {
-        get { return position + (lookDirection * .5f) + cameraHeight; }
+        get { return position + (LookDirection * .5f) + cameraHeight; }
     }
     #endregion
 
     private void Awake()
     {
-        lookDirection = new Vector3(0, 0, 1);
+        LookDirection = new Vector3(0, 0, 1);
         audioManager = FindObjectOfType<AudioManager>();
         animator = GetComponentInChildren<Animator>();
         rigidBody = GetComponent<Rigidbody>();
         health = GetComponent<PlayerHealth>();
         shootSound = GetComponent<RandomShoot>();
         shieldSound = GetComponent<RandomShield>();
-
-        friendlyFire = audioManager.GetFriendlyFire();
+        Weapon = GetComponentsInChildren<IWeapon>()[0];
+        animator.SetInteger("WeaponType", Weapon.WeaponType);
     }
 
     private void FixedUpdate()
     {
-        if (!health.Dead && gameMode.GameState.GetPlayerVisible(playerNumber, sourceRoundNum))
+        if (!health.Dead && IsVisible)
         {
-            gameObject.transform.localScale = new Vector3(2, 2, 2); //unhides the player if they are hidden
-
             frameCounter++;
             if (frameCounter > 30) //maxFrames or something
             {
@@ -104,23 +107,22 @@ public class PlayerController : MonoBehaviour, IRecordable
             {
                 loadedCursor = true;
                 targetingCursor = Instantiate(targetingCursor);
+                targetingCursor.GetComponent<PlayerCursor>().Player = this;
             }
-            else if (usingSnapshots)
-                Destroy(targetingCursor);
 
             //read in the calculated values from the rigidbody
             velocity = rigidBody.velocity;
             position = rigidBody.position; // seperate method?
             //end
 
-            SetLayer(gameMode.GameState.GetPlayerCanTakeDamage(playerNumber, sourceRoundNum) ? PlayerLayerName : ghostLayerName);
+            SetLayer(gameMode.GameState.GetPlayerCanTakeDamage(PlayerNumber, sourceRoundNum) ? PlayerLayerName : ghostLayerName);
 
             if (usingSnapshots)
                 RecordedFrame();
             else
             {
                 ControlledFrame();
-                if (gameMode.GameState.GetPlayerPositionsLocked(playerNumber, sourceRoundNum))
+                if (gameMode.GameState.GetPlayerPositionsLocked(PlayerNumber, sourceRoundNum))
                 {
                     velocity = new Vector3();
                     isIdle = true;
@@ -145,11 +147,11 @@ public class PlayerController : MonoBehaviour, IRecordable
             }
 
             Quaternion desiredRotation;
-            bool isLooking = lookDirection.magnitude > 0;
+            bool isLooking = LookDirection.magnitude > 0.1;
             bool isMoving = velocity.magnitude > 0.2;
 
             if (isLooking) {
-                Vector3 moddedDirection = Quaternion.AngleAxis(lookOffset, Vector3.up) * lookDirection;
+                Vector3 moddedDirection = Quaternion.AngleAxis(lookOffset, Vector3.up) * LookDirection;
 
                 float lookAngle = Vector3.Angle(Vector3.forward, moddedDirection) % 45;
                 if (lookAngle > lookSnap) lookAngle -= 45;
@@ -165,44 +167,37 @@ public class PlayerController : MonoBehaviour, IRecordable
                 moddedDirection.y = 0;
 
                 desiredRotation = Quaternion.LookRotation(moddedDirection, Vector3.up);
-                if (!gameMode.GameState.GetPlayerLookLocked(playerNumber, sourceRoundNum))
+                if (!gameMode.GameState.GetPlayerLookLocked(PlayerNumber, sourceRoundNum))
                     rigidBody.MoveRotation(desiredRotation);
             }
 
-            if (targetingCursor != null) { 
-                targetingCursor.SetActive(isLooking && !usingSnapshots);
-
-                if(targetingCursor.activeInHierarchy)
-                    targetingCursor.transform.position =
-                         rigidBody.position + lookDirection + new Vector3(0, fireTransform.position.y, 0);
-            }
-
-            if (!gameMode.GameState.GetPlayerFireLocked(playerNumber, sourceRoundNum) &&
+            if (!gameMode.GameState.GetPlayerFireLocked(PlayerNumber, sourceRoundNum) &&
                 firingGun &&
                 (FireCallback?.Invoke() ?? true))
                 Shoot();
 
-            if (!gameMode.GameState.GetPlayerFireLocked(playerNumber, sourceRoundNum) &&
+            if (!gameMode.GameState.GetPlayerFireLocked(PlayerNumber, sourceRoundNum) &&
                 usedEquipment &&
                 !usingEquipment &&
                 (EquipmentCallback?.Invoke() ?? true))
                 PlaceEquipment();
         }
-        else
-        {
-            gameObject.transform.localScale = new Vector3(0, 0, 0); //hides the player without deactiviating
-            if (targetingCursor != null) targetingCursor.SetActive(false);
-            if (shieldPlacer != null) Destroy(shieldPlacer);
-            
-            //foreach (Transform obj in gameObject.GetComponentsInChildren<Transform>())
-            //    obj.gameObject.layer = LayerMask.NameToLayer("Player" + playerNumber);
-        }
+
+        IsVisible = IsVisible;
+
+        if(targetingCursor != null)
+            targetingCursor.SetActive(
+                !health.Dead &&
+                IsVisible &&
+                LookDirection.magnitude > 0 &&
+                !usingSnapshots
+                );
     }
 
     private void ControlledFrame()
     {
-        float horizontalMove = Input.GetAxis("Horizontal" + playerNumber);
-        float verticalMove = Input.GetAxis("Vertical" + playerNumber);
+        float horizontalMove = Input.GetAxis("Horizontal" + PlayerNumber);
+        float verticalMove = Input.GetAxis("Vertical" + PlayerNumber);
 
         bool hasHorizontalInput = DeltaExceeds(horizontalMove, 0f, 0.02f);
         bool hasVerticalInput = DeltaExceeds(verticalMove, 0f, 0.02f);
@@ -212,36 +207,36 @@ public class PlayerController : MonoBehaviour, IRecordable
         inputVector *= moveSpeed;
         velocity += (inputVector * Time.fixedDeltaTime);
 
-        float horizontalAim = Input.GetAxis("AimHorizontal" + playerNumber);
-        float verticalAim = Input.GetAxis("AimVertical" + playerNumber);
+        float horizontalAim = Input.GetAxis("AimHorizontal" + PlayerNumber);
+        float verticalAim = Input.GetAxis("AimVertical" + PlayerNumber);
 
         bool hasHorizontalAim = DeltaExceeds(horizontalAim, 0f, 0.1f);
         bool hasVerticalAim = DeltaExceeds(verticalAim, 0f, 0.1f);
 
-        if ((hasHorizontalAim || hasVerticalAim) && !aimLocked) {
-            lookDirection = new Vector3(horizontalAim, 0f, verticalAim);
-            lookDirection *= lookMagnitude;
+        if ((hasHorizontalAim || hasVerticalAim) && !aimLocked)
+        {
+            LookDirection = new Vector3(horizontalAim, 0f, verticalAim);
+            LookDirection *= lookMagnitude;
         }
         else if (!aimLocked)
-            lookDirection.Set(0, 0, 0);
+            LookDirection = Vector3.zero;
 
-        float fireActivity = Input.GetAxis("Fire" + playerNumber);
-        float equipmentActivity = Input.GetAxis("Equipment" + playerNumber);
+        float fireActivity = Input.GetAxis("Fire" + PlayerNumber);
+        float equipmentActivity = Input.GetAxis("Equipment" + PlayerNumber);
 
         firingGun = false;
         if (!fired && fireActivity > 0f) //this works becuase of the masssive deadzone setting
         {
             fired = true;
             firingGun = true;
+            Invoke("FiringReset", Weapon.FireRate);
         }
-        else if (fireActivity == 0f)
-            fired = false;
 
         usedEquipment = false;
         if (!usingEquipment && 
             equipmentActivity > 0f && 
-            !gameMode.GameState.GetPlayerFireLocked(playerNumber, sourceRoundNum) && 
-            gameMode.GetPlayerManager(playerNumber).GetAvailableEquipment(sourceRoundNum) != 0)
+            !gameMode.GameState.GetPlayerFireLocked(PlayerNumber, sourceRoundNum) && 
+            gameMode.GetPlayerManager(PlayerNumber).GetAvailableEquipment(sourceRoundNum) != 0)
         {
             usingEquipment = true;
             PlacingEquipmentGuide();
@@ -256,9 +251,11 @@ public class PlayerController : MonoBehaviour, IRecordable
             usingEquipment = false;
 
 
-        if (Input.GetButtonDown("AimLock" + playerNumber))
+        if (Input.GetButtonDown("AimLock" + PlayerNumber))
             aimLocked = !aimLocked;
     }
+
+    private void FiringReset() { fired = false; }
 
     private static bool DeltaExceeds(float value, float target, float delta)
     {
@@ -270,7 +267,7 @@ public class PlayerController : MonoBehaviour, IRecordable
     {
         position = snapshot.Translation;
         velocity = snapshot.Velocity;
-        lookDirection = snapshot.LookDirection;
+        LookDirection = snapshot.LookDirection;
         firingGun = snapshot.Firing;
         usingEquipment = snapshot.UsingEquipment;
         usedEquipment = snapshot.UsedEquipment;
@@ -281,12 +278,13 @@ public class PlayerController : MonoBehaviour, IRecordable
     {
         shieldPlacer = Instantiate(equipmentGuide, shieldTransform);
         shieldPlacer.transform.localScale = new Vector3(.1f, .1f, .1f);
+        roundClearingList.Add(shieldPlacer);
     }
 
     private void PlaceEquipment()
     {
         GameObject shieldInstance = Instantiate(equipment, shieldTransform.position, shieldTransform.rotation) as GameObject;
-        int destLayer = LayerMask.NameToLayer("ForceField" + playerNumber);
+        int destLayer = LayerMask.NameToLayer("ForceField" + PlayerNumber);
         MeshCollider[] colliders = shieldInstance.GetComponentsInChildren<MeshCollider>();
         shieldInstance.layer = destLayer;
         foreach (MeshCollider collider in colliders)
@@ -298,18 +296,19 @@ public class PlayerController : MonoBehaviour, IRecordable
 
     private void Shoot()
     {
-        Rigidbody bulletInstance = Instantiate(bullet, fireTransform.position, fireTransform.rotation) as Rigidbody;
-        bulletInstance.GetComponent<Bullet>().bulletColor = playerColor;
-
-        string bulletLayer = "Projectile";
-        if (!friendlyFire) bulletLayer += playerNumber;
-
-        bulletInstance.gameObject.layer = LayerMask.NameToLayer(bulletLayer);
-        bulletInstance.velocity = fireTransform.forward;
-
-        roundClearingList.Add(bulletInstance.gameObject);
-        
+        roundClearingList.AddRange(Weapon.Fire(PlayerNumber, playerColor));
         audioManager.PlayVoice(shootSound.GetClip());
+    }
+
+    private void ChangeWeapon(string weaponName)
+    {
+        Transform newWeapon = transform.Find(weaponName + "Transform");
+
+        transform.Find(Weapon.WeaponName + "Transform").gameObject.SetActive(false);
+        newWeapon.gameObject.SetActive(true);
+        Weapon = (IWeapon) newWeapon.GetComponentInChildren(System.Type.GetType(weaponName));
+
+        animator.SetInteger("WeaponType", Weapon.WeaponType);
     }
 
     private void SetLayer(string newLayer)
@@ -317,14 +316,14 @@ public class PlayerController : MonoBehaviour, IRecordable
         if(currentLayer != newLayer)
         {
             gameObject.layer = LayerMask.NameToLayer(newLayer);
+
             foreach (Transform obj in gameObject.GetComponentsInChildren<Transform>())
                 obj.gameObject.layer = LayerMask.NameToLayer(newLayer);
+
             currentLayer = newLayer;
         }
 
     }
-
-    private void TalkingStopped() { talking = false; }
 
     private void DestroyAllPlayerCreations()
     {
@@ -335,7 +334,7 @@ public class PlayerController : MonoBehaviour, IRecordable
 
     public void SetPlayerInformation(int playerNumber, int sourceRoundNum, Vector3 initialPosition, IGameMode gameMode)
     {
-        this.playerNumber = playerNumber;
+        this.PlayerNumber = playerNumber;
         this.sourceRoundNum = sourceRoundNum;
 
         Collider[] setColliderTags = GetComponentsInChildren<Collider>();
@@ -349,7 +348,7 @@ public class PlayerController : MonoBehaviour, IRecordable
 
     public PlayerSnapshot GetSnapshot()
     {
-        return new PlayerSnapshot(position, velocity, lookDirection, firingGun, usingEquipment, usedEquipment, isIdle);
+        return new PlayerSnapshot(position, velocity, LookDirection, firingGun, usingEquipment, usedEquipment, isIdle);
     }
 
     public void SetSnapshot(PlayerSnapshot playerSnapshot)
@@ -366,13 +365,14 @@ public class PlayerController : MonoBehaviour, IRecordable
 
         if (useSnapshots)
         {
-            primaryRenderer.material = Resources.Load<Material>("Materials/Player/Player" + playerNumber + "Primary");
-            secondaryRenderer.material = Resources.Load<Material>("Materials/Player/Player" + playerNumber + "Secondary");
+            primaryRenderer.material = Resources.Load<Material>("Materials/Player/Player" + PlayerNumber + "Primary");
+            secondaryRenderer.material = Resources.Load<Material>("Materials/Player/Player" + PlayerNumber + "Secondary");
+            Destroy(targetingCursor);
         }
         else
         {
-            primaryRenderer.material = Resources.Load<Material>("Materials/Player/Player" + playerNumber + "PrimaryGhost");
-            secondaryRenderer.material = Resources.Load<Material>("Materials/Player/Player" + playerNumber + "SecondaryGhost");
+            primaryRenderer.material = Resources.Load<Material>("Materials/Player/Player" + PlayerNumber + "PrimaryGhost");
+            secondaryRenderer.material = Resources.Load<Material>("Materials/Player/Player" + PlayerNumber + "SecondaryGhost");
         }
 
         playerColor = primaryRenderer.material.GetColor("_GlowColor");
