@@ -15,6 +15,7 @@ public class InstinctPlayerManager : PlayerManager
 
     internal InstinctPlayerManager(int playerNumber, int maxProjectiles, int maxEquipment)
     {
+        this.playerNumber = playerNumber;
         this.maxProjectiles = maxProjectiles;
         this.projectilesRemaining = new List<int>();
         this.maxEquipment = maxEquipment;
@@ -33,6 +34,16 @@ public class InstinctPlayerManager : PlayerManager
         return projectilesRemaining[roundNumber];
     }
 
+    internal override int GetProjectedProjectilesRemaining(int roundNumber, int asOfStepNumber)
+    {
+        return 0;
+    }
+
+    internal override int GetProjectedProjectilesRemaining(int asOfStepNumber)
+    {
+        return 0;
+    }
+
     internal override int GetMaxEquipment(int roundNumber)
     {
         return maxEquipment;
@@ -43,6 +54,11 @@ public class InstinctPlayerManager : PlayerManager
         if (roundNumber < 0 || roundNumber >= equipmentRemaining.Count)
             throw new System.ArgumentException("Illegal round number passed to GetAvailableEquipment");
         return equipmentRemaining[roundNumber];
+    }
+
+    internal override int GetProjectedEquipmentRemaining(int roundNumber, int asOfStepNumber)
+    {
+        return 0;
     }
 
     //add another controlled player instance

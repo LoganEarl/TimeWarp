@@ -26,14 +26,15 @@ public class EquipmentBar : MonoBehaviour
     {
         if (setup)
         {
+            int roundNumber = gameMode.RoundNumber;
             PlayerManager manager = gameMode.GetPlayerManager(playerNumber);
-            if (instantiatedPrefabs.Length != gameMode.GetPlayerManager(playerNumber).GetMaxEquipment())
+            if (instantiatedPrefabs.Length != gameMode.GetPlayerManager(playerNumber).GetMaxEquipment(roundNumber))
                 ReloadDisplay();
             for(int i = 0; i < instantiatedPrefabs.Length; i++)
             {
                 int colorIndex = 0;
                 if (i >= manager.GetProjectedEquipmentRemaining(0,gameMode.GameState.StepNumber)) colorIndex++;
-                if (i >= manager.GetAvailableEquipment()) colorIndex++;
+                if (i >= manager.GetAvailableEquipment(roundNumber)) colorIndex++;
                 spriteRenderers[i].color = colorSelections[i].colors[colorIndex];
             }
         }

@@ -27,9 +27,10 @@ public class AmmoBar : MonoBehaviour
 
     public void Update()
     {
+        int roundNumber = attachedGameMode.RoundNumber;
         int step = attachedGameMode.GameState.StepNumber;
-        int maxShots = attachedGameMode.GetPlayerManager(playerNumber).GetMaxProjectiles();
-        int shotsRemaining = attachedGameMode.GetPlayerManager(playerNumber).GetAvailableProjectiles();
+        int maxShots = attachedGameMode.GetPlayerManager(playerNumber).GetMaxProjectiles(roundNumber);
+        int shotsRemaining = attachedGameMode.GetPlayerManager(playerNumber).GetAvailableProjectiles(roundNumber);
         int projectedShotsRemaining = attachedGameMode.GetPlayerManager(playerNumber).GetProjectedProjectilesRemaining(step);
 
         float shotsScalar = shotsRemaining / (float)maxShots;

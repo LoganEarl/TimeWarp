@@ -296,7 +296,7 @@ public class InstinctManager : MonoBehaviour, IGameMode
         {
             get
             {
-                if (manager.NumPlayers - manager.playerDeaths.Count <= 1)
+                if (manager.NumPlayers - manager.playerDeaths.Count <= 1 || manager.RoundNumber >= manager.levelConfig.GetMaxRounds()-1)
                     return new StateFinished(manager);
                 else
                     return new StateSpawning(manager);
@@ -320,8 +320,8 @@ public class InstinctManager : MonoBehaviour, IGameMode
 
         internal override void OnEnterState()
         {
-            //manager.hudController.gameObject.SetActive(false);
-            //manager.LoadScoreScreen();
+            manager.hudController.gameObject.SetActive(false);
+            manager.LoadScoreScreen();
         }
 
         private protected override InstinctGameState NextState { get => new StateInitializing(manager); }
@@ -378,7 +378,40 @@ public class InstinctManager : MonoBehaviour, IGameMode
 
     private void OnPlayerKilled(int playerNum)
     {
-        playerDeaths.Add(playerNum, new DeathSignature(RoundNumber, GameState.StepNumber));
+        if(!playerDeaths.ContainsKey(playerNum))
+            playerDeaths.Add(playerNum, new DeathSignature(RoundNumber, GameState.StepNumber));
+    }
+
+    private void LoadScoreScreen()
+    {
+        string[] scoreKeyOrder = { "Time Alive" };
+        int[] scores = new int[NumPlayers];
+        Dictionary<string, int>[] listings = new Dictionary<string, int>[NumPlayers];
+
+        for (int i = 0; i < NumPlayers; i++)
+        {
+            int timeAlive = RoundLength;
+            if (playerDeaths.ContainsKey(i))
+                timeAlive = playerDeaths[i].StepNum;
+
+            Dictionary<string, int> stats = new Dictionary<string, int>();
+            stats["Time Alive"] = timeAlive;
+
+            int total = 0;
+            foreach (int value in stats.Values)
+                total += value;
+
+            scores[i] = total;
+            listings[i] = stats;
+        }
+
+        ScoreOverlay.ScoreList scoreListings = new ScoreOverlay.ScoreList(scores, listings, scoreKeyOrder);
+        string canvasPath = "Prefabs/Overlay/ScoreOverlay";
+        GameObject loaded = Resources.Load(canvasPath) as GameObject;
+        if (loaded == null)
+            throw new System.Exception("Unable to find ScoreOverlay component. Have you renamed/moved it?");
+        loaded = Instantiate(loaded);
+        loaded.GetComponent<ScoreOverlay>().Setup(scoreListings, this);
     }
 
     private void LoadPauseOverlay()
