@@ -12,9 +12,9 @@ public class PlayerController : MonoBehaviour, IRecordable
     #endregion
 
     #region equipment
-    private bool firingGun = false;
+    public bool FiringGun { get; private set; } = false;
     private bool fired = false;
-    private bool usingEquipment = false;
+    public bool UsingEquipment { get; private set; } = false;
     private bool usedEquipment = false;
     private GameObject shieldPlacer;
     private List<GameObject> roundClearingList = new List<GameObject>();
@@ -40,9 +40,9 @@ public class PlayerController : MonoBehaviour, IRecordable
     #endregion
 
     #region Components
-    private int PlayerNumber { get; set; } = 0;
+    public int PlayerNumber { get; private set; } = 0;
     public IWeapon Weapon { get; private set; }
-    private int sourceRoundNum = 0;
+    public int RoundNum { get; private set; } = 0;
     private string ghostLayerName = "Ghost";
     private string PlayerLayerName { get => "Player" + PlayerNumber; }
     private string currentLayer = "Unset";
@@ -57,7 +57,7 @@ public class PlayerController : MonoBehaviour, IRecordable
     private RandomShoot shootSound;
     private RandomShield shieldSound;
     public bool IsVisible {
-        get => gameMode.GameState.GetPlayerVisible(PlayerNumber, sourceRoundNum);
+        get => gameMode.GameState.GetPlayerVisible(PlayerNumber, RoundNum);
         set {
             if (value) gameObject.transform.localScale = new Vector3(2, 2, 2);
             else gameObject.transform.localScale = new Vector3(0, 0, 0);
@@ -115,14 +115,14 @@ public class PlayerController : MonoBehaviour, IRecordable
             position = rigidBody.position; // seperate method?
             //end
 
-            SetLayer(gameMode.GameState.GetPlayerCanTakeDamage(PlayerNumber, sourceRoundNum) ? PlayerLayerName : ghostLayerName);
+            SetLayer(gameMode.GameState.GetPlayerCanTakeDamage(PlayerNumber, RoundNum) ? PlayerLayerName : ghostLayerName);
 
             if (usingSnapshots)
                 RecordedFrame();
             else
             {
                 ControlledFrame();
-                if (gameMode.GameState.GetPlayerPositionsLocked(PlayerNumber, sourceRoundNum))
+                if (gameMode.GameState.GetPlayerPositionsLocked(PlayerNumber, RoundNum))
                 {
                     velocity = new Vector3();
                     isIdle = true;
@@ -167,18 +167,18 @@ public class PlayerController : MonoBehaviour, IRecordable
                 moddedDirection.y = 0;
 
                 desiredRotation = Quaternion.LookRotation(moddedDirection, Vector3.up);
-                if (!gameMode.GameState.GetPlayerLookLocked(PlayerNumber, sourceRoundNum))
+                if (!gameMode.GameState.GetPlayerLookLocked(PlayerNumber, RoundNum))
                     rigidBody.MoveRotation(desiredRotation);
             }
 
-            if (!gameMode.GameState.GetPlayerFireLocked(PlayerNumber, sourceRoundNum) &&
-                firingGun &&
+            if (!gameMode.GameState.GetPlayerFireLocked(PlayerNumber, RoundNum) &&
+                FiringGun &&
                 (FireCallback?.Invoke() ?? true))
                 Shoot();
 
-            if (!gameMode.GameState.GetPlayerFireLocked(PlayerNumber, sourceRoundNum) &&
+            if (!gameMode.GameState.GetPlayerFireLocked(PlayerNumber, RoundNum) &&
                 usedEquipment &&
-                !usingEquipment &&
+                !UsingEquipment &&
                 (EquipmentCallback?.Invoke() ?? true))
                 PlaceEquipment();
         }
@@ -224,31 +224,31 @@ public class PlayerController : MonoBehaviour, IRecordable
         float fireActivity = Input.GetAxis("Fire" + PlayerNumber);
         float equipmentActivity = Input.GetAxis("Equipment" + PlayerNumber);
 
-        firingGun = false;
+        FiringGun = false;
         if (!fired && fireActivity > 0f) //this works becuase of the masssive deadzone setting
         {
             fired = true;
-            firingGun = true;
+            FiringGun = true;
             Invoke("FiringReset", Weapon.FireRate);
         }
 
         usedEquipment = false;
-        if (!usingEquipment && 
+        if (!UsingEquipment && 
             equipmentActivity > 0f && 
-            !gameMode.GameState.GetPlayerFireLocked(PlayerNumber, sourceRoundNum) && 
-            gameMode.GetPlayerManager(PlayerNumber).GetAvailableEquipment(sourceRoundNum) != 0)
+            !gameMode.GameState.GetPlayerFireLocked(PlayerNumber, RoundNum) && 
+            gameMode.GetPlayerManager(PlayerNumber).GetAvailableEquipment(RoundNum) != 0)
         {
-            usingEquipment = true;
+            UsingEquipment = true;
             PlacingEquipmentGuide();
         }
-        else if (usingEquipment && equipmentActivity == 0f)
+        else if (UsingEquipment && equipmentActivity == 0f)
         {
             Destroy(shieldPlacer);
             usedEquipment = true;
-            usingEquipment = false;
+            UsingEquipment = false;
         }
         else if (equipmentActivity == 0f)
-            usingEquipment = false;
+            UsingEquipment = false;
 
 
         if (Input.GetButtonDown("AimLock" + PlayerNumber))
@@ -268,8 +268,8 @@ public class PlayerController : MonoBehaviour, IRecordable
         position = snapshot.Translation;
         velocity = snapshot.Velocity;
         LookDirection = snapshot.LookDirection;
-        firingGun = snapshot.Firing;
-        usingEquipment = snapshot.UsingEquipment;
+        FiringGun = snapshot.Firing;
+        UsingEquipment = snapshot.UsingEquipment;
         usedEquipment = snapshot.UsedEquipment;
         isIdle = snapshot.IsIdle;
     }
@@ -335,7 +335,7 @@ public class PlayerController : MonoBehaviour, IRecordable
     public void SetPlayerInformation(int playerNumber, int sourceRoundNum, Vector3 initialPosition, IGameMode gameMode)
     {
         this.PlayerNumber = playerNumber;
-        this.sourceRoundNum = sourceRoundNum;
+        this.RoundNum = sourceRoundNum;
 
         Collider[] setColliderTags = GetComponentsInChildren<Collider>();
         foreach (Collider collider in setColliderTags)
@@ -344,11 +344,13 @@ public class PlayerController : MonoBehaviour, IRecordable
         rigidBody.MovePosition(initialPosition);
 
         this.gameMode = gameMode;
+
+        GetComponentInChildren<TrailRecorder>()?.Setup(this, gameMode);
     }
 
     public PlayerSnapshot GetSnapshot()
     {
-        return new PlayerSnapshot(position, velocity, LookDirection, firingGun, usingEquipment, usedEquipment, isIdle);
+        return new PlayerSnapshot(position, velocity, LookDirection, FiringGun, UsingEquipment, usedEquipment, isIdle);
     }
 
     public void SetSnapshot(PlayerSnapshot playerSnapshot)
