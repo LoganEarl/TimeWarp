@@ -9,8 +9,13 @@ public class TrailRecorder : MonoBehaviour
     private IGameMode gameMode;
     private bool setup = false;
 
+    [SerializeField]
+    private GameObject placedShieldPrefab;
+    [SerializeField]
+    private GameObject placedProjectilePrefab;
+
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         trail = GetComponent<TrailRenderer>();
         trail.emitting = false;
@@ -21,16 +26,47 @@ public class TrailRecorder : MonoBehaviour
         this.controller = controller;
         this.gameMode = gameMode;
         setup = true;
+
+        trail.material = ColorManager.Instance.GetPlayerMaterial(controller.PlayerNumber, ColorManager.PlayerColorVarient.UI_PRIMARY_ACTIVE);
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void LateUpdate()
     {
         if (setup)
         {
-            trail.emitting = 
-                !gameMode.GameState.GetPlayerPositionsLocked(controller.PlayerNumber, controller.RoundNum) &&
-                gameMode.GameState.GetPlayerVisible(controller.PlayerNumber, controller.RoundNum);
+            bool active = !gameMode.GameState.GetPlayerPositionsLocked(controller.PlayerNumber, controller.RoundNumber) &&
+                gameMode.GameState.GetPlayerVisible(controller.PlayerNumber, controller.RoundNumber) &&
+                !controller.UsingSnapshots;
+            trail.emitting = active;
+
+            if (active)
+            {
+                if (controller.FiringGun)
+                    PlaceProjectileIndicator();
+                if (controller.UsingEquipment)
+                    PlaceEquipmentIndicator();
+            }
         }
+    }
+
+    private void PlaceProjectileIndicator()
+    {
+        GameObject indicator = Instantiate(placedProjectilePrefab);
+        Material material = ColorManager.Instance.GetPlayerMaterial(controller.PlayerNumber, ColorManager.PlayerColorVarient.UI_PRIMARY_ACTIVE);
+        MeshRenderer primaryRenderer = indicator.GetComponent<MeshRenderer>();
+        primaryRenderer.material = material;
+        indicator.transform.position = gameObject.transform.position;
+        indicator.transform.localRotation = Quaternion.LookRotation(controller.LookDirection, Vector3.up);
+    }
+
+    private void PlaceEquipmentIndicator()
+    {
+        GameObject indicator = Instantiate(placedShieldPrefab);
+        Material material = ColorManager.Instance.GetPlayerMaterial(controller.PlayerNumber, ColorManager.PlayerColorVarient.UI_PRIMARY_ACTIVE);
+        MeshRenderer primaryRenderer = indicator.GetComponent<MeshRenderer>();
+        primaryRenderer.material = material;
+        indicator.transform.position = gameObject.transform.position;
+        indicator.transform.localRotation = Quaternion.LookRotation(controller.LookDirection, Vector3.up);
     }
 }

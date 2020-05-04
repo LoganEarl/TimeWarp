@@ -49,7 +49,7 @@ public class PlayerDeath : MonoBehaviour
         ApplyExplosion();
     }
 
-    private void FixedUpdate()
+    private void LateUpdate()
     {
         if (PlayerMaterial != null)
         {
