@@ -335,7 +335,6 @@ public class PlayerController : MonoBehaviour, IRecordable
 
             currentLayer = newLayer;
         }
-
     }
 
     private void DestroyAllPlayerCreations()
@@ -396,6 +395,12 @@ public class PlayerController : MonoBehaviour, IRecordable
         DestroyAllPlayerCreations();
         health.FullHeal();
         health.ResetStatistics();
+        PlaySpawnParticles();
+    }
+
+    public void PlaySpawnParticles()
+    {
+        GetComponent<ParticleSystem>().Play();
     }
     
     public void AddToRoundClearingList(GameObject obj)
