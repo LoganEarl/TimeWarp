@@ -10,9 +10,9 @@ public class AudioManager : MonoBehaviour {
 
     private static AudioManager instance;
 
-    private static readonly float BGM_DEFAULT_VOLUME = .1f;
-    private static readonly float SFX_DEFAULT_VOLUME = .1f;
-    private static readonly float VOICE_DEFAULT_VOLUME = .5f;
+    private static readonly float BGM_DEFAULT_VOLUME = 0.1f;
+    private static readonly float SFX_DEFAULT_VOLUME = 0.1f;
+    private static readonly float VOICE_DEFAULT_VOLUME = 0.5f;
 
     [SerializeField]
     private GameObject OptionsMenu;

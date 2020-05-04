@@ -39,15 +39,16 @@ public class PauseOverlay : MonoBehaviour {
     public void ResumeGame()
     {
         selectButton.Select();
-        gameIsPaused = false;
         StartCoroutine(UnPause());
     }
 
     IEnumerator UnPause()
     {
         yield return new WaitForSecondsRealtime(.7f);
-        pauseOverlay.SetActive(false);
+        gameIsPaused = false;
         Time.timeScale = 1f;
+        pauseOverlay.SetActive(false);
+        
     }
 
     public void PauseGame()
@@ -61,16 +62,18 @@ public class PauseOverlay : MonoBehaviour {
     public void RestartGame()
     {
         Destroy(gameObject);
-        sourceGameMode.Reset();
         ResumeGame();
+        sourceGameMode.Reset();
+        Time.timeScale = 1f;
         sourceGameMode.Begin();
     }
 
     public void QuitGame()
     {
-        Destroy(sourceGameMode.GameObject);
         ResumeGame();
         SceneManager.LoadScene("Menu", LoadSceneMode.Single);
+        Destroy(sourceGameMode.GameObject);
+        Time.timeScale = 1f;
     }
 
     IEnumerator HighlightButton()

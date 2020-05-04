@@ -49,7 +49,6 @@ GameObject:
   - component: {fileID: 6124920833450078902}
   - component: {fileID: 3222362354939372245}
   - component: {fileID: 8839810057422911048}
-  - component: {fileID: 2287901933131566472}
   m_Layer: 0
   m_Name: SelectButton
   m_TagString: Untagged
@@ -155,29 +154,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 6124920833450078902}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: Select
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 7229337887414255901}
-        m_MethodName: ResumeGame
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!95 &8839810057422911048
 Animator:
   serializedVersion: 3
@@ -197,18 +174,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &2287901933131566472
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1773092101224303760}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2773a1d62871b4649bed3083238e8242, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1961472758529589493
 GameObject:
   m_ObjectHideFlags: 0
@@ -899,8 +864,8 @@ MonoBehaviour:
     m_Mode: 4
     m_SelectOnUp: {fileID: 8347576525352700550}
     m_SelectOnDown: {fileID: 6028956254001809464}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
+    m_SelectOnLeft: {fileID: 8581591151869455707}
+    m_SelectOnRight: {fileID: 8581591151869455707}
   m_Transition: 3
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 0}
@@ -1061,8 +1026,8 @@ MonoBehaviour:
     m_Mode: 4
     m_SelectOnUp: {fileID: 8581591151869455707}
     m_SelectOnDown: {fileID: 8347576525352700550}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
+    m_SelectOnLeft: {fileID: 6028956254001809464}
+    m_SelectOnRight: {fileID: 6028956254001809464}
   m_Transition: 3
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 0}
@@ -1088,8 +1053,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: Select
+      - m_Target: {fileID: 4074255254100558512}
+        m_MethodName: PlayButtonOnClickSound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1270,8 +1235,8 @@ MonoBehaviour:
     m_Mode: 4
     m_SelectOnUp: {fileID: 6028956254001809464}
     m_SelectOnDown: {fileID: 8581591151869455707}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
+    m_SelectOnLeft: {fileID: 8347576525352700550}
+    m_SelectOnRight: {fileID: 8347576525352700550}
   m_Transition: 3
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 0}
@@ -1297,6 +1262,17 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 4914609008766930272}
+        m_MethodName: PlayButtonOnClickSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 7229337887414255901}
         m_MethodName: RestartGame
         m_Mode: 1
