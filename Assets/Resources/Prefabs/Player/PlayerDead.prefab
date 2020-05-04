@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f657be80553b5ef4cb150f3f27ca69ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeToFade: 2
+  timeToFade: 3
 --- !u!82 &499081561
 AudioSource:
   m_ObjectHideFlags: 0
