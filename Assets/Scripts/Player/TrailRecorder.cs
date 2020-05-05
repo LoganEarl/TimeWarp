@@ -58,6 +58,7 @@ public class TrailRecorder : MonoBehaviour
         primaryRenderer.material = material;
         indicator.transform.position = gameObject.transform.position;
         indicator.transform.localRotation = Quaternion.LookRotation(controller.LookDirection, Vector3.up);
+        gameMode.ClearOnMatchChange(indicator);
     }
 
     private void PlaceEquipmentIndicator()
@@ -68,5 +69,6 @@ public class TrailRecorder : MonoBehaviour
         primaryRenderer.material = material;
         indicator.transform.position = gameObject.transform.position;
         indicator.transform.localRotation = Quaternion.LookRotation(controller.LookDirection, Vector3.up);
+        gameMode.ClearOnMatchChange(indicator);
     }
 }
