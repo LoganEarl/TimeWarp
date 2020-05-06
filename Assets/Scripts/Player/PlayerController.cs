@@ -189,7 +189,7 @@ public class PlayerController : MonoBehaviour, IRecordable
             targetingCursor.SetActive(
                 !health.Dead &&
                 IsVisible &&
-                LookDirection.magnitude > 0 &&
+                LookDirection.magnitude > 0.1 &&
                 !UsingSnapshots
                 );
     }
@@ -219,7 +219,7 @@ public class PlayerController : MonoBehaviour, IRecordable
             LookDirection *= lookMagnitude;
         }
         else if (!aimLocked)
-            LookDirection = Vector3.zero;
+            LookDirection = velocity.normalized / 20;
 
         float fireActivity = Input.GetAxis("Fire" + PlayerNumber);
         float equipmentActivity = Input.GetAxis("Equipment" + PlayerNumber);
@@ -315,21 +315,24 @@ public class PlayerController : MonoBehaviour, IRecordable
 
     private void ChangeWeapon(string weaponName)
     {
-        Transform newWeapon = weaponsTransform.Find(weaponName);
-        Transform oldWeapon = weaponsTransform.Find(Weapon.WeaponName);
+        if (Weapon.WeaponName != weaponName)
+        {
+            Transform newWeapon = weaponsTransform.Find(weaponName);
+            Transform oldWeapon = weaponsTransform.Find(Weapon.WeaponName);
 
-        //Debug.Log("OldWeapon: " + Weapon.WeaponName + ", NewWeapon: " + weaponName);
+            //Debug.Log("OldWeapon: " + Weapon.WeaponName + ", NewWeapon: " + weaponName);
 
-        oldWeapon.gameObject.SetActive(false);
-        newWeapon.gameObject.SetActive(true);
+            oldWeapon.gameObject.SetActive(false);
+            newWeapon.gameObject.SetActive(true);
 
-        //Maybe Change this to keep the targeting Cursors attached to the weapon in question?
-        targetingCursor = null;
-        loadedCursor = false;
+            //Maybe Change this to keep the targeting Cursors attached to the weapon in question?
+            Destroy(targetingCursor);
+            loadedCursor = false;
 
-        Weapon = (IWeapon) newWeapon.GetComponentInChildren(System.Type.GetType(weaponName));
+            Weapon = (IWeapon)newWeapon.GetComponentInChildren(System.Type.GetType(weaponName));
 
-        animator.SetInteger("WeaponType", Weapon.WeaponType);
+            animator.SetInteger("WeaponType", Weapon.WeaponType);
+        }
     }
 
     private void SetLayer(string newLayer)
@@ -397,16 +400,11 @@ public class PlayerController : MonoBehaviour, IRecordable
     {
         health.FullHeal();
         health.ResetStatistics();
-        PlaySpawnParticles();
+        //PlaySpawnParticles();
     }
 
     public void PlaySpawnParticles()
     {
         GetComponent<ParticleSystem>().Play();
-    }
-    
-    public void AddToRoundClearingList(GameObject obj)
-    {
-        roundClearingList.Add(obj);
     }
 }

@@ -19,11 +19,17 @@ public class SpawnerController : MonoBehaviour
         {
             for(int instanceNum = 0; instanceNum < playerSpawns[playerNum].Length; instanceNum++)
             {
-                GameObject spawner = Instantiate(spawnerPrefab);
-                Transform transform = spawner.GetComponent<Transform>();
-                transform.position = playerSpawns[playerNum][instanceNum];
-                spawnTransforms.Add(transform);
+                if (instanceNum <= GetComponent<IGameMode>().RoundNumber)
+                {
+                    GameObject spawner = Instantiate(spawnerPrefab);
+                    spawner.transform.position = playerSpawns[playerNum][instanceNum];
 
+                    spawner.GetComponent<ParticleSystemRenderer>().material =
+                        ColorManager.Instance.GetPlayerMaterial(playerNum, ColorManager.PlayerColorVarient.SPAWN_PRIMARY);
+                    spawner.GetComponent<ParticleSystem>().Play();
+
+                    spawnTransforms.Add(transform);
+                }
             }
         }
         stepNumber = 0;
