@@ -5769,8 +5769,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1150190981002470540}
+  - component: {fileID: 5170608461675542025}
   m_Layer: 0
-  m_Name: Shotgun (PlaceHolder)
+  m_Name: Shotgun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5786,10 +5787,30 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 3112723893844621929}
   m_Father: {fileID: 5604768586197034703}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5170608461675542025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3904732389472557230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 094ee7e7512b0fc42a59ab56d1a3ded2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectile: {fileID: 2463973995420363885, guid: b1230d9a4c00d824dbae22f0b48fc769,
+    type: 3}
+  projectileLayer: Projectile
+  firingSound: WeaponLaserShot1
+  fireRate: 0.7
+  targetingCursor: {fileID: 8425450157001774646, guid: 10f0c664998b9db4e81674f2533c26be,
+    type: 3}
 --- !u!1 &3930357197940435931
 GameObject:
   m_ObjectHideFlags: 0
@@ -7390,6 +7411,36 @@ Transform:
   m_Father: {fileID: 1296341257412372742}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8934428672710093036
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3112723893844621929}
+  m_Layer: 0
+  m_Name: FireTransform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3112723893844621929
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8934428672710093036}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1150190981002470540}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8948997633267653592
 GameObject:
   m_ObjectHideFlags: 0
@@ -7465,6 +7516,12 @@ PrefabInstance:
       propertyPath: projectile
       value: 
       objectReference: {fileID: 2463973995420363885, guid: b1230d9a4c00d824dbae22f0b48fc769,
+        type: 3}
+    - target: {fileID: 833722135321521786, guid: 48b66697210ef034b86f3469ffd19b19,
+        type: 3}
+      propertyPath: targetingCursor
+      value: 
+      objectReference: {fileID: 1814408534329862, guid: 3dd1434c704a6f34997c698b06c80000,
         type: 3}
     - target: {fileID: 3764169013809480834, guid: 48b66697210ef034b86f3469ffd19b19,
         type: 3}

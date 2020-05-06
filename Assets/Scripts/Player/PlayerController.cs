@@ -48,7 +48,6 @@ public class PlayerController : MonoBehaviour, IRecordable
     private string currentLayer = "Unset";
     private bool usingSnapshots = false;
     private bool aimLocked = false;
-    private bool loadedCursor = false;
     private Animator animator;
     private Rigidbody rigidBody;
     private PlayerHealth health;
@@ -56,6 +55,7 @@ public class PlayerController : MonoBehaviour, IRecordable
     private AudioManager audioManager;
     private RandomShoot shootSound;
     private RandomShield shieldSound;
+    private bool loadedCursor = false;
     public bool IsVisible {
         get => gameMode.GameState.GetPlayerVisible(PlayerNumber, sourceRoundNum);
         set {
@@ -106,7 +106,7 @@ public class PlayerController : MonoBehaviour, IRecordable
             if (!loadedCursor && !usingSnapshots)
             {
                 loadedCursor = true;
-                targetingCursor = Instantiate(targetingCursor);
+                targetingCursor = Instantiate(Weapon.TargetingCursor);
                 targetingCursor.GetComponent<PlayerCursor>().Player = this;
             }
 
@@ -315,10 +315,18 @@ public class PlayerController : MonoBehaviour, IRecordable
 
     private void ChangeWeapon(string weaponName)
     {
-        Transform newWeapon = weaponsTransform.Find(weaponName + "Transform");
+        Transform newWeapon = weaponsTransform.Find(weaponName);
+        Transform oldWeapon = weaponsTransform.Find(Weapon.WeaponName);
 
-        weaponsTransform.Find(Weapon.WeaponName + "Transform").gameObject.SetActive(false);
+        //Debug.Log("OldWeapon: " + Weapon.WeaponName + ", NewWeapon: " + weaponName);
+
+        oldWeapon.gameObject.SetActive(false);
         newWeapon.gameObject.SetActive(true);
+
+        //Maybe Change this to keep the targeting Cursors attached to the weapon in question?
+        targetingCursor = null;
+        loadedCursor = false;
+
         Weapon = (IWeapon) newWeapon.GetComponentInChildren(System.Type.GetType(weaponName));
 
         animator.SetInteger("WeaponType", Weapon.WeaponType);
