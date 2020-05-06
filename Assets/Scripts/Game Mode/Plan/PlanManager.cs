@@ -17,6 +17,9 @@ public class PlanManager : MonoBehaviour, IGameMode
 
     private AudioManager audioManager;
 
+    private List<GameObject> roundClearingList = new List<GameObject>();
+    private List<GameObject> matchClearingList = new List<GameObject>();
+
     private bool runningRecordingRound = false;
 
     //================================================Public Accessors
@@ -57,7 +60,7 @@ public class PlanManager : MonoBehaviour, IGameMode
         this.levelConfig = levelConfig;
         this.NumPlayers = numPlayers;
         this.MaxRounds = levelConfig.GetMaxRounds();
-        
+
         gameState = new StateInitializing(this);
         gameState.OnEnterState();
     }
@@ -81,6 +84,16 @@ public class PlanManager : MonoBehaviour, IGameMode
     public void Reset()
     {
         Setup(NumPlayers, levelConfig);
+    }
+
+    public void ClearOnRoundChange(params GameObject[] toClear)
+    {
+        roundClearingList.AddRange(toClear);
+    }
+
+    public void ClearOnMatchChange(params GameObject[] toClear)
+    {
+        matchClearingList.AddRange(toClear);
     }
 
     //================================================Unity Callback Methods
@@ -192,6 +205,13 @@ public class PlanManager : MonoBehaviour, IGameMode
 
         internal override void OnEnterState()
         {
+            foreach (GameObject toDestroy in manager.roundClearingList)
+                if (toDestroy != null) Destroy(toDestroy);
+            manager.roundClearingList.Clear();
+
+            foreach (PlanPlayerManager player in manager.playerManagers)
+                player.Step(0);
+
             if (spawnNewPlayers)
             {
                 manager.RoundNumber++;
@@ -276,7 +296,6 @@ public class PlanManager : MonoBehaviour, IGameMode
                 foreach (PlanPlayerManager player in manager.playerManagers)
                 {
                     player.FinishSequence();
-                    player.Step(0); //frontloads first frame of recorded data. Cuts down on visual glitches
                 }
 
             manager.runningRecordingRound = manager.RoundNumber >= manager.MaxRounds - 1;
@@ -307,6 +326,14 @@ public class PlanManager : MonoBehaviour, IGameMode
 
         internal override void OnEnterState()
         {
+            foreach (GameObject toDestroy in manager.roundClearingList)
+                if (toDestroy != null) Destroy(toDestroy);
+            manager.roundClearingList.Clear();
+
+            foreach (GameObject toDestroy in manager.matchClearingList)
+                if (toDestroy != null) Destroy(toDestroy);
+            manager.matchClearingList.Clear();
+
             manager.hudController.gameObject.SetActive(false);
             manager.LoadScoreScreen();
         }

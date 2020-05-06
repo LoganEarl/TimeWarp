@@ -29,7 +29,7 @@ public class SpawnerController : MonoBehaviour
         stepNumber = 0;
     }
 
-    private void FixedUpdate()
+    private void LateUpdate()
     {
         if(stepNumber >= 0 && stepNumber < stepsToRaise)
         {

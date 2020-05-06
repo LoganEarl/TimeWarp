@@ -18,6 +18,9 @@ public class InstinctManager : MonoBehaviour, IGameMode
     private Dictionary<string, GameObject> loadedPlayerModels = new Dictionary<string, GameObject>();
     private InstinctPlayerManager[] playerManagers = null;
 
+    private List<GameObject> roundClearingList = new List<GameObject>();
+    private List<GameObject> matchClearingList = new List<GameObject>();
+
     private Dictionary<int, DeathSignature> playerDeaths = new Dictionary<int, DeathSignature>();
 
     private class DeathSignature
@@ -98,6 +101,16 @@ public class InstinctManager : MonoBehaviour, IGameMode
     public void Reset()
     {
         Setup(NumPlayers, levelConfig);
+    }
+
+    public void ClearOnRoundChange(params GameObject[] toClear)
+    {
+        roundClearingList.AddRange(toClear);
+    }
+
+    public void ClearOnMatchChange(params GameObject[] toClear)
+    {
+        matchClearingList.AddRange(toClear);
     }
 
     //================================================Unity Callback Methods
@@ -206,6 +219,13 @@ public class InstinctManager : MonoBehaviour, IGameMode
 
         internal override void OnEnterState()
         {
+            foreach (GameObject toDestroy in manager.roundClearingList)
+                if (toDestroy != null) Destroy(toDestroy);
+            manager.roundClearingList.Clear();
+
+            foreach (InstinctPlayerManager player in manager.playerManagers)
+                player.Step(0);
+
             manager.RoundNumber++;
             manager.LoadNewPlayers();
 
@@ -288,7 +308,7 @@ public class InstinctManager : MonoBehaviour, IGameMode
             foreach (InstinctPlayerManager player in manager.playerManagers)
             {
                 player.FinishSequence();
-                player.Step(0); //frontloads first frame of recorded data. Cuts down on visual glitches
+                //player.Step(0); //frontloads first frame of recorded data. Cuts down on visual glitches
             }
         }
 
@@ -320,6 +340,14 @@ public class InstinctManager : MonoBehaviour, IGameMode
 
         internal override void OnEnterState()
         {
+            foreach (GameObject toDestroy in manager.roundClearingList)
+                if (toDestroy != null) Destroy(toDestroy);
+            manager.roundClearingList.Clear();
+
+            foreach (GameObject toDestroy in manager.matchClearingList)
+                if (toDestroy != null) Destroy(toDestroy);
+            manager.matchClearingList.Clear();
+
             manager.hudController.gameObject.SetActive(false);
             manager.LoadScoreScreen();
         }
