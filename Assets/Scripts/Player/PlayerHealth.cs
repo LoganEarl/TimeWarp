@@ -11,6 +11,7 @@ public class PlayerHealth : MonoBehaviour
     public delegate void OnHealthChange(int newHealth, int maxHealth, GameObject player);
 
     private List<OnHealthChange> healthListeners = new List<OnHealthChange>();
+    private PlayerController playerController;
 
     private int health = 3;
     private bool dead = false;
@@ -36,14 +37,10 @@ public class PlayerHealth : MonoBehaviour
         }
         private set {
             dead = value;
-            gameObject.SetActive(!dead);
-
-            if (dead) gameObject.transform.localScale = new Vector3(0, 0, 0);
-            else gameObject.transform.localScale = new Vector3(2, 2, 2);
         }
     }
 
-    private void FixedUpdate()
+    private void LateUpdate()
     {
         TimeAlive++;
     }
@@ -64,7 +61,7 @@ public class PlayerHealth : MonoBehaviour
 
             deadBody.GetComponent<PlayerDeath>().PlayerMaterial = pMaterial;
 
-            GetComponent<PlayerController>().AddToRoundClearingList(deadBody);
+            GetComponent<PlayerController>().GameMode.ClearOnRoundChange(deadBody);
         }
     }
 

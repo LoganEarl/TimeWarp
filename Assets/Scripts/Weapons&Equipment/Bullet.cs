@@ -20,7 +20,7 @@ public class Bullet : MonoBehaviour
         GetComponent<TrailRenderer>().material.SetColor("_GlowColor", BulletColor);
     }
 
-    private void FixedUpdate() {
+    private void LateUpdate() {
         // Needed to maintain the correct speed even when bouncing off of surfaces that aren't
         // actually a clean vertical surface to rebound off of.
         bulletInstance.velocity = bulletInstance.velocity.normalized * bulletSpeed;
