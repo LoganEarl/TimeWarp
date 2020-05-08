@@ -25,7 +25,6 @@ public class PlayerController : MonoBehaviour, IRecordable
     [SerializeField] private Transform shieldTransform;
     [SerializeField] private Transform weaponsTransform;
 
-    [SerializeField] private GameObject targetingCursor;
     [SerializeField] private GameObject equipment;
     [SerializeField] private GameObject equipmentGuide;
 
@@ -57,6 +56,7 @@ public class PlayerController : MonoBehaviour, IRecordable
     private RandomShield shieldSound;
     private bool loadedCursor = false;
     private GameObject playerModel;
+    private GameObject targetingCursor;
 
     public bool IsVisible {
         get => GameMode.GameState.GetPlayerVisible(PlayerNumber, RoundNumber);
@@ -131,6 +131,7 @@ public class PlayerController : MonoBehaviour, IRecordable
                     isIdle = true;
                 }
             }
+
             //write the calculated values to the rigidbody depending on type of player moving
             rigidBody.velocity = velocity;
             if (UsingSnapshots)
@@ -154,7 +155,7 @@ public class PlayerController : MonoBehaviour, IRecordable
             bool isMoving = velocity.magnitude > 0.2;
 
             if (isLooking) {
-                Vector3 moddedDirection = Quaternion.AngleAxis(lookOffset, Vector3.up) * LookDirection;
+                Vector3 moddedDirection = LookDirection;
 
                 float lookAngle = Vector3.Angle(Vector3.forward, moddedDirection) % 45;
                 if (lookAngle > lookSnap) lookAngle -= 45;
@@ -166,8 +167,14 @@ public class PlayerController : MonoBehaviour, IRecordable
                 rigidBody.MoveRotation(desiredRotation);
             }
             else if (isMoving) {
-                Vector3 moddedDirection = Quaternion.AngleAxis(lookOffset, Vector3.up) * velocity;
+                Vector3 moddedDirection = velocity;
                 moddedDirection.y = 0;
+
+                float lookAngle = Vector3.Angle(Vector3.forward, moddedDirection) % 45;
+                if (lookAngle > lookSnap) lookAngle -= 45;
+
+                if (Mathf.Abs(lookAngle) <= lookSnap)
+                    moddedDirection = Quaternion.AngleAxis(lookAngle, Vector3.up) * moddedDirection;
 
                 desiredRotation = Quaternion.LookRotation(moddedDirection, Vector3.up);
                 if (!GameMode.GameState.GetPlayerLookLocked(PlayerNumber, RoundNumber))
@@ -203,9 +210,14 @@ public class PlayerController : MonoBehaviour, IRecordable
         bool hasVerticalInput = DeltaExceeds(verticalMove, 0f, 0.02f);
         isIdle = !(hasHorizontalInput || hasVerticalInput);
 
-        Vector3 inputVector = new Vector3(horizontalMove, 0f, verticalMove);
+        Vector3 inputVector = new Vector3(horizontalMove, 0f, verticalMove).normalized;
         inputVector *= moveSpeed;
         velocity += (inputVector * Time.fixedDeltaTime);
+
+        //if (!hasHorizontalInput && velocity.x <= 0.2f) velocity.x = 0f;
+        //if (!hasVerticalInput && velocity.y <= 0.2f) velocity.y = 0f;
+
+        //Debug.Log(velocity);
 
         float horizontalAim = Input.GetAxis("AimHorizontal" + PlayerNumber);
         float verticalAim = Input.GetAxis("AimVertical" + PlayerNumber);
@@ -254,17 +266,20 @@ public class PlayerController : MonoBehaviour, IRecordable
         if (Input.GetButtonDown("AimLock" + PlayerNumber))
             aimLocked = !aimLocked;
 
-        if (Input.GetButtonDown("ChangeToPistol" + PlayerNumber))
+        if (Input.GetButtonDown("ChangeToPistol" + PlayerNumber) || Input.GetButtonDown("ChangeToSniperOrShotgun" + PlayerNumber))
         {
             if (Input.GetAxis("ChangeToPistol" + PlayerNumber) > 0)
                 ChangeWeapon("Pistol");
-        }
-        else if (Input.GetButtonDown("ChangeToSniperOrShotgun" + PlayerNumber))
-        {
+            
             if (Input.GetAxis("ChangeToSniperOrShotgun" + PlayerNumber) > 0)
                 ChangeWeapon("Sniper");
             else if (Input.GetAxis("ChangeToSniperOrShotgun" + PlayerNumber) < 0)
                 ChangeWeapon("Shotgun");
+
+            
+            //Maybe Change this to keep the targeting Cursors attached to the weapon in question?
+            Destroy(targetingCursor);
+            loadedCursor = false;
         }
     }
 
@@ -324,10 +339,6 @@ public class PlayerController : MonoBehaviour, IRecordable
 
             oldWeapon.gameObject.SetActive(false);
             newWeapon.gameObject.SetActive(true);
-
-            //Maybe Change this to keep the targeting Cursors attached to the weapon in question?
-            Destroy(targetingCursor);
-            loadedCursor = false;
 
             Weapon = (IWeapon)newWeapon.GetComponentInChildren(System.Type.GetType(weaponName));
 

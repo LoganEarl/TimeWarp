@@ -6,7 +6,7 @@ public class Bullet : MonoBehaviour
 {
     [SerializeField] private float bulletSpeed = 25;
     [SerializeField] private int bulletDmg = 1;
-    [SerializeField] private int bouncesLeft = 4;
+    [SerializeField] public int BouncesLeft { private get; set; } = 4;
 
     public Color BulletColor { private get; set; }
 
@@ -48,8 +48,8 @@ public class Bullet : MonoBehaviour
 
         FindObjectOfType<AudioManager>().PlaySFX("WeaponLaserRicochet");
 
-        if ((other.tag == "Wall") && bouncesLeft != 0)
-            bouncesLeft--;
+        if ((other.tag == "Wall") && BouncesLeft != 0)
+            BouncesLeft--;
         else if (!other.tag.StartsWith("Player"))
             Destroy(gameObject);
     }
