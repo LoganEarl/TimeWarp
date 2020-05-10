@@ -14,6 +14,7 @@ public class Shotgun : MonoBehaviour, IWeapon
 
     public GameObject TargetingCursor => targetingCursor;
     public float FireRate => fireRate;
+    public int CostToFire { get; } = 2;
     public bool LoadedCursor { get; set; } = false;
     public string WeaponName { get; } = "Shotgun";
     public int WeaponType { get; } = 1;

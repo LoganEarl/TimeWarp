@@ -8,6 +8,7 @@ public interface IWeapon
     bool LoadedCursor { get; set; }
     int WeaponType { get; }
     float FireRate { get; }
+    int CostToFire { get; }
     Transform FireTransform { get; }
     GameObject TargetingCursor { get; }
     

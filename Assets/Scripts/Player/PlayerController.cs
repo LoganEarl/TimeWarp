@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour, IRecordable
 {
     #region delegates
-    public delegate bool FireEventCallback();
+    public delegate bool FireEventCallback(int costToFire);
     public FireEventCallback FireCallback { private get; set; } = null;
     public delegate bool EquipmentEventCallback();
     public EquipmentEventCallback EquipmentCallback { private get; set; } = null;
@@ -183,7 +183,7 @@ public class PlayerController : MonoBehaviour, IRecordable
 
             if (!GameMode.GameState.GetPlayerFireLocked(PlayerNumber, RoundNumber) &&
                 FiringGun &&
-                (FireCallback?.Invoke() ?? true))
+                (FireCallback?.Invoke(Weapon.CostToFire) ?? true))
                 Shoot();
 
             if (!GameMode.GameState.GetPlayerFireLocked(PlayerNumber, RoundNumber) &&
@@ -411,11 +411,6 @@ public class PlayerController : MonoBehaviour, IRecordable
     {
         health.FullHeal();
         health.ResetStatistics();
-        //PlaySpawnParticles();
-    }
-
-    public void PlaySpawnParticles()
-    {
-        GetComponent<ParticleSystem>().Play();
+        ChangeWeapon("Pistol");
     }
 }

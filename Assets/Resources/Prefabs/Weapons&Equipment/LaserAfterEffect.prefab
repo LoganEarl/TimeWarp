@@ -1,0 +1,121 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &7503086649111828408
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1596135761635660010, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1596135761635660010, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 58fbd51fd05e2aa4b8e469298a256a0c, type: 2}
+    - target: {fileID: 1741123719417506768, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
+        type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 0.0001
+      objectReference: {fileID: 0}
+    - target: {fileID: 1741123719417506768, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
+        type: 3}
+      propertyPath: InitialModule.maxNumParticles
+      value: 3000
+      objectReference: {fileID: 0}
+    - target: {fileID: 1741123719417506768, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
+        type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 1741123719417506768, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
+        type: 3}
+      propertyPath: InitialModule.startLifetime.minMaxState
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1741123719417506768, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
+        type: 3}
+      propertyPath: InitialModule.startLifetime.minScalar
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1741123719417506768, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
+        type: 3}
+      propertyPath: InitialModule.gravityModifier.scalar
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1741123719417506768, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
+        type: 3}
+      propertyPath: looping
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1741123719417506768, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
+        type: 3}
+      propertyPath: lengthInSec
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6219656630711172463, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -18.278845
+      objectReference: {fileID: 0}
+    - target: {fileID: 6219656630711172463, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.8319516
+      objectReference: {fileID: 0}
+    - target: {fileID: 6219656630711172463, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 6.737688
+      objectReference: {fileID: 0}
+    - target: {fileID: 6219656630711172463, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6219656630711172463, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6219656630711172463, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6219656630711172463, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6219656630711172463, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6219656630711172463, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6219656630711172463, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6219656630711172463, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7605028428472621440, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
+        type: 3}
+      propertyPath: m_Name
+      value: LaserAfterEffect
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b4fcf5ccf1893e94d8d9679b12a0b04f, type: 3}
