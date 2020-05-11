@@ -30,7 +30,7 @@ PrefabInstance:
     - target: {fileID: 1741123719417506768, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
         type: 3}
       propertyPath: EmissionModule.rateOverTime.scalar
-      value: 100
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 1741123719417506768, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
         type: 3}
@@ -40,12 +40,12 @@ PrefabInstance:
     - target: {fileID: 1741123719417506768, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
         type: 3}
       propertyPath: InitialModule.startLifetime.minScalar
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1741123719417506768, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
         type: 3}
       propertyPath: InitialModule.gravityModifier.scalar
-      value: 0.1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 1741123719417506768, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
         type: 3}

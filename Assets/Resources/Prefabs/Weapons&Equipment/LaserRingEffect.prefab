@@ -20,7 +20,7 @@ PrefabInstance:
     - target: {fileID: 1741123719417506768, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
         type: 3}
       propertyPath: ShapeModule.radius.value
-      value: 0.3
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 1741123719417506768, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
         type: 3}

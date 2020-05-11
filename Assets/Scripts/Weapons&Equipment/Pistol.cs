@@ -8,7 +8,7 @@ public class Pistol : MonoBehaviour, IWeapon
     [SerializeField] private string projectileLayer = "Projectile";
 
     [SerializeField] private string firingSound = "WeaponLaserShot1";
-    [SerializeField] private float fireRate = 0.4f;
+    [SerializeField] private float fireRate = 5f;
     [SerializeField] private GameObject targetingCursor;
 
     public GameObject TargetingCursor => targetingCursor;

@@ -97,6 +97,9 @@ public class PlayerController : MonoBehaviour, IRecordable
                 break;
             }
         }
+
+        SetTag(transform, "Player" + PlayerNumber);
+
         Weapon = GetComponentsInChildren<IWeapon>()[0];
         animator.SetInteger("WeaponType", Weapon.WeaponType);
     }
@@ -183,8 +186,13 @@ public class PlayerController : MonoBehaviour, IRecordable
 
             if (!GameMode.GameState.GetPlayerFireLocked(PlayerNumber, RoundNumber) &&
                 FiringGun &&
+                !fired &&
                 (FireCallback?.Invoke(Weapon.CostToFire) ?? true))
+            {
+                fired = true;
                 Shoot();
+                Invoke("FiringReset", Weapon.FireRate);
+            }
 
             if (!GameMode.GameState.GetPlayerFireLocked(PlayerNumber, RoundNumber) &&
                 UsingEquipment &&
@@ -214,11 +222,6 @@ public class PlayerController : MonoBehaviour, IRecordable
         inputVector *= moveSpeed;
         velocity += (inputVector * Time.fixedDeltaTime);
 
-        //if (!hasHorizontalInput && velocity.x <= 0.2f) velocity.x = 0f;
-        //if (!hasVerticalInput && velocity.y <= 0.2f) velocity.y = 0f;
-
-        //Debug.Log(velocity);
-
         float horizontalAim = Input.GetAxis("AimHorizontal" + PlayerNumber);
         float verticalAim = Input.GetAxis("AimVertical" + PlayerNumber);
 
@@ -237,11 +240,9 @@ public class PlayerController : MonoBehaviour, IRecordable
         float equipmentActivity = Input.GetAxis("Equipment" + PlayerNumber);
 
         FiringGun = false;
-        if (!fired && fireActivity > 0f) //this works becuase of the masssive deadzone setting
+        if (fireActivity > 0f) //this works becuase of the masssive deadzone setting
         {
-            fired = true;
             FiringGun = true;
-            Invoke("FiringReset", Weapon.FireRate);
         }
 
         usedEquipment = false;
@@ -335,10 +336,9 @@ public class PlayerController : MonoBehaviour, IRecordable
             Transform newWeapon = weaponsTransform.Find(weaponName);
             Transform oldWeapon = weaponsTransform.Find(Weapon.WeaponName);
 
-            //Debug.Log("OldWeapon: " + Weapon.WeaponName + ", NewWeapon: " + weaponName);
-
             oldWeapon.gameObject.SetActive(false);
             newWeapon.gameObject.SetActive(true);
+            newWeapon.tag = "Player" + PlayerNumber;
 
             Weapon = (IWeapon)newWeapon.GetComponentInChildren(System.Type.GetType(weaponName));
 
@@ -357,6 +357,20 @@ public class PlayerController : MonoBehaviour, IRecordable
 
             currentLayer = newLayer;
         }
+    }
+
+    private void SetTag(Transform root, string tag)
+    {
+        root.tag = tag;
+        for (int i = 0; i < root.childCount; i++)
+        {
+            Transform child = root.GetChild(i);
+            child.tag = tag;
+
+            if (child.childCount != 0)
+                SetTag(child, tag);
+        }
+
     }
 
     public void SetPlayerInformation(int playerNumber, int sourceRoundNum, Vector3 initialPosition, IGameMode gameMode)
