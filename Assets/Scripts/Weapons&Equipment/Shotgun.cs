@@ -43,10 +43,13 @@ public class Shotgun : MonoBehaviour, IWeapon
 
     private GameObject InstantiateProjectile(int playerNumber, Color playerColor, float bulletAngle)
     {
+        Quaternion newRotation = fireTransform.rotation;
+        newRotation *= Quaternion.AngleAxis(bulletAngle, Vector3.up);
+
         GameObject projectileInstance = Instantiate(
                 projectile,
                 fireTransform.position,
-                fireTransform.rotation
+                newRotation
             ) as GameObject;
 
         projectileInstance.GetComponent<Bullet>().BulletColor = playerColor;
@@ -57,12 +60,7 @@ public class Shotgun : MonoBehaviour, IWeapon
                 friendlyFire ? projectileLayer : projectileLayer + playerNumber
             );
 
-        projectileInstance.GetComponent<Rigidbody>().velocity = Quaternion.AngleAxis(bulletAngle, Vector3.up) * 
-            new Vector3(
-                projectileInstance.transform.forward.x,
-                projectileInstance.transform.forward.y,
-                projectileInstance.transform.forward.z
-            );
+        projectileInstance.GetComponent<Rigidbody>().velocity = projectileInstance.transform.forward;
 
         return projectileInstance;
     }

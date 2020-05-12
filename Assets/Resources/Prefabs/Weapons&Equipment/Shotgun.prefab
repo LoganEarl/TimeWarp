@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1427909910594338754}
+  - component: {fileID: 8424539584689391278}
   - component: {fileID: 7965727274646570484}
   - component: {fileID: 4447159134814009613}
-  - component: {fileID: 8424539584689391278}
   - component: {fileID: 3102964595617380563}
   m_Layer: 11
   m_Name: Shotgun
@@ -35,6 +35,27 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 180}
+--- !u!114 &8424539584689391278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2705446936079158737}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 094ee7e7512b0fc42a59ab56d1a3ded2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fireTransform: {fileID: 8574251771736937516}
+  projectile: {fileID: 2463973995420363885, guid: b1230d9a4c00d824dbae22f0b48fc769,
+    type: 3}
+  projectileLayer: Projectile
+  firingSound: WeaponLaserShot1
+  fireRate: 0.7
+  projectileSpread: 0.5
+  targetingCursor: {fileID: 8425450157001774646, guid: 10f0c664998b9db4e81674f2533c26be,
+    type: 3}
 --- !u!33 &7965727274646570484
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -81,27 +102,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &8424539584689391278
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2705446936079158737}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 094ee7e7512b0fc42a59ab56d1a3ded2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fireTransform: {fileID: 8574251771736937516}
-  projectile: {fileID: 2463973995420363885, guid: b1230d9a4c00d824dbae22f0b48fc769,
-    type: 3}
-  projectileLayer: Projectile
-  firingSound: WeaponLaserShot1
-  fireRate: 0.7
-  projectileSpread: 10
-  targetingCursor: {fileID: 8425450157001774646, guid: 10f0c664998b9db4e81674f2533c26be,
-    type: 3}
 --- !u!65 &3102964595617380563
 BoxCollider:
   m_ObjectHideFlags: 0
