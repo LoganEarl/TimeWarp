@@ -188,8 +188,7 @@ public class PlayerController : MonoBehaviour, IRecordable
                     rigidBody.MoveRotation(desiredRotation);
             }
 
-            if(!GameMode.GameState.GetPlayerFireLocked(PlayerNumber, RoundNumber) &&
-                changingGun)
+            if(!GameMode.GameState.GetPlayerFireLocked(PlayerNumber, RoundNumber) && changingGun)
                 ChangeWeapon(newWeapon);
 
             if (!GameMode.GameState.GetPlayerFireLocked(PlayerNumber, RoundNumber) &&
@@ -281,7 +280,8 @@ public class PlayerController : MonoBehaviour, IRecordable
             aimLocked = !aimLocked;
 
         changingGun = false;
-        if (Input.GetButtonDown("ChangeToPistol" + PlayerNumber) || Input.GetButtonDown("ChangeToSniperOrShotgun" + PlayerNumber))
+        print(Input.GetAxis("ChangeToSniperOrShotgun" + PlayerNumber));
+        if (Input.GetAxis("ChangeToPistol" + PlayerNumber) > 0 || Input.GetAxis("ChangeToSniperOrShotgun" + PlayerNumber) != 0)
         {
             changingGun = true;
             if (Input.GetAxis("ChangeToPistol" + PlayerNumber) > 0)

@@ -50,12 +50,22 @@ PrefabInstance:
     - target: {fileID: 1741123719417506768, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
         type: 3}
       propertyPath: looping
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1741123719417506768, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
         type: 3}
       propertyPath: lengthInSec
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1741123719417506768, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
+        type: 3}
+      propertyPath: prewarm
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1741123719417506768, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
+        type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 6219656630711172463, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
         type: 3}

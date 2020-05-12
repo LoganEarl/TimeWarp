@@ -43,14 +43,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4246457e755f39843b2ffcd6ec4f2134, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxBounces: 3
+  maxBounces: 2
   laser: {fileID: 7605028428472621440, guid: b4fcf5ccf1893e94d8d9679b12a0b04f, type: 3}
   laserRings: {fileID: 7348934855639681543, guid: bf0509c9a1b71b448b0b84d7efb6297f,
     type: 3}
   laserAfterEffects: {fileID: 119957396768607800, guid: 80a7f7b08e5a3b44398b479a50df2131,
     type: 3}
   laserDensity: 0.1
-  ringDensity: 2
+  ringDensity: 50
   afterEffectDensity: 1
-  laserDuration: 0.75
-  afterEffectsDuration: 3
+  laserDuration: 0.1
+  afterEffectsDuration: 0.75
