@@ -280,7 +280,6 @@ public class PlayerController : MonoBehaviour, IRecordable
             aimLocked = !aimLocked;
 
         changingGun = false;
-        print(Input.GetAxis("ChangeToSniperOrShotgun" + PlayerNumber));
         if (Input.GetAxis("ChangeToPistol" + PlayerNumber) > 0 || Input.GetAxis("ChangeToSniperOrShotgun" + PlayerNumber) != 0)
         {
             changingGun = true;

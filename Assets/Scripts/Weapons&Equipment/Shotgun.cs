@@ -57,11 +57,12 @@ public class Shotgun : MonoBehaviour, IWeapon
                 friendlyFire ? projectileLayer : projectileLayer + playerNumber
             );
 
-        projectileInstance.GetComponent<Rigidbody>().velocity = new Vector3(
-                                                                    projectileInstance.transform.forward.x + bulletAngle, 
-                                                                    projectileInstance.transform.forward.y,
-                                                                    projectileInstance.transform.forward.z
-                                                                );
+        projectileInstance.GetComponent<Rigidbody>().velocity = Quaternion.AngleAxis(bulletAngle, Vector3.up) * 
+            new Vector3(
+                projectileInstance.transform.forward.x,
+                projectileInstance.transform.forward.y,
+                projectileInstance.transform.forward.z
+            );
 
         return projectileInstance;
     }
