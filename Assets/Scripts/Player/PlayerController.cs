@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour, IRecordable
     #endregion
 
     #region equipment
+    private bool changingGun = false;
+    private string newWeapon = "Pistol";
     public bool FiringGun { get; private set; } = false;
     private bool fired = false;
     public bool UsingEquipment { get; private set; } = false;
@@ -30,7 +32,9 @@ public class PlayerController : MonoBehaviour, IRecordable
 
     [SerializeField] private float lookOffset;
     [SerializeField] private float turnSpeed;
-    [SerializeField] private float moveSpeed;
+    [SerializeField] private float accelSpeed;
+    [SerializeField] private float deaccelSpeed;
+    [SerializeField] private float maxSpeed;
 
     [SerializeField] private Vector3 cameraHeight = new Vector3(0, 10, 0);
     [SerializeField] private int lookSnap = 5;
@@ -117,7 +121,7 @@ public class PlayerController : MonoBehaviour, IRecordable
             }
 
             //read in the calculated values from the rigidbody
-            velocity = rigidBody.velocity;
+            //velocity = rigidBody.velocity;
             position = rigidBody.position; // seperate method?
             //end
 
@@ -184,6 +188,10 @@ public class PlayerController : MonoBehaviour, IRecordable
                     rigidBody.MoveRotation(desiredRotation);
             }
 
+            if(!GameMode.GameState.GetPlayerFireLocked(PlayerNumber, RoundNumber) &&
+                changingGun)
+                ChangeWeapon(newWeapon);
+
             if (!GameMode.GameState.GetPlayerFireLocked(PlayerNumber, RoundNumber) &&
                 FiringGun &&
                 !fired &&
@@ -219,8 +227,13 @@ public class PlayerController : MonoBehaviour, IRecordable
         isIdle = !(hasHorizontalInput || hasVerticalInput);
 
         Vector3 inputVector = new Vector3(horizontalMove, 0f, verticalMove).normalized;
-        inputVector *= moveSpeed;
-        velocity += (inputVector * Time.fixedDeltaTime);
+
+        if (!isIdle)
+            inputVector *= Mathf.Lerp(velocity.magnitude, maxSpeed, accelSpeed);
+        else
+            inputVector = velocity.normalized * Mathf.Lerp(velocity.magnitude, 0, accelSpeed * 10);
+
+        velocity = inputVector;
 
         float horizontalAim = Input.GetAxis("AimHorizontal" + PlayerNumber);
         float verticalAim = Input.GetAxis("AimVertical" + PlayerNumber);
@@ -267,16 +280,17 @@ public class PlayerController : MonoBehaviour, IRecordable
         if (Input.GetButtonDown("AimLock" + PlayerNumber))
             aimLocked = !aimLocked;
 
+        changingGun = false;
         if (Input.GetButtonDown("ChangeToPistol" + PlayerNumber) || Input.GetButtonDown("ChangeToSniperOrShotgun" + PlayerNumber))
         {
+            changingGun = true;
             if (Input.GetAxis("ChangeToPistol" + PlayerNumber) > 0)
-                ChangeWeapon("Pistol");
+                newWeapon = "Pistol";
             
             if (Input.GetAxis("ChangeToSniperOrShotgun" + PlayerNumber) > 0)
-                ChangeWeapon("Sniper");
+                newWeapon = "Sniper";
             else if (Input.GetAxis("ChangeToSniperOrShotgun" + PlayerNumber) < 0)
-                ChangeWeapon("Shotgun");
-
+                newWeapon = "Shotgun";
             
             //Maybe Change this to keep the targeting Cursors attached to the weapon in question?
             Destroy(targetingCursor);
@@ -297,6 +311,8 @@ public class PlayerController : MonoBehaviour, IRecordable
         position = snapshot.Translation;
         velocity = snapshot.Velocity;
         LookDirection = snapshot.LookDirection;
+        changingGun = snapshot.Changing;
+        newWeapon = snapshot.WeaponName;
         FiringGun = snapshot.Firing;
         UsingEquipment = snapshot.UsingEquipment;
         usedEquipment = snapshot.UsedEquipment;
@@ -391,7 +407,7 @@ public class PlayerController : MonoBehaviour, IRecordable
 
     public PlayerSnapshot GetSnapshot()
     {
-        return new PlayerSnapshot(position, velocity, LookDirection, FiringGun, UsingEquipment, usedEquipment, isIdle);
+        return new PlayerSnapshot(position, velocity, LookDirection, changingGun, newWeapon, FiringGun, UsingEquipment, usedEquipment, isIdle);
     }
 
     public void SetSnapshot(PlayerSnapshot playerSnapshot)

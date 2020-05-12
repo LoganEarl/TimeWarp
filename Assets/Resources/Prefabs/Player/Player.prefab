@@ -805,7 +805,9 @@ MonoBehaviour:
     type: 3}
   lookOffset: -11
   turnSpeed: 20
-  moveSpeed: 50
+  accelSpeed: 0.2
+  deaccelSpeed: 0.5
+  maxSpeed: 5
   cameraHeight: {x: 0, y: 10, z: 0}
   lookSnap: 5
   lookMagnitude: 16
@@ -2879,11 +2881,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8315169936223900241, guid: 310a14ec79f4e264ea687b45ebfc8833,
+        type: 3}
+      propertyPath: fireTransform
+      value: 
+      objectReference: {fileID: 3112723893844621929}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 310a14ec79f4e264ea687b45ebfc8833, type: 3}
 --- !u!4 &7076795715775930612 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8298216064568413968, guid: 310a14ec79f4e264ea687b45ebfc8833,
+    type: 3}
+  m_PrefabInstance: {fileID: 1233137195697500132}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &3112723893844621929 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4192400853898122637, guid: 310a14ec79f4e264ea687b45ebfc8833,
     type: 3}
   m_PrefabInstance: {fileID: 1233137195697500132}
   m_PrefabAsset: {fileID: 0}
@@ -2911,6 +2924,11 @@ PrefabInstance:
       propertyPath: fireRate
       value: 0.4
       objectReference: {fileID: 0}
+    - target: {fileID: 833722135321521786, guid: 48b66697210ef034b86f3469ffd19b19,
+        type: 3}
+      propertyPath: fireTransform
+      value: 
+      objectReference: {fileID: 1051835922776050759}
     - target: {fileID: 3764169013809480834, guid: 48b66697210ef034b86f3469ffd19b19,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2999,6 +3017,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1718710757141976693}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &1051835922776050759 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1820238618868374066, guid: 48b66697210ef034b86f3469ffd19b19,
+    type: 3}
+  m_PrefabInstance: {fileID: 1718710757141976693}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6072405813910149065
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3016,6 +3040,11 @@ PrefabInstance:
       propertyPath: afterEffectsDuration
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 589978975846753806, guid: 687d670b325a3304d847729d0d523027,
+        type: 3}
+      propertyPath: fireTransform
+      value: 
+      objectReference: {fileID: 5984727910120567650}
     - target: {fileID: 3298186964282681711, guid: 687d670b325a3304d847729d0d523027,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3081,6 +3110,12 @@ PrefabInstance:
 --- !u!4 &8755005904342302374 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3298186964282681711, guid: 687d670b325a3304d847729d0d523027,
+    type: 3}
+  m_PrefabInstance: {fileID: 6072405813910149065}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &5984727910120567650 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 525657513777669291, guid: 687d670b325a3304d847729d0d523027,
     type: 3}
   m_PrefabInstance: {fileID: 6072405813910149065}
   m_PrefabAsset: {fileID: 0}

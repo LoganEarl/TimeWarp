@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Pistol : MonoBehaviour, IWeapon
 {
+    [SerializeField] private Transform fireTransform;
     [SerializeField] private GameObject projectile;
     [SerializeField] private string projectileLayer = "Projectile";
 
@@ -17,18 +18,20 @@ public class Pistol : MonoBehaviour, IWeapon
     public bool LoadedCursor { get; set; } = false;
     public string WeaponName { get; } = "Pistol";
     public int WeaponType { get; } = 0;
-    public Transform FireTransform { get; private set; }
     private bool friendlyFire;
 
     void Awake()
     {
-        FireTransform = transform.childCount > 0 ? transform.GetChild(0) : transform;
+        fireTransform = transform.childCount > 0 ? transform.GetChild(0) : transform;
         friendlyFire = FindObjectOfType<AudioManager>().FriendlyFire;
     }
 
     public GameObject[] Fire(int playerNumber, Color playerColor)
     {
-        GameObject projectileInstance = Instantiate(projectile, FireTransform.position, FireTransform.rotation) as GameObject;
+        if (fireTransform.parent != transform.root)
+            fireTransform.parent = transform.root;
+
+        GameObject projectileInstance = Instantiate(projectile, fireTransform.position, fireTransform.rotation) as GameObject;
         projectileInstance.GetComponent<Bullet>().BulletColor = playerColor;
         
         projectileInstance.gameObject.layer = 
@@ -36,7 +39,7 @@ public class Pistol : MonoBehaviour, IWeapon
                 friendlyFire ? projectileLayer : projectileLayer + playerNumber
             );
 
-        projectileInstance.GetComponent<Rigidbody>().velocity = FireTransform.forward;
+        projectileInstance.GetComponent<Rigidbody>().velocity = fireTransform.forward;
 
         FindObjectOfType<AudioManager>().PlaySFX(firingSound);
 

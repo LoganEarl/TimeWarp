@@ -21,11 +21,21 @@ public class SpawnerController : MonoBehaviour
             {
                 if (instanceNum <= GetComponent<IGameMode>().RoundNumber)
                 {
-                    GameObject spawner = Instantiate(spawnerPrefab);
-                    spawner.transform.position = playerSpawns[playerNum][instanceNum];
+                    GameObject spawner = Instantiate(
+                            spawnerPrefab, 
+                            playerSpawns[playerNum][instanceNum], 
+                            Quaternion.LookRotation(
+                                playerNum == 0 ? Vector3.right : Vector3.left, 
+                                Vector3.up
+                            )
+                        );
 
                     spawner.GetComponent<ParticleSystemRenderer>().material =
-                        ColorManager.Instance.GetPlayerMaterial(playerNum, ColorManager.PlayerColorVarient.SPAWN_PRIMARY);
+                        ColorManager.Instance.GetPlayerMaterial(
+                                playerNum, 
+                                ColorManager.PlayerColorVarient.SPAWN_PRIMARY
+                            );
+
                     spawner.GetComponent<ParticleSystem>().Play();
 
                     spawnTransforms.Add(transform);

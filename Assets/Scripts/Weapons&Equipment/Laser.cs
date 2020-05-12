@@ -51,6 +51,7 @@ public class Laser : MonoBehaviour
     private bool FireRay(Vector3 position, Vector3 direction, int bouncesLeft)
     {
         bool result = false;
+        direction.y = 0f;
 
         if (Physics.Raycast(position, direction, out RaycastHit hit, 1000, layerMask))
         {

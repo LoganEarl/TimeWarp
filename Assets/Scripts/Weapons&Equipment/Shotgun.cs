@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Shotgun : MonoBehaviour, IWeapon
 {
+    [SerializeField] private Transform fireTransform;
     [SerializeField] private GameObject projectile;
     [SerializeField] private string projectileLayer = "Projectile";
 
@@ -18,21 +19,21 @@ public class Shotgun : MonoBehaviour, IWeapon
     public bool LoadedCursor { get; set; } = false;
     public string WeaponName { get; } = "Shotgun";
     public int WeaponType { get; } = 1;
-    public Transform FireTransform { get; private set; }
     private bool friendlyFire;
 
     void Awake()
     {
-        FireTransform = transform.childCount > 0 ? transform.GetChild(0) : transform;
+        fireTransform = transform.childCount > 0 ? transform.GetChild(0) : transform;
         friendlyFire = FindObjectOfType<AudioManager>().FriendlyFire;
     }
 
     public GameObject[] Fire(int playerNumber, Color playerColor)
     {
+        if (fireTransform.parent != transform.root)
+            fireTransform.parent = transform.root;
+
         GameObject projectileInstance1 = InstantiateProjectile(playerNumber, playerColor, -1 * projectileSpread);
-
         GameObject projectileInstance2 = InstantiateProjectile(playerNumber, playerColor, 0);
-
         GameObject projectileInstance3 = InstantiateProjectile(playerNumber, playerColor, projectileSpread);
 
         FindObjectOfType<AudioManager>().PlaySFX(firingSound);
@@ -44,8 +45,8 @@ public class Shotgun : MonoBehaviour, IWeapon
     {
         GameObject projectileInstance = Instantiate(
                 projectile,
-                FireTransform.position,
-                FireTransform.rotation
+                fireTransform.position,
+                fireTransform.rotation
             ) as GameObject;
 
         projectileInstance.GetComponent<Bullet>().BulletColor = playerColor;
