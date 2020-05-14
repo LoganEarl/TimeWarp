@@ -804,7 +804,7 @@ MonoBehaviour:
   equipmentGuide: {fileID: 2962610272491726437, guid: 57e007a91795fab4db920309f6fbada3,
     type: 3}
   lookOffset: -11
-  turnSpeed: 20
+  turnSpeed: 15
   accelSpeed: 0.2
   deaccelSpeed: 0.5
   maxSpeed: 5
@@ -2821,6 +2821,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5604768586197034703}
     m_Modifications:
+    - target: {fileID: 5570419067369353198, guid: 1df6742f568e9654ba75ac20eabb2243,
+        type: 3}
+      propertyPath: fireRate
+      value: 0.4
+      objectReference: {fileID: 0}
     - target: {fileID: 6877580852321241924, guid: 1df6742f568e9654ba75ac20eabb2243,
         type: 3}
       propertyPath: m_LocalPosition.x

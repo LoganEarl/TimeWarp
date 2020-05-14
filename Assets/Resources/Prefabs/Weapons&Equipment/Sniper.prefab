@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 198406983496773162}
+  - component: {fileID: 7177963104552748568}
   - component: {fileID: 9195194468952118300}
   - component: {fileID: 3217661190147467493}
-  - component: {fileID: 7177963104552748568}
   - component: {fileID: 5490559670410998217}
   m_Layer: 11
   m_Name: Sniper
@@ -35,6 +35,24 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 180.00002, z: 180}
+--- !u!114 &7177963104552748568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3790829950104165433}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e41892b1ac6e7d4c89631a9f4d4fc04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fireTransform: {fileID: 6434063951937880551}
+  laser: {fileID: 5878688565026836233, guid: 161e247a4fdc42841834482d3b7af74e, type: 3}
+  firingSound: WeaponLaserShot1
+  fireRate: 0.85
+  targetingCursor: {fileID: 2102135367879133501, guid: feaf5df5960a49740a925f6dc7d44665,
+    type: 3}
 --- !u!33 &9195194468952118300
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -81,24 +99,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &7177963104552748568
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3790829950104165433}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e41892b1ac6e7d4c89631a9f4d4fc04, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fireTransform: {fileID: 6434063951937880551}
-  laser: {fileID: 5878688565026836233, guid: 161e247a4fdc42841834482d3b7af74e, type: 3}
-  firingSound: WeaponLaserShot1
-  fireRate: 0.85
-  targetingCursor: {fileID: 2102135367879133501, guid: feaf5df5960a49740a925f6dc7d44665,
-    type: 3}
 --- !u!65 &5490559670410998217
 BoxCollider:
   m_ObjectHideFlags: 0

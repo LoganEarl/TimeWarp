@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour, IRecordable
     private bool changingGun = false;
     private string newWeapon = "Pistol";
     public bool FiringGun { get; private set; } = false;
+    private int tester;
     private bool fired = false;
     public bool UsingEquipment { get; private set; } = false;
     private bool placingEquipment = false;
@@ -188,18 +189,14 @@ public class PlayerController : MonoBehaviour, IRecordable
                     rigidBody.MoveRotation(desiredRotation);
             }
 
-            if(!GameMode.GameState.GetPlayerFireLocked(PlayerNumber, RoundNumber) && changingGun)
+            if (!GameMode.GameState.GetPlayerFireLocked(PlayerNumber, RoundNumber) && changingGun)
                 ChangeWeapon(newWeapon);
 
             if (!GameMode.GameState.GetPlayerFireLocked(PlayerNumber, RoundNumber) &&
                 FiringGun &&
-                !fired &&
                 (FireCallback?.Invoke(Weapon.CostToFire) ?? true))
-            {
-                fired = true;
                 Shoot();
-                Invoke("FiringReset", Weapon.FireRate);
-            }
+            else FiringGun = false;
 
             if (!GameMode.GameState.GetPlayerFireLocked(PlayerNumber, RoundNumber) &&
                 UsingEquipment &&
@@ -226,11 +223,26 @@ public class PlayerController : MonoBehaviour, IRecordable
         isIdle = !(hasHorizontalInput || hasVerticalInput);
 
         Vector3 inputVector = new Vector3(horizontalMove, 0f, verticalMove).normalized;
+        float inputAngle = Vector3.SignedAngle(inputVector, velocity.normalized, Vector3.up);
+
+        if (PlayerNumber == 0)
+            Debug.Log(inputVector + " : " + velocity + " @ " + inputAngle);
 
         if (!isIdle)
-            inputVector *= Mathf.Lerp(velocity.magnitude, maxSpeed, accelSpeed);
-        else
+        {
+            //if (Mathf.Abs(inputAngle) < turnSpeed)
+                inputVector *= Mathf.Lerp(velocity.magnitude, maxSpeed, accelSpeed);
+            //else
+            //    inputVector = Vector3.RotateTowards(
+            //            velocity.normalized,
+            //            inputVector,
+            //            turnSpeed / 2,
+            //            1
+            //        ) * Mathf.Lerp(velocity.magnitude, maxSpeed, accelSpeed);
+        }
+        else if (velocity != Vector3.zero)
             inputVector = velocity.normalized * Mathf.Lerp(velocity.magnitude, 0, accelSpeed * 10);
+
 
         velocity = inputVector;
 
@@ -246,15 +258,17 @@ public class PlayerController : MonoBehaviour, IRecordable
             LookDirection *= lookMagnitude;
         }
         else if (!aimLocked)
-            LookDirection = velocity.normalized / 20;
+            LookDirection = transform.forward / 20;
 
         float fireActivity = Input.GetAxis("Fire" + PlayerNumber);
         float equipmentActivity = Input.GetAxis("Equipment" + PlayerNumber);
 
         FiringGun = false;
-        if (fireActivity > 0f) //this works becuase of the masssive deadzone setting
+        if (!fired && fireActivity > 0) //this works becuase of the masssive deadzone setting
         {
+            fired = true;
             FiringGun = true;
+            Invoke("FiringReset", Weapon.FireRate);
         }
 
         usedEquipment = false;
