@@ -21,10 +21,9 @@ public class Laser : MonoBehaviour
     private bool friendlyFire;
     private LayerMask layerMask;
 
-    public void Initialize(int playerNumber, Color playerColor)
+    public void Initialize(int playerNumber)
     {
         friendlyFire = FindObjectOfType<AudioManager>().FriendlyFire;
-
         List<string> layerList = new List<string> { "Default", "ScreenTransitions", "Player0", "Player1", "ForceField0", "ForceField1" };
         if (!friendlyFire)
         {
@@ -35,8 +34,9 @@ public class Laser : MonoBehaviour
         layerMask = LayerMask.GetMask(layerList.ToArray());
 
         Material playerMaterial = ColorManager.Instance.GetPlayerMaterial(playerNumber, ColorManager.PlayerColorVarient.SPAWN_PRIMARY);
-        laserRings.GetComponent<ParticleSystemRenderer>().material = playerMaterial;
 
+        Color playerColor = playerMaterial.GetColor("_TintColor");
+        laserRings.GetComponent<ParticleSystemRenderer>().material = playerMaterial;
         var main = laserRings.GetComponent<ParticleSystem>().main;
         main.startColor = playerColor;
 
