@@ -40,7 +40,7 @@ PrefabInstance:
     - target: {fileID: 1741123719417506768, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
         type: 3}
       propertyPath: InitialModule.startLifetime.minScalar
-      value: 1
+      value: 0.75
       objectReference: {fileID: 0}
     - target: {fileID: 1741123719417506768, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
         type: 3}
@@ -50,7 +50,7 @@ PrefabInstance:
     - target: {fileID: 1741123719417506768, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
         type: 3}
       propertyPath: looping
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1741123719417506768, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
         type: 3}
@@ -60,12 +60,32 @@ PrefabInstance:
     - target: {fileID: 1741123719417506768, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
         type: 3}
       propertyPath: prewarm
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1741123719417506768, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
         type: 3}
       propertyPath: InitialModule.startSize.scalar
       value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1741123719417506768, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
+        type: 3}
+      propertyPath: InitialModule.startColor.maxColor.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1741123719417506768, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
+        type: 3}
+      propertyPath: InitialModule.startColor.maxColor.g
+      value: 1.4197595
+      objectReference: {fileID: 0}
+    - target: {fileID: 1741123719417506768, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
+        type: 3}
+      propertyPath: InitialModule.startColor.maxColor.b
+      value: 8.47419
+      objectReference: {fileID: 0}
+    - target: {fileID: 1741123719417506768, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
+        type: 3}
+      propertyPath: InitialModule.startColor.maxColor.a
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6219656630711172463, guid: b4fcf5ccf1893e94d8d9679b12a0b04f,
         type: 3}

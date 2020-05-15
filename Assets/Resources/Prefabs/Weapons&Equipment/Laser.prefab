@@ -49,8 +49,8 @@ MonoBehaviour:
     type: 3}
   laserAfterEffects: {fileID: 119957396768607800, guid: 80a7f7b08e5a3b44398b479a50df2131,
     type: 3}
-  laserDensity: 0.1
-  ringDensity: 50
+  laserDensity: 0.2
+  ringDensity: 2
   afterEffectDensity: 1
-  laserDuration: 0.1
-  afterEffectsDuration: 0.75
+  laserDuration: 0.5
+  afterEffectsDuration: 1.5

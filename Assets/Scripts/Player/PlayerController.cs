@@ -15,7 +15,6 @@ public class PlayerController : MonoBehaviour, IRecordable
     private bool changingGun = false;
     private string newWeapon = "Pistol";
     public bool FiringGun { get; private set; } = false;
-    private int tester;
     private bool fired = false;
     public bool UsingEquipment { get; private set; } = false;
     private bool placingEquipment = false;
@@ -222,16 +221,16 @@ public class PlayerController : MonoBehaviour, IRecordable
         bool hasVerticalInput = DeltaExceeds(verticalMove, 0f, 0.02f);
         isIdle = !(hasHorizontalInput || hasVerticalInput);
 
-        Vector3 inputVector = new Vector3(horizontalMove, 0f, verticalMove).normalized;
-        float inputAngle = Vector3.SignedAngle(inputVector, velocity.normalized, Vector3.up);
+        Vector3 inputVector = new Vector3(horizontalMove, 0f, verticalMove);
+        float inputAngle = Vector3.SignedAngle(inputVector.normalized, velocity.normalized, Vector3.up);
 
-        if (PlayerNumber == 0)
-            Debug.Log(inputVector + " : " + velocity + " @ " + inputAngle);
+        //if (PlayerNumber == 0)
+        //    Debug.Log(inputVector + " : " + velocity + " @ " + inputAngle);
 
         if (!isIdle)
         {
             //if (Mathf.Abs(inputAngle) < turnSpeed)
-                inputVector *= Mathf.Lerp(velocity.magnitude, maxSpeed, accelSpeed);
+                inputVector = inputVector.normalized * Mathf.Lerp(velocity.magnitude, maxSpeed, accelSpeed);
             //else
             //    inputVector = Vector3.RotateTowards(
             //            velocity.normalized,
@@ -240,7 +239,7 @@ public class PlayerController : MonoBehaviour, IRecordable
             //            1
             //        ) * Mathf.Lerp(velocity.magnitude, maxSpeed, accelSpeed);
         }
-        else if (velocity != Vector3.zero)
+        else if (inputVector != Vector3.zero)
             inputVector = velocity.normalized * Mathf.Lerp(velocity.magnitude, 0, accelSpeed * 10);
 
 
@@ -297,6 +296,7 @@ public class PlayerController : MonoBehaviour, IRecordable
         if (Input.GetAxis("ChangeToPistol" + PlayerNumber) > 0 || Input.GetAxis("ChangeToSniperOrShotgun" + PlayerNumber) != 0)
         {
             changingGun = true;
+
             if (Input.GetAxis("ChangeToPistol" + PlayerNumber) > 0)
                 newWeapon = "Pistol";
             

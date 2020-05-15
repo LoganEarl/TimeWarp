@@ -16,29 +16,33 @@ public class Laser : MonoBehaviour
     [SerializeField] private float laserDuration = 0.75f;
     [SerializeField] private float afterEffectsDuration = 0.75f;
 
-    public int PlayerNumber { private get; set; }
-
     private List<GameObject> toDelete = new List<GameObject>();
     private List<GameObject> toDeleteLater = new List<GameObject>();
     private bool friendlyFire;
     private LayerMask layerMask;
 
-    public void Awake()
+    public void Initialize(int playerNumber, Color playerColor)
     {
         friendlyFire = FindObjectOfType<AudioManager>().FriendlyFire;
 
         List<string> layerList = new List<string> { "Default", "ScreenTransitions", "Player0", "Player1", "ForceField0", "ForceField1" };
         if (!friendlyFire)
         {
-            layerList.Remove("Player" + PlayerNumber);
-            layerList.Remove("ForceField" + PlayerNumber);
+            layerList.Remove("Player" + playerNumber);
+            layerList.Remove("ForceField" + playerNumber);
         }
 
         layerMask = LayerMask.GetMask(layerList.ToArray());
 
-        Material playerMaterial = ColorManager.Instance.GetPlayerMaterial(PlayerNumber, ColorManager.PlayerColorVarient.SPAWN_PRIMARY);
+        Material playerMaterial = ColorManager.Instance.GetPlayerMaterial(playerNumber, ColorManager.PlayerColorVarient.SPAWN_PRIMARY);
         laserRings.GetComponent<ParticleSystemRenderer>().material = playerMaterial;
+
+        var main = laserRings.GetComponent<ParticleSystem>().main;
+        main.startColor = playerColor;
+
         laserAfterEffects.GetComponent<ParticleSystemRenderer>().material = playerMaterial;
+        main = laserAfterEffects.GetComponent<ParticleSystem>().main;
+        main.startColor = playerColor;
 
         Vector3 fireDirection = new Vector3(0, transform.forward.y, transform.forward.z);
 
