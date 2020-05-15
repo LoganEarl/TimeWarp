@@ -29,7 +29,7 @@ public class Sniper : MonoBehaviour, IWeapon
             fireTransform.parent = transform.root;
 
         GameObject laserBeam = Instantiate(laser, fireTransform.position, fireTransform.rotation);
-        laserBeam.GetComponent<Laser>().Initialize(playerNumber, playerColor);
+        laserBeam.GetComponent<Laser>().Initialize(playerNumber);
 
 
         return new GameObject[] { laserBeam };
