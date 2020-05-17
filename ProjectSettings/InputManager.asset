@@ -70,15 +70,15 @@ InputManager:
     axis: 8
     joyNum: 1
   - serializedVersion: 3
-    m_Name: Fire0
+    m_Name: Fire1
     descriptiveName: 
     descriptiveNegativeName: 
     negativeButton: 
     positiveButton: '[0]'
     altNegativeButton: 
     altPositiveButton: 
-    gravity: 1
-    dead: 0.001
+    gravity: 10
+    dead: 0.5
     sensitivity: 1
     snap: 1
     invert: 0
@@ -470,7 +470,7 @@ InputManager:
     axis: 5
     joyNum: 1
   - serializedVersion: 3
-    m_Name: ChangeToSniperOrShotgun0
+    m_Name: ChangeToSniperOrShotgun1
     descriptiveName: 
     descriptiveNegativeName: 
     negativeButton: '[4]'

@@ -78,11 +78,11 @@ public class InstinctPlayerManager : PlayerManager
         health.AddHealthChangeListener(OnPlayerHealthChange);
 
         int index = playerRecordings.Count - 1;
-        controller.FireCallback = () =>
+        controller.FireCallback = (int CostToFire) =>
         {
-            if(projectilesRemaining[index] > 0)
+            if(projectilesRemaining[index] >= CostToFire)
             {
-                projectilesRemaining[index]--;
+                projectilesRemaining[index] -= CostToFire;
                 return true;
             }
             return false;

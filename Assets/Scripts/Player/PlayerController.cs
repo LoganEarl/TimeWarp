@@ -5,13 +5,15 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour, IRecordable
 {
     #region delegates
-    public delegate bool FireEventCallback();
+    public delegate bool FireEventCallback(int costToFire);
     public FireEventCallback FireCallback { private get; set; } = null;
     public delegate bool EquipmentEventCallback();
     public EquipmentEventCallback EquipmentCallback { private get; set; } = null;
     #endregion
 
     #region equipment
+    private bool changingGun = false;
+    private string newWeapon = "Pistol";
     public bool FiringGun { get; private set; } = false;
     private bool fired = false;
     public bool UsingEquipment { get; private set; } = false;
@@ -30,7 +32,9 @@ public class PlayerController : MonoBehaviour, IRecordable
 
     [SerializeField] private float lookOffset;
     [SerializeField] private float turnSpeed;
-    [SerializeField] private float moveSpeed;
+    [SerializeField] private float accelSpeed;
+    [SerializeField] private float deaccelSpeed;
+    [SerializeField] private float maxSpeed;
 
     [SerializeField] private Vector3 cameraHeight = new Vector3(0, 10, 0);
     [SerializeField] private int lookSnap = 5;
@@ -97,6 +101,9 @@ public class PlayerController : MonoBehaviour, IRecordable
                 break;
             }
         }
+
+        SetTag(transform, "Player" + PlayerNumber);
+
         Weapon = GetComponentsInChildren<IWeapon>()[0];
         animator.SetInteger("WeaponType", Weapon.WeaponType);
     }
@@ -114,7 +121,7 @@ public class PlayerController : MonoBehaviour, IRecordable
             }
 
             //read in the calculated values from the rigidbody
-            velocity = rigidBody.velocity;
+            //velocity = rigidBody.velocity;
             position = rigidBody.position; // seperate method?
             //end
 
@@ -181,10 +188,14 @@ public class PlayerController : MonoBehaviour, IRecordable
                     rigidBody.MoveRotation(desiredRotation);
             }
 
+            if (!GameMode.GameState.GetPlayerFireLocked(PlayerNumber, RoundNumber) && changingGun)
+                ChangeWeapon(newWeapon);
+
             if (!GameMode.GameState.GetPlayerFireLocked(PlayerNumber, RoundNumber) &&
                 FiringGun &&
-                (FireCallback?.Invoke() ?? true))
+                (FireCallback?.Invoke(Weapon.CostToFire) ?? true))
                 Shoot();
+            else FiringGun = false;
 
             if (!GameMode.GameState.GetPlayerFireLocked(PlayerNumber, RoundNumber) &&
                 UsingEquipment &&
@@ -210,14 +221,29 @@ public class PlayerController : MonoBehaviour, IRecordable
         bool hasVerticalInput = DeltaExceeds(verticalMove, 0f, 0.02f);
         isIdle = !(hasHorizontalInput || hasVerticalInput);
 
-        Vector3 inputVector = new Vector3(horizontalMove, 0f, verticalMove).normalized;
-        inputVector *= moveSpeed;
-        velocity += (inputVector * Time.fixedDeltaTime);
+        Vector3 inputVector = new Vector3(horizontalMove, 0f, verticalMove);
+        float inputAngle = Vector3.SignedAngle(inputVector.normalized, velocity.normalized, Vector3.up);
 
-        //if (!hasHorizontalInput && velocity.x <= 0.2f) velocity.x = 0f;
-        //if (!hasVerticalInput && velocity.y <= 0.2f) velocity.y = 0f;
+        //if (PlayerNumber == 0)
+        //    Debug.Log(inputVector + " : " + velocity + " @ " + inputAngle);
 
-        //Debug.Log(velocity);
+        if (!isIdle)
+        {
+            //if (Mathf.Abs(inputAngle) < turnSpeed)
+                inputVector = inputVector.normalized * Mathf.Lerp(velocity.magnitude, maxSpeed, accelSpeed);
+            //else
+            //    inputVector = Vector3.RotateTowards(
+            //            velocity.normalized,
+            //            inputVector,
+            //            turnSpeed / 2,
+            //            1
+            //        ) * Mathf.Lerp(velocity.magnitude, maxSpeed, accelSpeed);
+        }
+        else if (inputVector != Vector3.zero)
+            inputVector = velocity.normalized * Mathf.Lerp(velocity.magnitude, 0, accelSpeed * 10);
+
+
+        velocity = inputVector;
 
         float horizontalAim = Input.GetAxis("AimHorizontal" + PlayerNumber);
         float verticalAim = Input.GetAxis("AimVertical" + PlayerNumber);
@@ -231,13 +257,13 @@ public class PlayerController : MonoBehaviour, IRecordable
             LookDirection *= lookMagnitude;
         }
         else if (!aimLocked)
-            LookDirection = velocity.normalized / 20;
+            LookDirection = transform.forward / 20;
 
         float fireActivity = Input.GetAxis("Fire" + PlayerNumber);
         float equipmentActivity = Input.GetAxis("Equipment" + PlayerNumber);
 
         FiringGun = false;
-        if (!fired && fireActivity > 0f) //this works becuase of the masssive deadzone setting
+        if (!fired && fireActivity > 0) //this works becuase of the masssive deadzone setting
         {
             fired = true;
             FiringGun = true;
@@ -266,16 +292,18 @@ public class PlayerController : MonoBehaviour, IRecordable
         if (Input.GetButtonDown("AimLock" + PlayerNumber))
             aimLocked = !aimLocked;
 
-        if (Input.GetButtonDown("ChangeToPistol" + PlayerNumber) || Input.GetButtonDown("ChangeToSniperOrShotgun" + PlayerNumber))
+        changingGun = false;
+        if (Input.GetAxis("ChangeToPistol" + PlayerNumber) > 0 || Input.GetAxis("ChangeToSniperOrShotgun" + PlayerNumber) != 0)
         {
+            changingGun = true;
+
             if (Input.GetAxis("ChangeToPistol" + PlayerNumber) > 0)
-                ChangeWeapon("Pistol");
+                newWeapon = "Pistol";
             
             if (Input.GetAxis("ChangeToSniperOrShotgun" + PlayerNumber) > 0)
-                ChangeWeapon("Sniper");
+                newWeapon = "Sniper";
             else if (Input.GetAxis("ChangeToSniperOrShotgun" + PlayerNumber) < 0)
-                ChangeWeapon("Shotgun");
-
+                newWeapon = "Shotgun";
             
             //Maybe Change this to keep the targeting Cursors attached to the weapon in question?
             Destroy(targetingCursor);
@@ -296,6 +324,8 @@ public class PlayerController : MonoBehaviour, IRecordable
         position = snapshot.Translation;
         velocity = snapshot.Velocity;
         LookDirection = snapshot.LookDirection;
+        changingGun = snapshot.Changing;
+        newWeapon = snapshot.WeaponName;
         FiringGun = snapshot.Firing;
         UsingEquipment = snapshot.UsingEquipment;
         usedEquipment = snapshot.UsedEquipment;
@@ -335,10 +365,9 @@ public class PlayerController : MonoBehaviour, IRecordable
             Transform newWeapon = weaponsTransform.Find(weaponName);
             Transform oldWeapon = weaponsTransform.Find(Weapon.WeaponName);
 
-            //Debug.Log("OldWeapon: " + Weapon.WeaponName + ", NewWeapon: " + weaponName);
-
             oldWeapon.gameObject.SetActive(false);
             newWeapon.gameObject.SetActive(true);
+            newWeapon.tag = "Player" + PlayerNumber;
 
             Weapon = (IWeapon)newWeapon.GetComponentInChildren(System.Type.GetType(weaponName));
 
@@ -359,6 +388,20 @@ public class PlayerController : MonoBehaviour, IRecordable
         }
     }
 
+    private void SetTag(Transform root, string tag)
+    {
+        root.tag = tag;
+        for (int i = 0; i < root.childCount; i++)
+        {
+            Transform child = root.GetChild(i);
+            child.tag = tag;
+
+            if (child.childCount != 0)
+                SetTag(child, tag);
+        }
+
+    }
+
     public void SetPlayerInformation(int playerNumber, int sourceRoundNum, Vector3 initialPosition, IGameMode gameMode)
     {
         this.PlayerNumber = playerNumber;
@@ -377,7 +420,7 @@ public class PlayerController : MonoBehaviour, IRecordable
 
     public PlayerSnapshot GetSnapshot()
     {
-        return new PlayerSnapshot(position, velocity, LookDirection, FiringGun, UsingEquipment, usedEquipment, isIdle);
+        return new PlayerSnapshot(position, velocity, LookDirection, changingGun, newWeapon, FiringGun, UsingEquipment, usedEquipment, isIdle);
     }
 
     public void SetSnapshot(PlayerSnapshot playerSnapshot)
@@ -411,11 +454,6 @@ public class PlayerController : MonoBehaviour, IRecordable
     {
         health.FullHeal();
         health.ResetStatistics();
-        //PlaySpawnParticles();
-    }
-
-    public void PlaySpawnParticles()
-    {
-        GetComponent<ParticleSystem>().Play();
+        ChangeWeapon("Pistol");
     }
 }
