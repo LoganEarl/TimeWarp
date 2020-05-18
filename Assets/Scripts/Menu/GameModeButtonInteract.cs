@@ -13,19 +13,19 @@ public class GameModeButtonInteract : MonoBehaviour, ButtonInteract {
 
     public void ButtonClicked(Button clickedButton)
     {
-        int buttonIndex = System.Array.IndexOf(gameModeButtons, clickedButton);
+        //int buttonIndex = System.Array.IndexOf(gameModeButtons, clickedButton);
 
-        if (buttonIndex == -1)
-            return;
+        //if (buttonIndex == -1)
+        //    return;
 
-        SetButtonsInteractable(clickedButton);
+        //SetButtonsInteractable(clickedButton);
 
-        clickedButton.interactable = false;
+        //clickedButton.interactable = false;
     }
 
     public void SetButtonsInteractable(Button clickedButton)
     {
-        foreach (Button button in gameModeButtons)
-            button.interactable = true;
+        //foreach (Button button in gameModeButtons)
+        //    button.interactable = true;
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /*
@@ -11,23 +12,24 @@ public class LevelSelectorButtonInteract : MonoBehaviour, ButtonInteract {
     [SerializeField]
     private Button[] levelSelectorButtons;
 
+    [SerializeField]
     private Animator animator;
 
     public void ButtonClicked(Button clickedButton)
     {
-        int buttonIndex = System.Array.IndexOf(levelSelectorButtons, clickedButton);
+        //int buttonIndex = System.Array.IndexOf(levelSelectorButtons, clickedButton);
 
-        if (buttonIndex == -1)
-            return;
+        //if (buttonIndex == -1)
+        //    return;
 
-        SetButtonsInteractable(clickedButton);
+        //SetButtonsInteractable(clickedButton);
 
-        clickedButton.interactable = false;
+        //clickedButton.interactable = false;
     }
 
     public void SetButtonsInteractable(Button clickedButton)
     {
-        foreach (Button button in levelSelectorButtons)
-            button.interactable = true;
+        //foreach (Button button in levelSelectorButtons)
+        //    button.interactable = true;
     }
 }
