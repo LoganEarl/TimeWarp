@@ -9,7 +9,8 @@ public class PauseOverlay : MonoBehaviour {
     private GameObject pauseOverlay;
 
     private IGameMode sourceGameMode;
-    private bool GameIsPaused;
+
+    public static bool GameIsPaused;
     
     void Update()
     {
@@ -23,11 +24,6 @@ public class PauseOverlay : MonoBehaviour {
     public void Setup(IGameMode iGameMode)
     {
         this.sourceGameMode = iGameMode;
-    }
-
-    public bool GetPausedState()
-    {
-        return GameIsPaused;
     }
 
     public void ResumeGame()

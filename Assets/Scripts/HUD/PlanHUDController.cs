@@ -45,7 +45,16 @@ public class PlanHUDController : MonoBehaviour
             foreach (GameObject obj in loadedPlayerHealthBars[playerNum])
                 Destroy(obj);
 
+        LoadPlayerWeapons();
         LoadPlayerHealthBars();
+    }
+
+    private void LoadPlayerWeapons()
+    {
+        GameObject p0Weapon = GameObject.Find("P0Weapon");
+        GameObject p1Weapon = GameObject.Find("P1Weapon");
+        p0Weapon.transform.GetChild(2).gameObject.GetComponent<WeaponModelExchange>().ResetWeapons();
+        p1Weapon.transform.GetChild(2).gameObject.GetComponent<WeaponModelExchange>().ResetWeapons();
     }
 
     private void LoadPlayerHealthBars()
