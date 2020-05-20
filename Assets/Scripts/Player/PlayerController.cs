@@ -63,7 +63,7 @@ public class PlayerController : MonoBehaviour, IRecordable
     private GameObject targetingCursor;
 
     public bool IsVisible {
-        get => GameMode.GameState.GetPlayerVisible(PlayerNumber, RoundNumber);
+        get => GameMode.GameState.GetPlayerVisible(PlayerNumber, RoundNumber) && !health.Dead;
         set {
             if (value) playerModel.transform.localScale = new Vector3(1, 1, 1);
             else playerModel.transform.localScale = new Vector3(0, 0, 0);
@@ -110,7 +110,8 @@ public class PlayerController : MonoBehaviour, IRecordable
 
     private void LateUpdate()
     {
-        IsVisible = GameMode?.GameState.GetPlayerVisible(PlayerNumber, RoundNumber) ?? false && !health.Dead;
+        IsVisible = GameMode.GameState.GetPlayerVisible(PlayerNumber, RoundNumber) && !health.Dead;
+
         if (!health.Dead && IsVisible)
         {
             if (!loadedCursor && !UsingSnapshots)
@@ -228,17 +229,7 @@ public class PlayerController : MonoBehaviour, IRecordable
         //    Debug.Log(inputVector + " : " + velocity + " @ " + inputAngle);
 
         if (!isIdle)
-        {
-            //if (Mathf.Abs(inputAngle) < turnSpeed)
-                inputVector = inputVector.normalized * Mathf.Lerp(velocity.magnitude, maxSpeed, accelSpeed);
-            //else
-            //    inputVector = Vector3.RotateTowards(
-            //            velocity.normalized,
-            //            inputVector,
-            //            turnSpeed / 2,
-            //            1
-            //        ) * Mathf.Lerp(velocity.magnitude, maxSpeed, accelSpeed);
-        }
+            inputVector = inputVector.normalized * Mathf.Lerp(velocity.magnitude, maxSpeed, accelSpeed);
         else if (inputVector != Vector3.zero)
             inputVector = velocity.normalized * Mathf.Lerp(velocity.magnitude, 0, accelSpeed * 10);
 
@@ -371,6 +362,7 @@ public class PlayerController : MonoBehaviour, IRecordable
 
             Weapon = (IWeapon)newWeapon.GetComponentInChildren(System.Type.GetType(weaponName));
 
+            lookMagnitude = Weapon.LookMagnitude;
             animator.SetInteger("WeaponType", Weapon.WeaponType);
         }
     }

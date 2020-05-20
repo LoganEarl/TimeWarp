@@ -47,21 +47,25 @@ public class PlayerHealth : MonoBehaviour
 
     public void DoDamage(int damage)
     {
-        if (damage > 0)
+        if (Health - damage > 0)
         {
-            Health -= damage;
+            Health -= damage < 0 ? 0 : damage;
             FindObjectOfType<AudioManager>().PlayVoice(hurtSound.GetClip());
         }
-
-        if (Health <= 0)
+        else if (!Dead)
         {
             GameObject deadBody = Instantiate(deadPlayer, transform.position, transform.rotation);
-            Material pMaterial = 
+            Material pMaterial =
                 gameObject.GetComponentsInChildren<SkinnedMeshRenderer>()[1].material;
 
-            deadBody.GetComponent<PlayerDeath>().PlayerMaterial = pMaterial;
+            PlayerDeath corpse = deadBody.GetComponent<PlayerDeath>();
+            PlayerController playerController = GetComponent<PlayerController>();
 
-            GetComponent<PlayerController>().GameMode.ClearOnRoundChange(deadBody);
+            corpse.PlayerMaterial = pMaterial;
+            corpse.SetHeldWeapon(playerController.Weapon.WeaponName);
+            playerController.GameMode.ClearOnRoundChange(deadBody);
+
+            Health -= damage < 0 ? 0 : damage;
         }
     }
 

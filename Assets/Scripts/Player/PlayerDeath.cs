@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerDeath : MonoBehaviour
 {
     [SerializeField] private float timeToFade = 2.0f;
+    [SerializeField] private Transform weaponsTransform;
 
     public Vector3 ExplosionPos { private get; set; }
     public Material PlayerMaterial { get; set; }
@@ -13,11 +14,14 @@ public class PlayerDeath : MonoBehaviour
     private readonly float power = 10.0f;
 
     private new SkinnedMeshRenderer renderer;
+    private Transform[] allTransforms;
 
     void Awake()
     {
+
         renderer = GetComponentsInChildren<SkinnedMeshRenderer>()[1];
 
+        renderer.material = ColorManager.Instance.GetPlayerMaterial(0, ColorManager.PlayerColorVarient.MODEL_PRIMARY_ACTIVE);
         Destroy(transform.GetChild(0).gameObject);
         Destroy(GetComponentsInChildren<AudioSource>()[0].gameObject);
         Destroy(GetComponentsInChildren<AudioSource>()[1].gameObject);
@@ -25,7 +29,7 @@ public class PlayerDeath : MonoBehaviour
         Destroy(GetComponentsInChildren<AudioSource>()[3].gameObject);
         Destroy(GetComponentsInChildren<SkinnedMeshRenderer>()[0].gameObject);
 
-        Transform[] allTransforms = GetComponentsInChildren<Transform>();
+        allTransforms = GetComponentsInChildren<Transform>();
 
         foreach (Transform child in allTransforms)
         {
@@ -39,7 +43,7 @@ public class PlayerDeath : MonoBehaviour
 
             child.parent = null;
 
-            Destroy(child.gameObject, 3f);
+            //Destroy(child.gameObject, 5f);
         }
     }
 
@@ -49,23 +53,47 @@ public class PlayerDeath : MonoBehaviour
         ApplyExplosion();
     }
 
-    private void LateUpdate()
+    private void FixedUpdate()
     {
+        float alpha = 1;
+
         if (PlayerMaterial != null)
         {
+            alpha = PlayerMaterial.GetFloat("_Alpha");
+
             renderer.material = PlayerMaterial;
 
             PlayerMaterial.SetFloat(
                 "_Alpha", Mathf.Lerp(
-                    PlayerMaterial.GetFloat("_Alpha"),
+                    alpha,
                     0f,
-                    timeToFade * Time.deltaTime
+                    timeToFade
                 )
             );
         }
+
+        Debug.Log("Alpha: " + alpha);
+
+        if (alpha <= 0.25)
+            DestroyAllTransforms();
     }
 
-    void ApplyExplosion()
+    public void SetHeldWeapon(string weaponName)
+    {
+        if ("Pistol" != weaponName)
+        {
+            Transform newWeapon = weaponsTransform.Find(weaponName);
+            Transform oldWeapon = weaponsTransform.Find("Pistol");
+
+            if (newWeapon != null && oldWeapon != null)
+            {
+                oldWeapon.gameObject?.SetActive(false);
+                newWeapon.gameObject?.SetActive(true);
+            }
+        }
+    }
+
+    private void ApplyExplosion()
     {
         if(ExplosionPos == null) ExplosionPos = transform.position;
 
@@ -81,5 +109,13 @@ public class PlayerDeath : MonoBehaviour
                     rb.AddExplosionForce(power, ExplosionPos, radius, 3.0F);
             }
         }
+    }
+
+    private void DestroyAllTransforms()
+    {
+        foreach (Transform t in allTransforms)
+            if(t != null)
+                Destroy(t.gameObject);
+        Destroy(this.gameObject);
     }
 }

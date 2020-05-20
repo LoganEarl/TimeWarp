@@ -63,7 +63,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnerController: {fileID: 7306439072910383384}
-  roundLengthSeconds: 20
+  roundLengthSeconds: 5
 --- !u!95 &7058409687327364151
 Animator:
   serializedVersion: 3

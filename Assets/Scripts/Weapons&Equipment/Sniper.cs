@@ -13,7 +13,8 @@ public class Sniper : MonoBehaviour, IWeapon
 
     public GameObject TargetingCursor => targetingCursor;
     public float FireRate => fireRate;
-    public int CostToFire { get; } = 0;
+    public int CostToFire { get; } = 3;
+    public int LookMagnitude { get; } = 20;
     public bool LoadedCursor { get; set; } = false;
     public string WeaponName { get; } = "Sniper";
     public int WeaponType { get; } = 1;

@@ -51,6 +51,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 8247ecf837ae6314b936a01fa24a5b49, type: 2}
   - {fileID: 2100000, guid: 0c31decc530b6c345a95679c1b23da6f, type: 2}
   - {fileID: 2100000, guid: 58fbd51fd05e2aa4b8e469298a256a0c, type: 2}
+  - {fileID: 2100000, guid: 58fbd51fd05e2aa4b8e469298a256a0c, type: 2}
   player1Materials:
   - {fileID: 2100000, guid: 4d7dd44aeb72a914289c85166b417d29, type: 2}
   - {fileID: 2100000, guid: 501ee31180bc27b47830c37497d26a05, type: 2}
@@ -59,3 +60,4 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 070271649960ee440b83f46228ed356c, type: 2}
   - {fileID: 2100000, guid: 5a25657ff3b9ded4eb1a152e92356326, type: 2}
   - {fileID: 2100000, guid: d471063f6be73be40a3b8fb32e14dbaa, type: 2}
+  - {fileID: 2100000, guid: 027ce57b6fbdf9c4c914809f36a8eb14, type: 2}

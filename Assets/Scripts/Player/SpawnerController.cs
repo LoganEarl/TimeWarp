@@ -14,6 +14,7 @@ public class SpawnerController : MonoBehaviour
     public void BeginSpawnSequence(int stepsToRaise,int totalDuration, Vector3[][] playerSpawns)
     {
         this.stepsToRaise = stepsToRaise;
+        //DestroyPlatforms();
 
         for(int playerNum = 0; playerNum < playerSpawns.Length; playerNum++)
         {
