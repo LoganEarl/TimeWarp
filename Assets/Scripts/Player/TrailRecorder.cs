@@ -9,11 +9,6 @@ public class TrailRecorder : MonoBehaviour
     private IGameMode gameMode;
     private bool setup = false;
 
-    [SerializeField]
-    private GameObject placedShieldPrefab;
-    [SerializeField]
-    private GameObject placedProjectilePrefab;
-
     // Start is called before the first frame update
     void Awake()
     {
@@ -52,7 +47,7 @@ public class TrailRecorder : MonoBehaviour
 
     private void PlaceProjectileIndicator()
     {
-        GameObject indicator = Instantiate(placedProjectilePrefab);
+        GameObject indicator = Instantiate(controller.Weapon.ProjectileIconPrefab);
         Material material = ColorManager.Instance.GetPlayerMaterial(controller.PlayerNumber, ColorManager.PlayerColorVarient.UI_PRIMARY_ACTIVE);
         MeshRenderer primaryRenderer = indicator.GetComponent<MeshRenderer>();
         primaryRenderer.material = material;
@@ -63,7 +58,7 @@ public class TrailRecorder : MonoBehaviour
 
     private void PlaceEquipmentIndicator()
     {
-        GameObject indicator = Instantiate(placedShieldPrefab);
+        GameObject indicator = Instantiate(controller.EquipmentIconPrefab);
         Material material = ColorManager.Instance.GetPlayerMaterial(controller.PlayerNumber, ColorManager.PlayerColorVarient.UI_PRIMARY_ACTIVE);
         MeshRenderer primaryRenderer = indicator.GetComponent<MeshRenderer>();
         primaryRenderer.material = material;

@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour, IRecordable
 
     [SerializeField] private GameObject equipment;
     [SerializeField] private GameObject equipmentGuide;
+    [SerializeField] private GameObject equipmentIcon;
 
     [SerializeField] private float lookOffset;
     [SerializeField] private float turnSpeed;
@@ -43,6 +44,7 @@ public class PlayerController : MonoBehaviour, IRecordable
     #endregion
 
     #region Components
+    public GameObject EquipmentIconPrefab => equipmentIcon;
     public int PlayerNumber { get; private set; } = 0;
     public IWeapon Weapon { get; private set; }
     public int RoundNumber { get; private set; } = 0;
@@ -73,7 +75,7 @@ public class PlayerController : MonoBehaviour, IRecordable
 
     #region movement
     private bool isIdle = true;
-    private Vector3 position, velocity;
+    private Vector3 position, velocity, moveDirection;
     public Vector3 LookDirection { get; set; }
     private Quaternion desiredRotation = Quaternion.identity;
     private PlayerSnapshot snapshot;
@@ -175,7 +177,7 @@ public class PlayerController : MonoBehaviour, IRecordable
                 rigidBody.MoveRotation(desiredRotation);
             }
             else if (isMoving) {
-                Vector3 moddedDirection = velocity;
+                Vector3 moddedDirection = moveDirection;
                 moddedDirection.y = 0;
 
                 float lookAngle = Vector3.Angle(Vector3.forward, moddedDirection) % 45;
@@ -223,16 +225,16 @@ public class PlayerController : MonoBehaviour, IRecordable
         isIdle = !(hasHorizontalInput || hasVerticalInput);
 
         Vector3 inputVector = new Vector3(horizontalMove, 0f, verticalMove);
-        float inputAngle = Vector3.SignedAngle(inputVector.normalized, velocity.normalized, Vector3.up);
-
-        //if (PlayerNumber == 0)
-        //    Debug.Log(inputVector + " : " + velocity + " @ " + inputAngle);
 
         if (!isIdle)
             inputVector = inputVector.normalized * Mathf.Lerp(velocity.magnitude, maxSpeed, accelSpeed);
         else if (inputVector != Vector3.zero)
             inputVector = velocity.normalized * Mathf.Lerp(velocity.magnitude, 0, accelSpeed * 10);
 
+        if (isIdle)
+            moveDirection = Vector3.zero;
+        else
+            moveDirection = inputVector;
 
         velocity = inputVector;
 
@@ -314,6 +316,7 @@ public class PlayerController : MonoBehaviour, IRecordable
     {
         position = snapshot.Translation;
         velocity = snapshot.Velocity;
+        
         LookDirection = snapshot.LookDirection;
         changingGun = snapshot.Changing;
         newWeapon = snapshot.WeaponName;
@@ -412,7 +415,7 @@ public class PlayerController : MonoBehaviour, IRecordable
 
     public PlayerSnapshot GetSnapshot()
     {
-        return new PlayerSnapshot(position, velocity, LookDirection, changingGun, newWeapon, FiringGun, UsingEquipment, usedEquipment, isIdle);
+        return new PlayerSnapshot(position, velocity, moveDirection, LookDirection, changingGun, newWeapon, FiringGun, UsingEquipment, usedEquipment, isIdle);
     }
 
     public void SetSnapshot(PlayerSnapshot playerSnapshot)

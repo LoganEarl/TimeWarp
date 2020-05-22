@@ -12,7 +12,9 @@ public class Shotgun : MonoBehaviour, IWeapon
     [SerializeField] private float fireRate = 0.7f;
     [SerializeField] private float projectileSpread = 10.0f;
     [SerializeField] private GameObject targetingCursor;
+    [SerializeField] private GameObject iconPrefab;
 
+    public GameObject ProjectileIconPrefab => iconPrefab;
     public GameObject TargetingCursor => targetingCursor;
     public float FireRate => fireRate;
     public int CostToFire { get; } = 2;

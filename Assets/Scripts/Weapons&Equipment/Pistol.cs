@@ -11,7 +11,9 @@ public class Pistol : MonoBehaviour, IWeapon
     [SerializeField] private string firingSound = "WeaponLaserShot1";
     [SerializeField] private float fireRate = 5f;
     [SerializeField] private GameObject targetingCursor;
+    [SerializeField] private GameObject iconPrefab;
 
+    public GameObject ProjectileIconPrefab => iconPrefab;
     public GameObject TargetingCursor => targetingCursor;
     public float FireRate => fireRate;
     public int CostToFire { get; } = 1;

@@ -7,19 +7,19 @@ public class LavaLevelConfig : ILevelConfig
     private static readonly Vector3[][] playerSpawns = new Vector3[][] {
         new Vector3[]
         {
-            new Vector3(-17,0.1f,0),
-            new Vector3(-17,0.1f,-7),
-            new Vector3(-17,0.1f,7),
-            new Vector3(-7,0.1f,8),
-            new Vector3(-7,0.1f,-8)
+            new Vector3(-17,0.2f,0),
+            new Vector3(-17,0.2f,-7),
+            new Vector3(-17,0.2f,7),
+            new Vector3(-7,0.2f,8),
+            new Vector3(-7,0.2f,-8)
         },
         new Vector3[]
         {
-            new Vector3(17,0.1f,0),
-            new Vector3(17,0.1f,7),
-            new Vector3(17,0.1f,-7),
-            new Vector3(7,0.1f,-8),
-            new Vector3(7,0.1f,8)
+            new Vector3(17,0.2f,0),
+            new Vector3(17,0.2f,7),
+            new Vector3(17,0.2f,-7),
+            new Vector3(7,0.2f,-8),
+            new Vector3(7,0.2f,8)
         }
     };
 

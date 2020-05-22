@@ -802,6 +802,8 @@ MonoBehaviour:
     type: 3}
   equipmentGuide: {fileID: 2962610272491726437, guid: 57e007a91795fab4db920309f6fbada3,
     type: 3}
+  equipmentIcon: {fileID: 6495671482999745178, guid: 9f6b43a770e60f14b8021ee3f3e8ff3f,
+    type: 3}
   lookOffset: -11
   turnSpeed: 15
   accelSpeed: 0.2
@@ -823,6 +825,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerCameras: []
+  snapSpeed: 15
 --- !u!114 &2019964514225723871
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2654,10 +2657,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eee83048cf0d87641a6167c06dae369e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  placedShieldPrefab: {fileID: 6495671482999745178, guid: 9f6b43a770e60f14b8021ee3f3e8ff3f,
-    type: 3}
-  placedProjectilePrefab: {fileID: 5284141720288589076, guid: f98d1912252c2b24a8f89712b3b93c8b,
-    type: 3}
 --- !u!1 &8482078287460820139
 GameObject:
   m_ObjectHideFlags: 0

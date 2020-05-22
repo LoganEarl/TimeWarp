@@ -23,6 +23,10 @@ public class PauseOverlay : MonoBehaviour {
     public void Setup(IGameMode iGameMode)
     {
         this.sourceGameMode = iGameMode;
+
+        Canvas drawCanvas = gameObject.GetComponentInChildren<Canvas>();
+        drawCanvas.worldCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+        drawCanvas.planeDistance = 1;
     }
 
     public bool GetPausedState()

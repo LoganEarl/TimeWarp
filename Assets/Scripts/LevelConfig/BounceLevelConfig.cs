@@ -7,19 +7,19 @@ public class BounceLevelConfig: ILevelConfig
     private static readonly Vector3[][] playerSpawns = new Vector3[][] {
         new Vector3[]
         {
-            new Vector3(-17.25f,.1f,9.25f),
-            new Vector3(-17.25f,.1f,-9.25f),
-            new Vector3(-15f,.1f,0),
-            new Vector3(-7f,.1f,8),
-            new Vector3(2,.1f,5)
+            new Vector3(-17.25f,.2f,9.25f),
+            new Vector3(-17.25f,.2f,-9.25f),
+            new Vector3(-15f,.2f,0),
+            new Vector3(-7f,.2f,8),
+            new Vector3(2,.2f,5)
         },
         new Vector3[]
         {
-            new Vector3(17.25f,.1f,-9.25f),
-            new Vector3(17.25f,.1f,9.25f),
-            new Vector3(15f,.1f,0),
-            new Vector3(7f,.1f,-8),
-            new Vector3(-2,.1f,-5)
+            new Vector3(17.25f,.2f,-9.25f),
+            new Vector3(17.25f,.2f,9.25f),
+            new Vector3(15f,.2f,0),
+            new Vector3(7f,.2f,-8),
+            new Vector3(-2,.2f,-5)
         }
     };
 
