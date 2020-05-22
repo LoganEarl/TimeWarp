@@ -164,6 +164,9 @@ public class PlayerController : MonoBehaviour, IRecordable
             bool isLooking = LookDirection.magnitude > 0.1;
             bool isMoving = velocity.magnitude > 0.2;
 
+            if (lastLookDirection == Vector3.zero)
+                lastLookDirection = rigidBody.rotation.eulerAngles;
+
             if (isLooking) {
                 lastLookDirection = new Vector3(LookDirection.x, LookDirection.y, LookDirection.z);
                 LookTo(LookDirection);
@@ -415,7 +418,7 @@ public class PlayerController : MonoBehaviour, IRecordable
 
     public PlayerSnapshot GetSnapshot()
     {
-        return new PlayerSnapshot(position, velocity, moveDirection, LookDirection, changingGun, newWeapon, FiringGun, UsingEquipment, usedEquipment, isIdle);
+        return new PlayerSnapshot(position, velocity, LookDirection, moveDirection, changingGun, newWeapon, FiringGun, UsingEquipment, usedEquipment, isIdle);
     }
 
     public void SetSnapshot(PlayerSnapshot playerSnapshot)

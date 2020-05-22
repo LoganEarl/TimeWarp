@@ -32,7 +32,7 @@ public class LobbyDriver : MonoBehaviour
     
     public void SelectTestLevel()
     {
-        selectedLevel = new TestLevelConfig();
+        //selectedLevel = new TestLevelConfig();
         CheckLoadButtonAvailability();
     }
 

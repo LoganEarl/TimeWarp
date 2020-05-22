@@ -28,6 +28,6 @@ public class PlayerSnapshot
         bool usedEquipment,
         bool isIdle
         ) =>
-        (Translation, Velocity, MoveDirection, LookDirection, Changing, WeaponName, Firing, UsingEquipment, UsedEquipment, IsIdle) = 
-        (translation, velocity, moveDirection, lookDirection, changing, weaponName, firing, usingEquipment, usedEquipment, isIdle);
+        (Translation, Velocity, LookDirection, MoveDirection, Changing, WeaponName, Firing, UsingEquipment, UsedEquipment, IsIdle) = 
+        (translation, velocity, lookDirection, moveDirection, changing, weaponName, firing, usingEquipment, usedEquipment, isIdle);
 }
