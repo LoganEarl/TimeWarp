@@ -77,6 +77,7 @@ public class PlayerController : MonoBehaviour, IRecordable
     private bool isIdle = true;
     private Vector3 position, velocity, moveDirection;
     public Vector3 LookDirection { get; set; }
+    private Vector3 lastLookDirection = new Vector3(1,0,0);
     private Quaternion desiredRotation = Quaternion.identity;
     private PlayerSnapshot snapshot;
     public IGameMode GameMode { get; private set; }
@@ -159,36 +160,21 @@ public class PlayerController : MonoBehaviour, IRecordable
 
                 animator.SetInteger("WalkingAngle", animDirection);
             }
-
-            Quaternion desiredRotation;
+            
             bool isLooking = LookDirection.magnitude > 0.1;
             bool isMoving = velocity.magnitude > 0.2;
 
             if (isLooking) {
-                Vector3 moddedDirection = LookDirection;
-
-                float lookAngle = Vector3.Angle(Vector3.forward, moddedDirection) % 45;
-                if (lookAngle > lookSnap) lookAngle -= 45;
-
-                if (Mathf.Abs(lookAngle) <= lookSnap)
-                    moddedDirection = Quaternion.AngleAxis(lookAngle, Vector3.up) * moddedDirection;
-
-                desiredRotation = Quaternion.LookRotation(moddedDirection, Vector3.up);
-                rigidBody.MoveRotation(desiredRotation);
+                lastLookDirection = new Vector3(LookDirection.x, LookDirection.y, LookDirection.z);
+                LookTo(LookDirection);
             }
-            else if (isMoving) {
-                Vector3 moddedDirection = moveDirection;
-                moddedDirection.y = 0;
-
-                float lookAngle = Vector3.Angle(Vector3.forward, moddedDirection) % 45;
-                if (lookAngle > lookSnap) lookAngle -= 45;
-
-                if (Mathf.Abs(lookAngle) <= lookSnap)
-                    moddedDirection = Quaternion.AngleAxis(lookAngle, Vector3.up) * moddedDirection;
-
-                desiredRotation = Quaternion.LookRotation(moddedDirection, Vector3.up);
-                if (!GameMode.GameState.GetPlayerLookLocked(PlayerNumber, RoundNumber))
-                    rigidBody.MoveRotation(desiredRotation);
+            else if (moveDirection != Vector3.zero) {
+                lastLookDirection = new Vector3(moveDirection.x, moveDirection.y, moveDirection.z);
+                LookTo(moveDirection);
+            }
+            else if(lastLookDirection != Vector3.zero)
+            {
+                LookTo(new Vector3(lastLookDirection.x, lastLookDirection.y, lastLookDirection.z));
             }
 
             if (!GameMode.GameState.GetPlayerFireLocked(PlayerNumber, RoundNumber) && changingGun)
@@ -213,6 +199,20 @@ public class PlayerController : MonoBehaviour, IRecordable
                 LookDirection.magnitude > 0.1 &&
                 !UsingSnapshots
                 );
+    }
+
+    private void LookTo(Vector3 direction)
+    {
+        Vector3 moddedDirection = direction;
+
+        float lookAngle = Vector3.Angle(Vector3.forward, moddedDirection) % 45;
+        if (lookAngle > lookSnap) lookAngle -= 45;
+
+        if (Mathf.Abs(lookAngle) <= lookSnap)
+            moddedDirection = Quaternion.AngleAxis(lookAngle, Vector3.up) * moddedDirection;
+
+        desiredRotation = Quaternion.LookRotation(moddedDirection, Vector3.up);
+        rigidBody.MoveRotation(desiredRotation);
     }
 
     private void ControlledFrame()
@@ -316,7 +316,7 @@ public class PlayerController : MonoBehaviour, IRecordable
     {
         position = snapshot.Translation;
         velocity = snapshot.Velocity;
-        
+        moveDirection = snapshot.MoveDirection;
         LookDirection = snapshot.LookDirection;
         changingGun = snapshot.Changing;
         newWeapon = snapshot.WeaponName;
