@@ -8,6 +8,7 @@ public class PlanManager : MonoBehaviour, IGameMode
     private ILevelConfig levelConfig = null;
 
     [SerializeField] private SpawnerController spawnerController;
+    [SerializeField] private AudioClip[] announcerClips;
 
     private Dictionary<string, GameObject> loadedPlayerModels = new Dictionary<string, GameObject>();
     private PlanPlayerManager[] playerManagers = null;
@@ -33,6 +34,7 @@ public class PlanManager : MonoBehaviour, IGameMode
     }
     public int NumPlayers { get; private set; }
     public int MaxRounds { get; private set; } = 1;
+    public bool FriendlyFire;
     public int RoundNumber { get; private set; } = -1;      //starts at -1, but first match is 0.
                                                             //This is so NextMatch() doesnt need edge case checks
     private PlanGameState gameState;
@@ -330,7 +332,6 @@ public class PlanManager : MonoBehaviour, IGameMode
         internal override void OnEnterState()
         {
             manager.hudController.gameObject.SetActive(false);
-            Destroy(manager.pauseOverlayController.gameObject);
             manager.LoadScoreScreen();
         }
 
@@ -345,7 +346,7 @@ public class PlanManager : MonoBehaviour, IGameMode
         {
             PlanPlayerManager manager = playerManagers[curPlayer];
 
-            string assetName = "Prefabs/Player/Player";//levelConfig.GetPlayerModelName(curPlayer, RoundNumber);
+            string assetName = levelConfig.GetPlayerModelName(curPlayer, RoundNumber);
             GameObject playerPrefab;
 
             if (loadedPlayerModels.ContainsKey(assetName))

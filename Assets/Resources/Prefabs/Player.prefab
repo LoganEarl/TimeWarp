@@ -779,8 +779,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56e17c10d0e40de48a6e0bace1cad8ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deadPlayer: {fileID: 344527791287166393, guid: 773637a8305d2ca4c8f6d63bebdd984e,
-    type: 3}
 --- !u!114 &7753736104076225717
 MonoBehaviour:
   m_ObjectHideFlags: 0

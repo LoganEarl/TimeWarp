@@ -35,7 +35,7 @@ public class LavaLevelConfig : ILevelConfig
 
     public string GetPlayerModelName(int playerNum, int matchNum)
     {
-        return "Prefabs/Player/Player";
+        return "Prefabs/Player";
     }
 
     public Vector3 GetPlayerSpawnPosition(int playerNum, int matchNum)
