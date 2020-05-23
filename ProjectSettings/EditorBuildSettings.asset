@@ -11,7 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Menu/Lobby.unity
     guid: 566feb09de9f10e43a3845cae9c2989f
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/FirstMap.unity
     guid: f0aee80d08a963a4c94b4e23846a5739
   - enabled: 1
@@ -26,4 +26,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/LavaMap.unity
     guid: 50efbb729f93d7a46b78af6d4a2b9122
+  - enabled: 1
+    path: Assets/Scenes/HexMap.unity
+    guid: c194ac01b3cba05439ef5563a402ffa6
+  - enabled: 1
+    path: Assets/Scenes/LavaMap.unity
+    guid: 50efbb729f93d7a46b78af6d4a2b9122
+  - enabled: 0
+    path: Assets/__DELETED_GUID_Trash/4fa2f910ba3339f4581608000f6e1b18
+    guid: 4fa2f910ba3339f4581608000f6e1b18
   m_configObjects: {}
