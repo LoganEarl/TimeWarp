@@ -45,7 +45,7 @@ public class OptionsNavigation : MonoBehaviour {
             CheckRightAxis();
         }
 
-        if (Input.GetButtonDown("Cancel0"))
+        if (Input.GetButtonDown("Cancel0") && !Input.GetButtonDown("Submit0"))
             OnCancel();
     }
 
