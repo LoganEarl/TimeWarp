@@ -7,13 +7,25 @@ public class ButtonSounds : MonoBehaviour, IPointerEnterHandler, IPointerDownHan
 
     private Button button { get { return GetComponent<Button>(); } }
 
-    public void OnPointerEnter(PointerEventData eventData) {
+    public void OnPointerEnter(PointerEventData eventData)
+    {
         if(button.IsInteractable() && button.IsActive())
             FindObjectOfType<AudioManager>().PlaySFX("OnButtonHover");
     }
 
-    public void OnPointerDown(PointerEventData eventData) {
+    public void OnPointerDown(PointerEventData eventData)
+    {
         if (button.IsInteractable() && button.IsActive())
             FindObjectOfType<AudioManager>().PlaySFX("OnButtonClick");
+    }
+
+    public void PlayOnSelect()
+    {
+        FindObjectOfType<AudioManager>().PlaySFX("OnButtonHover");
+    }
+
+    public void PlayOnClick()
+    {
+        FindObjectOfType<AudioManager>().PlaySFX("OnButtonClick");
     }
  }

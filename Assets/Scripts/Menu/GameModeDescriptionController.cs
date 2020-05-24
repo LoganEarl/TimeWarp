@@ -42,7 +42,7 @@ public class GameModeDescriptionController : MonoBehaviour {
 
     private string InstinctDescription()
     {
-        return "Only your current self, and that of your enemy matter. Say alive as you " +
+        return "Only your current self, and that of your enemy matter. Stay alive as you " +
             "both gain more an more iterations, and the field grows thick with the " +
             "projectiles of your past selves.";
     }
