@@ -6,9 +6,11 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class LevelSelect : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler {
+    [SerializeField] private LobbyDriver lobbyDriver;
     [SerializeField] private Animator neonAnimator;
-    [SerializeField] private Image lobbyLevelImage;
-    [SerializeField] private Sprite buttonLevelImage;
+    [SerializeField] private Image levelImageDisplay;
+    [SerializeField] private Sprite levelImage;
+    [SerializeField] private string levelName;
 
     private static LevelSelect selected;
    
@@ -16,6 +18,7 @@ public class LevelSelect : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     void Start() {
         buttonAnimator = (Animator)gameObject.GetComponent("Animator");
+        levelImageDisplay.enabled = false;
     }
 
     public void OnPointerEnter(PointerEventData eventData) {
@@ -23,8 +26,8 @@ public class LevelSelect : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             neonAnimator.Update(0);
             buttonAnimator.Play("Prehighlight");
             neonAnimator.Play("Prehighlight");
-            lobbyLevelImage.GetComponent<Image>().enabled = true;
-            lobbyLevelImage.sprite = buttonLevelImage;
+            levelImageDisplay.GetComponent<Image>().enabled = true;
+            levelImageDisplay.sprite = levelImage;
             if (selected != null) {
                 selected.buttonAnimator.Play("Interrupted");
             }
@@ -36,10 +39,10 @@ public class LevelSelect : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             neonAnimator.Update(0);
             buttonAnimator.Play("Normal");
             neonAnimator.Play("Normal");
-            lobbyLevelImage.GetComponent<Image>().enabled = false;
+            levelImageDisplay.GetComponent<Image>().enabled = false;
             if (selected != null) {
-                lobbyLevelImage.GetComponent<Image>().enabled = true;
-                lobbyLevelImage.sprite = selected.buttonLevelImage;
+                levelImageDisplay.GetComponent<Image>().enabled = true;
+                levelImageDisplay.sprite = selected.levelImage;
                 selected.buttonAnimator.Play("Selected");              
                 neonAnimator.Play("Selected");
             }
@@ -51,6 +54,7 @@ public class LevelSelect : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             selected = null;
             buttonAnimator.Play("Highlighted");
             neonAnimator.Play("Highlighted");
+            lobbyDriver.SelectLevelByName("");
         } else {
             if (selected != null) {
                 selected.buttonAnimator.Play("Normal");
@@ -58,6 +62,7 @@ public class LevelSelect : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             selected = this;
             buttonAnimator.Play("Selected");
             neonAnimator.Play("Selected");
+            lobbyDriver.SelectLevelByName(levelName);
         }
     }
 }

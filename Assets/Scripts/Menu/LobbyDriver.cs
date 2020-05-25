@@ -10,10 +10,12 @@ using UnityEngine.UI;
 
 public class LobbyDriver : MonoBehaviour
 {
-    [SerializeField] private Animator animator;
+    [SerializeField] private Animator neonAnimator;
     [SerializeField] private Button startButton;
     [SerializeField] private PlanManager planGameMode;
     [SerializeField] private InstinctManager instinctGameMode;
+
+    private Animator startButtonAnimator;
 
     private ILevelConfig selectedLevel = null;
     private IGameMode selectedGameMode = null;
@@ -21,41 +23,32 @@ public class LobbyDriver : MonoBehaviour
     // Added Start() in to make start button uninteractable at the beginning
     public void Start()
     {
+        startButtonAnimator = startButton.GetComponent<Animator>();
+        startButtonAnimator.Play("Disabled");
         startButton.interactable = false;
-        /*---------- For Testing Purposes to skip main menu ---- 
-                            //just remove the '*' at the end of ^ line to disable this block and '/' after '*' here.
-        SelectPlanGameMode();
-        SelectTestLevelWithIndex(2);
-        LoadSelectedGame();
-        /*---------- End Testing Purposes block ----*/
     }
-    
-    public void SelectTestLevel()
+   
+    public void SelectLevelByName(string levelName)
     {
-        selectedLevel = new TestLevelConfig();
-        CheckLoadButtonAvailability();
-    }
-
-    public void SelectPlanGameMode()
-    {
-        selectedGameMode = planGameMode;
-        CheckLoadButtonAvailability();
-    }
-
-    public void SelectInstinctGameMode()
-    {
-        selectedGameMode = instinctGameMode;
-        CheckLoadButtonAvailability();
-    }
-
-    public void SelectTestLevelWithIndex(int level) // maybe pass in levels by an index? or by name
-    {
-        if (level == 1)
+        if (levelName == "Bounce")
             selectedLevel = new BounceLevelConfig();
-        else if(level == 2)
+        else if (levelName == "Hex")
             selectedLevel = new HexLevelConfig();
-        else if(level == 3)
+        else if (levelName == "Lava")
             selectedLevel = new LavaLevelConfig();
+        else
+            selectedLevel = null;
+
+        CheckLoadButtonAvailability();
+    }
+
+    public void SelectGameModeByName(string gameMode) {
+        if (gameMode == "Plan")
+            selectedGameMode = planGameMode;
+        else if (gameMode == "Instinct")
+            selectedGameMode = instinctGameMode;
+        else
+            selectedGameMode = null;
 
         CheckLoadButtonAvailability();
     }
@@ -67,7 +60,15 @@ public class LobbyDriver : MonoBehaviour
 
     private void CheckLoadButtonAvailability()
     {
-        startButton.interactable = (selectedLevel != null && selectedGameMode != null);
+        if (selectedLevel != null && selectedGameMode != null) {
+            startButton.interactable = true;
+            startButtonAnimator.Play("Normal");
+            neonAnimator.Play("Selected");
+        } else {
+            startButton.interactable = false;
+            startButtonAnimator.Play("Disabled");
+            neonAnimator.Play("Normal");
+        }
     }
 
     public void LoadSelectedGame()
