@@ -38,9 +38,9 @@ public class WeaponModelExchange : MonoBehaviour {
         {
             if (Input.GetAxisRaw(PISTOL_NAME_P1) > 0)
                 SetWeaponObject(weapons[PISTOL], PLAYER_1);
-            if (Input.GetAxisRaw(SNIPER_SHOTGUN_NAME_P1) < 0)
-                SetWeaponObject(weapons[SNIPER], PLAYER_1);
             if (Input.GetAxisRaw(SNIPER_SHOTGUN_NAME_P1) > 0)
+                SetWeaponObject(weapons[SNIPER], PLAYER_1);
+            if (Input.GetAxisRaw(SNIPER_SHOTGUN_NAME_P1) < 0)
                 SetWeaponObject(weapons[SHOTGUN], PLAYER_1);
         }
 
@@ -48,9 +48,9 @@ public class WeaponModelExchange : MonoBehaviour {
         {
             if (Input.GetAxisRaw(PISTOL_NAME_P0) > 0)
                 SetWeaponObject(weapons[PISTOL], PLAYER_0);
-            if (Input.GetAxisRaw(SNIPER_SHOTGUN_NAME_P0) < 0)
-                SetWeaponObject(weapons[SNIPER], PLAYER_0);
             if (Input.GetAxisRaw(SNIPER_SHOTGUN_NAME_P0) > 0)
+                SetWeaponObject(weapons[SNIPER], PLAYER_0);
+            if (Input.GetAxisRaw(SNIPER_SHOTGUN_NAME_P0) < 0)
                 SetWeaponObject(weapons[SHOTGUN], PLAYER_0);
         }
     }
