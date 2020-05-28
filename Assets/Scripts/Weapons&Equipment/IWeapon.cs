@@ -9,7 +9,9 @@ public interface IWeapon
     int WeaponType { get; }
     float FireRate { get; }
     int CostToFire { get; }
+    int LookMagnitude { get; }
     GameObject TargetingCursor { get; }
+    GameObject ProjectileIconPrefab { get; }
     
     GameObject[] Fire(int playerNumber, Color playerColor);
 }

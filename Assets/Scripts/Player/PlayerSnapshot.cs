@@ -6,6 +6,7 @@ public class PlayerSnapshot
 {
     public Vector3 Translation { get; }     //xyz coords
     public Vector3 Velocity { get; }        //xyz velocity
+    public Vector3 MoveDirection { get; }   //xyz desired direction to move
     public Vector3 LookDirection { get; }   //look vector of the player
     public bool IsIdle { get; }             //if they are not doing anything
     public bool Changing { get; }           //if triggered the change weapon button this frame
@@ -19,6 +20,7 @@ public class PlayerSnapshot
         Vector3 translation,
         Vector3 velocity,
         Vector3 lookDirection,
+        Vector3 moveDirection,
         bool changing,
         string weaponName,
         bool firing, 
@@ -26,6 +28,6 @@ public class PlayerSnapshot
         bool usedEquipment,
         bool isIdle
         ) =>
-        (Translation, Velocity, LookDirection, Changing, WeaponName, Firing, UsingEquipment, UsedEquipment, IsIdle) = 
-        (translation, velocity, lookDirection, changing, weaponName, firing, usingEquipment, usedEquipment, isIdle);
+        (Translation, Velocity, LookDirection, MoveDirection, Changing, WeaponName, Firing, UsingEquipment, UsedEquipment, IsIdle) = 
+        (translation, velocity, lookDirection, moveDirection, changing, weaponName, firing, usingEquipment, usedEquipment, isIdle);
 }

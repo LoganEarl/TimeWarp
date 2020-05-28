@@ -6,6 +6,8 @@ public class PlayerCameraController : MonoBehaviour
 {
     [SerializeField]
     private Camera[] playerCameras;
+    [SerializeField]
+    private float snapSpeed = 15f;
     private PlayerController[] mainPlayers;
     private IGameMode gameMode;
     private bool setup = false;
@@ -22,7 +24,7 @@ public class PlayerCameraController : MonoBehaviour
         setup = false;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (setup)
         {
@@ -34,7 +36,7 @@ public class PlayerCameraController : MonoBehaviour
                 {
                     Vector3 delta = mainPlayers[playerIndex].CameraPosition - playerCameras[playerIndex].transform.position;
 
-                    Vector3 adj = delta / 15.0f;
+                    Vector3 adj = delta / snapSpeed;
                     if (adj.magnitude > 0.001)
                     {
                         playerCameras[playerIndex].transform.position += adj;

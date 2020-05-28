@@ -174,6 +174,14 @@ public class PlanManager : MonoBehaviour, IGameMode
                 foreach (PlanPlayerManager manager in manager.playerManagers)
                     manager.DestroyAll();
 
+            foreach (GameObject toDestroy in manager.roundClearingList)
+                if (toDestroy != null) Destroy(toDestroy);
+            manager.roundClearingList.Clear();
+
+            foreach (GameObject toDestroy in manager.matchClearingList)
+                if (toDestroy != null) Destroy(toDestroy);
+            manager.matchClearingList.Clear();
+
             SceneManager.sceneLoaded -= manager.OnSceneLoaded;
 
             manager.cameraController?.Stop();

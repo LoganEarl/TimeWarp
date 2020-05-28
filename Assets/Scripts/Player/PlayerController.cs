@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour, IRecordable
 
     [SerializeField] private GameObject equipment;
     [SerializeField] private GameObject equipmentGuide;
+    [SerializeField] private GameObject equipmentIcon;
 
     [SerializeField] private float lookOffset;
     [SerializeField] private float turnSpeed;
@@ -43,6 +44,7 @@ public class PlayerController : MonoBehaviour, IRecordable
     #endregion
 
     #region Components
+    public GameObject EquipmentIconPrefab => equipmentIcon;
     public int PlayerNumber { get; private set; } = 0;
     public IWeapon Weapon { get; private set; }
     public int RoundNumber { get; private set; } = 0;
@@ -63,7 +65,7 @@ public class PlayerController : MonoBehaviour, IRecordable
     private GameObject targetingCursor;
 
     public bool IsVisible {
-        get => GameMode.GameState.GetPlayerVisible(PlayerNumber, RoundNumber);
+        get => GameMode.GameState.GetPlayerVisible(PlayerNumber, RoundNumber) && !health.Dead;
         set {
             if (value) playerModel.transform.localScale = new Vector3(1, 1, 1);
             else playerModel.transform.localScale = new Vector3(0, 0, 0);
@@ -73,8 +75,9 @@ public class PlayerController : MonoBehaviour, IRecordable
 
     #region movement
     private bool isIdle = true;
-    private Vector3 position, velocity;
+    private Vector3 position, velocity, moveDirection;
     public Vector3 LookDirection { get; set; }
+    private Vector3 lastLookDirection = new Vector3(1,0,0);
     private Quaternion desiredRotation = Quaternion.identity;
     private PlayerSnapshot snapshot;
     public IGameMode GameMode { get; private set; }
@@ -110,7 +113,8 @@ public class PlayerController : MonoBehaviour, IRecordable
 
     private void LateUpdate()
     {
-        IsVisible = GameMode?.GameState.GetPlayerVisible(PlayerNumber, RoundNumber) ?? false && !health.Dead;
+        IsVisible = GameMode.GameState.GetPlayerVisible(PlayerNumber, RoundNumber) && !health.Dead;
+
         if (!health.Dead && IsVisible)
         {
             if (!loadedCursor && !UsingSnapshots)
@@ -156,36 +160,24 @@ public class PlayerController : MonoBehaviour, IRecordable
 
                 animator.SetInteger("WalkingAngle", animDirection);
             }
-
-            Quaternion desiredRotation;
+            
             bool isLooking = LookDirection.magnitude > 0.1;
             bool isMoving = velocity.magnitude > 0.2;
 
+            if (lastLookDirection == Vector3.zero)
+                lastLookDirection = rigidBody.rotation.eulerAngles;
+
             if (isLooking) {
-                Vector3 moddedDirection = LookDirection;
-
-                float lookAngle = Vector3.Angle(Vector3.forward, moddedDirection) % 45;
-                if (lookAngle > lookSnap) lookAngle -= 45;
-
-                if (Mathf.Abs(lookAngle) <= lookSnap)
-                    moddedDirection = Quaternion.AngleAxis(lookAngle, Vector3.up) * moddedDirection;
-
-                desiredRotation = Quaternion.LookRotation(moddedDirection, Vector3.up);
-                rigidBody.MoveRotation(desiredRotation);
+                lastLookDirection = new Vector3(LookDirection.x, LookDirection.y, LookDirection.z);
+                LookTo(LookDirection);
             }
-            else if (isMoving) {
-                Vector3 moddedDirection = velocity;
-                moddedDirection.y = 0;
-
-                float lookAngle = Vector3.Angle(Vector3.forward, moddedDirection) % 45;
-                if (lookAngle > lookSnap) lookAngle -= 45;
-
-                if (Mathf.Abs(lookAngle) <= lookSnap)
-                    moddedDirection = Quaternion.AngleAxis(lookAngle, Vector3.up) * moddedDirection;
-
-                desiredRotation = Quaternion.LookRotation(moddedDirection, Vector3.up);
-                if (!GameMode.GameState.GetPlayerLookLocked(PlayerNumber, RoundNumber))
-                    rigidBody.MoveRotation(desiredRotation);
+            else if (moveDirection != Vector3.zero) {
+                lastLookDirection = new Vector3(moveDirection.x, moveDirection.y, moveDirection.z);
+                LookTo(moveDirection);
+            }
+            else if(lastLookDirection != Vector3.zero)
+            {
+                LookTo(new Vector3(lastLookDirection.x, lastLookDirection.y, lastLookDirection.z));
             }
 
             if (!GameMode.GameState.GetPlayerFireLocked(PlayerNumber, RoundNumber) && changingGun)
@@ -212,6 +204,20 @@ public class PlayerController : MonoBehaviour, IRecordable
                 );
     }
 
+    private void LookTo(Vector3 direction)
+    {
+        Vector3 moddedDirection = direction;
+
+        float lookAngle = Vector3.Angle(Vector3.forward, moddedDirection) % 45;
+        if (lookAngle > lookSnap) lookAngle -= 45;
+
+        if (Mathf.Abs(lookAngle) <= lookSnap)
+            moddedDirection = Quaternion.AngleAxis(lookAngle, Vector3.up) * moddedDirection;
+
+        desiredRotation = Quaternion.LookRotation(moddedDirection, Vector3.up);
+        rigidBody.MoveRotation(desiredRotation);
+    }
+
     private void ControlledFrame()
     {
         float horizontalMove = Input.GetAxis("Horizontal" + PlayerNumber);
@@ -222,26 +228,16 @@ public class PlayerController : MonoBehaviour, IRecordable
         isIdle = !(hasHorizontalInput || hasVerticalInput);
 
         Vector3 inputVector = new Vector3(horizontalMove, 0f, verticalMove);
-        float inputAngle = Vector3.SignedAngle(inputVector.normalized, velocity.normalized, Vector3.up);
-
-        //if (PlayerNumber == 0)
-        //    Debug.Log(inputVector + " : " + velocity + " @ " + inputAngle);
 
         if (!isIdle)
-        {
-            //if (Mathf.Abs(inputAngle) < turnSpeed)
-                inputVector = inputVector.normalized * Mathf.Lerp(velocity.magnitude, maxSpeed, accelSpeed);
-            //else
-            //    inputVector = Vector3.RotateTowards(
-            //            velocity.normalized,
-            //            inputVector,
-            //            turnSpeed / 2,
-            //            1
-            //        ) * Mathf.Lerp(velocity.magnitude, maxSpeed, accelSpeed);
-        }
+            inputVector = inputVector.normalized * Mathf.Lerp(velocity.magnitude, maxSpeed, accelSpeed);
         else if (inputVector != Vector3.zero)
             inputVector = velocity.normalized * Mathf.Lerp(velocity.magnitude, 0, accelSpeed * 10);
 
+        if (isIdle)
+            moveDirection = Vector3.zero;
+        else
+            moveDirection = inputVector;
 
         velocity = inputVector;
 
@@ -323,6 +319,7 @@ public class PlayerController : MonoBehaviour, IRecordable
     {
         position = snapshot.Translation;
         velocity = snapshot.Velocity;
+        moveDirection = snapshot.MoveDirection;
         LookDirection = snapshot.LookDirection;
         changingGun = snapshot.Changing;
         newWeapon = snapshot.WeaponName;
@@ -371,6 +368,7 @@ public class PlayerController : MonoBehaviour, IRecordable
 
             Weapon = (IWeapon)newWeapon.GetComponentInChildren(System.Type.GetType(weaponName));
 
+            lookMagnitude = Weapon.LookMagnitude;
             animator.SetInteger("WeaponType", Weapon.WeaponType);
         }
     }
@@ -420,7 +418,7 @@ public class PlayerController : MonoBehaviour, IRecordable
 
     public PlayerSnapshot GetSnapshot()
     {
-        return new PlayerSnapshot(position, velocity, LookDirection, changingGun, newWeapon, FiringGun, UsingEquipment, usedEquipment, isIdle);
+        return new PlayerSnapshot(position, velocity, LookDirection, moveDirection, changingGun, newWeapon, FiringGun, UsingEquipment, usedEquipment, isIdle);
     }
 
     public void SetSnapshot(PlayerSnapshot playerSnapshot)

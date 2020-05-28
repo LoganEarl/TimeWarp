@@ -22,7 +22,8 @@ public class ColorManager : MonoBehaviour
         MODEL_SECONDARY_ACTIVE = 3,
         UI_PRIMARY_INACTIVE = 4,
         UI_PRIMARY_ACTIVE = 5,
-        SPAWN_PRIMARY = 6
+        SPAWN_PRIMARY = 6,
+        LASER_PRIMARY = 7
     }
 
     public Material GetPlayerMaterial(int playerNum, PlayerColorVarient varient)

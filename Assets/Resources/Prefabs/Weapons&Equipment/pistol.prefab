@@ -86,6 +86,8 @@ MonoBehaviour:
   fireRate: 5
   targetingCursor: {fileID: 1814408534329862, guid: 3dd1434c704a6f34997c698b06c80000,
     type: 3}
+  iconPrefab: {fileID: 5284141720288589076, guid: f98d1912252c2b24a8f89712b3b93c8b,
+    type: 3}
 --- !u!33 &2461522756276973938
 MeshFilter:
   m_ObjectHideFlags: 0

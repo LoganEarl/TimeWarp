@@ -10,10 +10,13 @@ public class Sniper : MonoBehaviour, IWeapon
     [SerializeField] private string firingSound = "WeaponLaserShot1";
     [SerializeField] private float fireRate = 0.85f;
     [SerializeField] private GameObject targetingCursor;
+    [SerializeField] private GameObject iconPrefab;
 
+    public GameObject ProjectileIconPrefab => iconPrefab;
     public GameObject TargetingCursor => targetingCursor;
     public float FireRate => fireRate;
-    public int CostToFire { get; } = 0;
+    public int CostToFire { get; } = 3;
+    public int LookMagnitude { get; } = 20;
     public bool LoadedCursor { get; set; } = false;
     public string WeaponName { get; } = "Sniper";
     public int WeaponType { get; } = 1;
