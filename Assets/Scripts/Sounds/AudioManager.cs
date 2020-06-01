@@ -56,6 +56,7 @@ public class AudioManager : MonoBehaviour {
         return friendlyFireToggle.isOn;
     }
 
+    #region LoadAllAudioSources
     private void LoadAllAudioSources(Sound[] type)
     {
         foreach (Sound s in type)
@@ -83,6 +84,7 @@ public class AudioManager : MonoBehaviour {
             //s.source.loop = s.loop;
         }
     }
+    #endregion
 
     public static AudioManager GetInstance()
     {
@@ -135,6 +137,7 @@ public class AudioManager : MonoBehaviour {
         voiceClipCurrentlyPlaying = false;
     }
 
+    #region UpdateVolume
     public void UpdateVolume()
     {
         foreach (Sound s in bgm)
@@ -155,4 +158,5 @@ public class AudioManager : MonoBehaviour {
                 s.source.volume = voiceVolumeSlider.value;
         }
     }
+    #endregion
 }
