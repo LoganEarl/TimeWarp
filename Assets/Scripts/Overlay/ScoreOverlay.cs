@@ -7,9 +7,15 @@ using UnityEngine.SceneManagement;
 public class ScoreOverlay : MonoBehaviour
 {
     [SerializeField]
-    private TextMeshProUGUI textWinner;
+    private GameObject textTie;
     [SerializeField]
-    private TextMeshProUGUI[] textPlayerScores;
+    private GameObject[] textWinner;
+    [SerializeField]
+    private TextMeshProUGUI[] textPlayerScoreHeader;
+    [SerializeField]
+    private TextMeshProUGUI[] textPlayerScoreLabels;
+    [SerializeField]
+    private TextMeshProUGUI[] textPlayerScoreValues;
 
     private IGameMode sourceGameMode;
     private bool setup = false;
@@ -29,19 +35,30 @@ public class ScoreOverlay : MonoBehaviour
             }
         }
 
-        if (max != second)
-            textWinner.text = "Player " + (maxIndex + 1) + " Wins!";
-        else
-            textWinner.text = "You Both Lose";
+        textTie.SetActive(false);
+        for (int i = 0; i < textWinner.Length; i++)
+            textWinner[i].SetActive(false);
 
-        for(int i = 0; i < scores.ScoreListings.Length && i < textPlayerScores.Length; i++)
+        if (max != second)
+            textWinner[maxIndex].SetActive(true);
+        else
+            textTie.SetActive(true);
+
+        for (int i = 0; i < scores.ScoreListings.Length && i < textPlayerScoreValues.Length; i++)
         {
-            string text = "Player " + (i + 1) + " Score\n";
+            textPlayerScoreHeader[i].text = "Player " + (i + 1) + " Score";
+
+            textPlayerScoreLabels[i].text = "";
+            textPlayerScoreValues[i].text = "";
+            
             foreach (string item in scores.ScoreKeyOrder)
-                if(scores.ScoreListings[i].ContainsKey(item))
-                    text += "\t" + item + ":" + scores.ScoreListings[i][item] + "\n";
-            text += "Total: " + scores.PlayerScores[i];
-            textPlayerScores[i].text = text;
+                if(scores.ScoreListings[i].ContainsKey(item)) {
+                    textPlayerScoreLabels[i].text += item + ":\n";
+                    textPlayerScoreValues[i].text += scores.ScoreListings[i][item] + "\n";
+                }
+
+            textPlayerScoreLabels[i].text += "Total:";
+            textPlayerScoreValues[i].text += scores.PlayerScores[i];
         }
 
         Canvas drawCanvas = gameObject.GetComponentInChildren<Canvas>();

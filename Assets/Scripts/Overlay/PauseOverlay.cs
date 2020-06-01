@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
+using UnityEditor.Experimental.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -32,6 +34,12 @@ public class PauseOverlay : MonoBehaviour {
 
     public void ResumeGame()
     {
+        //Reset button animators back to normal state, otherwise buttons get stuck in the middle of the highlighted animation
+        Animator[] animators = pauseOverlay.GetComponentsInChildren<Animator>(true);
+        foreach (Animator animator in animators) {
+            animator.Play("Normal");
+            animator.Update(0);
+        }
         pauseOverlay.SetActive(false);
         Time.timeScale = 1f;
         GameIsPaused = false;
