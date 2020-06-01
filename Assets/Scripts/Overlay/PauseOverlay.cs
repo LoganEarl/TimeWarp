@@ -4,19 +4,29 @@ using UnityEditor;
 using UnityEditor.Experimental.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class PauseOverlay : MonoBehaviour {
 
     [SerializeField]
     private GameObject pauseOverlay;
+    [SerializeField]
+    private Button selectButton;
 
     private IGameMode sourceGameMode;
-    private bool GameIsPaused;
-    
+    public static bool gameIsPaused;
+    private EventSystem es;
+
+    void Start()
+    {
+        es = GameObject.Find("EventSystem").GetComponent<EventSystem>();
+    }
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.P))
-            if (!GameIsPaused)
+            if (!gameIsPaused)
                 PauseGame();
             else
                 ResumeGame();
@@ -27,11 +37,6 @@ public class PauseOverlay : MonoBehaviour {
         this.sourceGameMode = iGameMode;
     }
 
-    public bool GetPausedState()
-    {
-        return GameIsPaused;
-    }
-
     public void ResumeGame()
     {
         //Reset button animators back to normal state, otherwise buttons get stuck in the middle of the highlighted animation
@@ -40,30 +45,58 @@ public class PauseOverlay : MonoBehaviour {
             animator.Play("Normal");
             animator.Update(0);
         }
-        pauseOverlay.SetActive(false);
+
+        StartCoroutine(UnPause());
+    }
+
+    IEnumerator UnPause()
+    {
+        if (Input.GetButtonDown("Submit0"))
+            FindObjectOfType<AudioManager>().PlaySFX("OnButtonClick");
+        this.selectButton.GetComponent<Animator>().Play("Normal");
+        es.SetSelectedGameObject(null);
+        yield return null;
+        gameIsPaused = false;
         Time.timeScale = 1f;
-        GameIsPaused = false;
+        pauseOverlay.SetActive(false);
     }
 
     public void PauseGame()
     {
-        pauseOverlay.SetActive(true);
         Time.timeScale = 0f;
-        GameIsPaused = true;
+        gameIsPaused = true;
+        pauseOverlay.SetActive(true);
+        StartCoroutine(HighlightButton());
     }
 
     public void RestartGame()
     {
+        if (Input.GetButtonDown("Submit0"))
+            FindObjectOfType<AudioManager>().PlaySFX("OnButtonClick");
         Destroy(gameObject);
-        sourceGameMode.Reset();
         ResumeGame();
+        sourceGameMode.Reset();
+        Time.timeScale = 1f;
         sourceGameMode.Begin();
     }
 
     public void QuitGame()
     {
-        Destroy(sourceGameMode.GameObject);
+        if (Input.GetButtonDown("Submit0"))
+            FindObjectOfType<AudioManager>().PlaySFX("OnButtonClick");
         ResumeGame();
         SceneManager.LoadScene("Menu", LoadSceneMode.Single);
+        Destroy(sourceGameMode.GameObject);
+        Time.timeScale = 1f;
+    }
+
+    IEnumerator HighlightButton()
+    {
+        if(es == null)
+            es = GameObject.Find("EventSystem").GetComponent<EventSystem>();
+        es.SetSelectedGameObject(null);
+        yield return null;
+        selectButton = es.firstSelectedGameObject.GetComponent<Button>();
+        selectButton.Select();
     }
 }
