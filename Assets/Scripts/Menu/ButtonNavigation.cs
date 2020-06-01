@@ -48,7 +48,10 @@ public class ButtonNavigation : MonoBehaviour {
             CheckRightAxis();
         }
 
-        if(isLobbyMenu)
+        if (Input.GetButtonDown("Submit0") && isNavigatable)
+            FindObjectOfType<AudioManager>().PlaySFX("OnButtonClick");
+
+        if (isLobbyMenu)
             this.selectedButton.onClick.AddListener(SetLevelButton);
     }
 
@@ -194,6 +197,7 @@ public class ButtonNavigation : MonoBehaviour {
         SetNavigatable(false);
         if (optionsNavigator == null)
             optionsNavigator = FindObjectOfType<AudioManager>().GetComponentInChildren<OptionsNavigation>();
+        FindObjectOfType<AudioManager>().PlaySFX("OnButtonClick");
         optionsNavigator.OnOpen();
     }
 
