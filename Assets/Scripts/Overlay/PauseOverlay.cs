@@ -11,7 +11,7 @@ public class PauseOverlay : MonoBehaviour {
 
     [SerializeField]
     private GameObject pauseOverlay;
-    [SerializeField]
+
     private Button selectButton;
 
     private IGameMode sourceGameMode;
@@ -35,6 +35,7 @@ public class PauseOverlay : MonoBehaviour {
     public void Setup(IGameMode iGameMode)
     {
         this.sourceGameMode = iGameMode;
+    }
 
     public void ResumeGame()
     {
@@ -58,7 +59,7 @@ public class PauseOverlay : MonoBehaviour {
         this.selectButton.GetComponent<Animator>().Play("Normal");
         es.SetSelectedGameObject(null);
         yield return null;
-        gameIsPaused = false;
+        GameIsPaused = false;
         Time.timeScale = 1f;
         pauseOverlay.SetActive(false);
     }
@@ -66,7 +67,7 @@ public class PauseOverlay : MonoBehaviour {
     public void PauseGame()
     {
         Time.timeScale = 0f;
-        gameIsPaused = true;
+        GameIsPaused = true;
         pauseOverlay.SetActive(true);
         StartCoroutine(HighlightButton());
     }

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
+    [SerializeField] GameObject deadPlayer;
+
     public int TimeAlive { get; private set; }
     public int MaxHealth { get; set; } = 3;
     public delegate void OnHealthChange(int newHealth, int maxHealth, GameObject player);
