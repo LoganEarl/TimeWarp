@@ -12,8 +12,7 @@ public class AudioSettings : MonoBehaviour
     void Awake()
     {
         myGameObject = GameObject.Find("AudioManager");
-        AudioManager audioManager = AudioManager.GetInstance();
-        myOptionsMenu = audioManager.GetOptionsMenu();
+        myOptionsMenu = AudioManager.GetInstance()?.GetOptionsMenu();
     }
 
     public void EnableOptionsMenu()

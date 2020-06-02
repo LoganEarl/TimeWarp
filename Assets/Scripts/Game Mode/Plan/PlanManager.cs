@@ -18,6 +18,9 @@ public class PlanManager : MonoBehaviour, IGameMode
 
     private AudioManager audioManager;
 
+    private List<GameObject> roundClearingList = new List<GameObject>();
+    private List<GameObject> matchClearingList = new List<GameObject>();
+
     private bool runningRecordingRound = false;
 
     //================================================Public Accessors
@@ -47,30 +50,6 @@ public class PlanManager : MonoBehaviour, IGameMode
         return playerManagers[playerNum];
     }
 
-    public void PlayAnnouncerRound()
-    {
-        if (audioManager == null)
-            audioManager = FindObjectOfType<AudioManager>();
-
-        if (RoundNumber != MaxRounds)
-        {
-            audioManager.PlayVoice("AnnouncerRound");
-            Invoke("PlayRoundNumber", audioManager.GetClipLength("AnnouncerRound"));
-        }
-        else
-            audioManager.PlayVoice("AnnouncerFinalRound");
-    }
-
-    public void PlayAnnouncerFight()
-    {
-        audioManager.PlayVoice("AnnouncerFight");
-    }
-
-    private void PlayRoundNumber()
-    {
-        audioManager.PlayVoice("Announcer" + (RoundNumber + 1));
-    }
-
     public GameObject GameObject
     {
         get { return gameObject; }
@@ -83,7 +62,7 @@ public class PlanManager : MonoBehaviour, IGameMode
         this.levelConfig = levelConfig;
         this.NumPlayers = numPlayers;
         this.MaxRounds = levelConfig.GetMaxRounds();
-        
+
         gameState = new StateInitializing(this);
         gameState.OnEnterState();
     }
@@ -107,6 +86,16 @@ public class PlanManager : MonoBehaviour, IGameMode
     public void Reset()
     {
         Setup(NumPlayers, levelConfig);
+    }
+
+    public void ClearOnRoundChange(params GameObject[] toClear)
+    {
+        roundClearingList.AddRange(toClear);
+    }
+
+    public void ClearOnMatchChange(params GameObject[] toClear)
+    {
+        matchClearingList.AddRange(toClear);
     }
 
     //================================================Unity Callback Methods
@@ -141,7 +130,6 @@ public class PlanManager : MonoBehaviour, IGameMode
         {
             this.manager = manager;
         }
-
         private protected abstract PlanGameState NextState { get; }
         internal virtual void OnEnterState() { }
         internal virtual void OnLeaveState() { }
@@ -188,6 +176,14 @@ public class PlanManager : MonoBehaviour, IGameMode
                 foreach (PlanPlayerManager manager in manager.playerManagers)
                     manager.DestroyAll();
 
+            foreach (GameObject toDestroy in manager.roundClearingList)
+                if (toDestroy != null) Destroy(toDestroy);
+            manager.roundClearingList.Clear();
+
+            foreach (GameObject toDestroy in manager.matchClearingList)
+                if (toDestroy != null) Destroy(toDestroy);
+            manager.matchClearingList.Clear();
+
             SceneManager.sceneLoaded -= manager.OnSceneLoaded;
 
             manager.cameraController?.Stop();
@@ -197,6 +193,8 @@ public class PlanManager : MonoBehaviour, IGameMode
             for (int i = 0; i < manager.NumPlayers; i++)
                 manager.playerManagers[i] = new PlanPlayerManager(18, 1);
         }
+
+        public override bool GetPlayerVisible(int playerNum, int roundNum) => false;
         private protected override PlanGameState NextState { get => new StateSpawning(true, manager); }
     }
 
@@ -217,6 +215,13 @@ public class PlanManager : MonoBehaviour, IGameMode
 
         internal override void OnEnterState()
         {
+            foreach (GameObject toDestroy in manager.roundClearingList)
+                if (toDestroy != null) Destroy(toDestroy);
+            manager.roundClearingList.Clear();
+
+            foreach (PlanPlayerManager player in manager.playerManagers)
+                player.Step(0);
+
             if (spawnNewPlayers)
             {
                 manager.RoundNumber++;
@@ -239,7 +244,7 @@ public class PlanManager : MonoBehaviour, IGameMode
             PlayerController[] mainPlayers = new PlayerController[manager.NumPlayers];
             for(int i = 0; i < mainPlayers.Length; i++)
                 mainPlayers[i] = manager.playerManagers[i].MainPlayer;
-
+            
             if (manager.cameraController == null)
             {
                 GameObject cameraControllerObject = GameObject.FindWithTag("SplitscreenController");
@@ -258,6 +263,7 @@ public class PlanManager : MonoBehaviour, IGameMode
             manager.PlayAnnouncerRound();
         }
 
+        public override bool GetPlayerVisible(int playerNum, int roundNum) => false;
         public override bool TimeAdvancing { get => true; }
         private protected override PlanGameState NextState { get => new StateSpawned(manager); }
         public override float SecondsRemaining { get => (MaxSteps - StepNumber + nextState.MaxSteps) * Time.fixedDeltaTime; }
@@ -269,7 +275,7 @@ public class PlanManager : MonoBehaviour, IGameMode
         private static readonly int STATE_LENGTH = 2 * 50;
 
         public StateSpawned(PlanManager manager) : base(manager) { MaxSteps = STATE_LENGTH; }
-        
+
         internal override void OnLeaveState()
         {
             manager.PlayAnnouncerFight();
@@ -300,7 +306,6 @@ public class PlanManager : MonoBehaviour, IGameMode
                 foreach (PlanPlayerManager player in manager.playerManagers)
                 {
                     player.FinishSequence();
-                    player.Step(0); //frontloads first frame of recorded data. Cuts down on visual glitches
                 }
 
             manager.runningRecordingRound = manager.RoundNumber >= manager.MaxRounds - 1;
@@ -331,10 +336,19 @@ public class PlanManager : MonoBehaviour, IGameMode
 
         internal override void OnEnterState()
         {
+            foreach (GameObject toDestroy in manager.roundClearingList)
+                if (toDestroy != null) Destroy(toDestroy);
+            manager.roundClearingList.Clear();
+
+            foreach (GameObject toDestroy in manager.matchClearingList)
+                if (toDestroy != null) Destroy(toDestroy);
+            manager.matchClearingList.Clear();
+
             manager.hudController.gameObject.SetActive(false);
             manager.LoadScoreScreen();
         }
 
+        public override bool GetPlayerVisible(int playerNum, int roundNum) => false;
         private protected override PlanGameState NextState { get => new StateInitializing(manager); }
     }
 
@@ -435,6 +449,30 @@ public class PlanManager : MonoBehaviour, IGameMode
         load = Instantiate(load);
         pauseOverlayController = load.GetComponent<PauseOverlay>();
         pauseOverlayController.Setup(this);
+    }
+
+    private void PlayAnnouncerRound()
+    {
+        if (audioManager == null)
+            audioManager = FindObjectOfType<AudioManager>();
+
+        if (RoundNumber != MaxRounds)
+        {
+            audioManager.PlayVoice("AnnouncerRound");
+            Invoke("PlayRoundNumber", audioManager.GetClipLength("AnnouncerRound"));
+        }
+        else
+            audioManager.PlayVoice("AnnouncerFinalRound");
+    }
+
+    private void PlayAnnouncerFight()
+    {
+        audioManager.PlayVoice("AnnouncerFight");
+    }
+
+    private void PlayRoundNumber()
+    {
+        audioManager.PlayVoice("Announcer" + (RoundNumber + 1));
     }
 }
 

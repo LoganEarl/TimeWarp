@@ -87,11 +87,11 @@ public class PlanPlayerManager: PlayerManager
         availableEquipment = maxEquipment;
     }
 
-    internal bool OnPlayerFireEvent()
+    internal bool OnPlayerFireEvent(int costToFire)
     {
-        if (availableProjectiles > 0)
+        if (availableProjectiles >= costToFire)
         {
-            availableProjectiles--;
+            availableProjectiles -= costToFire;
             return true;
         }
         return false;

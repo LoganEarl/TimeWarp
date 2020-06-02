@@ -22,6 +22,7 @@ Material:
     m_TexEnvs: []
     m_Floats:
     - Vector1_7B376830: 3
+    - _Alpha: 1
     m_Colors:
     - _BaseColor: {r: 0, g: 0, b: 0, a: 1}
     - _GlowColor: {r: 0, g: 17.06667, b: 191.749, a: 0}

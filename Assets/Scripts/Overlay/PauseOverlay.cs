@@ -15,18 +15,18 @@ public class PauseOverlay : MonoBehaviour {
     private Button selectButton;
 
     private IGameMode sourceGameMode;
-    public static bool gameIsPaused;
+    public static bool GameIsPaused;
     private EventSystem es;
 
     void Start()
     {
         es = GameObject.Find("EventSystem").GetComponent<EventSystem>();
     }
-
+    
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.P))
-            if (!gameIsPaused)
+            if (!GameIsPaused)
                 PauseGame();
             else
                 ResumeGame();
@@ -35,7 +35,6 @@ public class PauseOverlay : MonoBehaviour {
     public void Setup(IGameMode iGameMode)
     {
         this.sourceGameMode = iGameMode;
-    }
 
     public void ResumeGame()
     {
@@ -47,6 +46,9 @@ public class PauseOverlay : MonoBehaviour {
         }
 
         StartCoroutine(UnPause());
+        Canvas drawCanvas = gameObject.GetComponentInChildren<Canvas>();
+        drawCanvas.worldCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+        drawCanvas.planeDistance = 1;
     }
 
     IEnumerator UnPause()

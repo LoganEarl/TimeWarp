@@ -7,19 +7,19 @@ public class HexLevelConfig : ILevelConfig
     private static readonly Vector3[][] playerSpawns = new Vector3[][] {
         new Vector3[]
         {
-            new Vector3(-18,.1f,0),
-            new Vector3(-18,.1f,-6),
-            new Vector3(-18,.1f,6),
-            new Vector3(-12,.1f,8),
-            new Vector3(-12,.1f,-8)
+            new Vector3(-18,.2f,0),
+            new Vector3(-18,.2f,-6),
+            new Vector3(-18,.2f,6),
+            new Vector3(-12,.2f,8),
+            new Vector3(-12,.2f,-8)
         },
         new Vector3[]
         {
-            new Vector3(18,1,0),
-            new Vector3(18,1,6),
-            new Vector3(18,1,-6),
-            new Vector3(12,1,-8),
-            new Vector3(12,1,8)
+            new Vector3(18,.2f,0),
+            new Vector3(18,.2f,6),
+            new Vector3(18,.2f,-6),
+            new Vector3(12,.2f,-8),
+            new Vector3(12,.2f,8)
         }
     };
 

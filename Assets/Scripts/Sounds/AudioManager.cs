@@ -24,6 +24,7 @@ public class AudioManager : MonoBehaviour {
     private Toggle friendlyFireToggle;
 
     private bool voiceClipCurrentlyPlaying = false;
+    public bool FriendlyFire { get => friendlyFireToggle.isOn; }
 
     void Awake()
     {

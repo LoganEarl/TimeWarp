@@ -6,22 +6,21 @@ public class Bullet : MonoBehaviour
 {
     [SerializeField] private float bulletSpeed = 25;
     [SerializeField] private int bulletDmg = 1;
-    [SerializeField] private int bouncesLeft = 4;
+    [SerializeField] public int BouncesLeft { private get; set; } = 4;
 
-    public Color bulletColor { private get; set; }
+    public Color BulletColor { private get; set; }
 
     private Rigidbody bulletInstance;
     
     private void Start() {
         bulletInstance = GetComponent<Rigidbody>();
 
-        FindObjectOfType<AudioManager>().PlaySFX("WeaponLaserShot1");
 
-        GetComponent<MeshRenderer>().material.SetColor("_GlowColor", bulletColor);
-        GetComponent<TrailRenderer>().material.SetColor("_GlowColor", bulletColor);
+        GetComponent<MeshRenderer>().material.SetColor("_GlowColor", BulletColor);
+        GetComponent<TrailRenderer>().material.SetColor("_GlowColor", BulletColor);
     }
 
-    private void FixedUpdate() {
+    private void LateUpdate() {
         // Needed to maintain the correct speed even when bouncing off of surfaces that aren't
         // actually a clean vertical surface to rebound off of.
         bulletInstance.velocity = bulletInstance.velocity.normalized * bulletSpeed;
@@ -49,8 +48,8 @@ public class Bullet : MonoBehaviour
 
         FindObjectOfType<AudioManager>().PlaySFX("WeaponLaserRicochet");
 
-        if ((other.tag == "Wall") && bouncesLeft != 0)
-            bouncesLeft--;
+        if ((other.tag == "Wall") && BouncesLeft != 0)
+            BouncesLeft--;
         else if (!other.tag.StartsWith("Player"))
             Destroy(gameObject);
     }

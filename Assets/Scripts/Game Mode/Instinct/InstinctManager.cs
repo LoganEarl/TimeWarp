@@ -6,12 +6,20 @@ public class InstinctManager : MonoBehaviour, IGameMode
 {
     private ILevelConfig levelConfig = null;
 
+    [SerializeField] private int projectilesPerRound = 5;
+    [SerializeField] private int equipmentPerRound = 1;
     [SerializeField] private SpawnerController spawnerController;
+
     private PlayerCameraController cameraController = null;
-    //TODO [SerializeField] private AudioClip[] announcerClips;
+    private InstinctHUDController hudController;
+    private AudioManager audioManager;
+    private PauseOverlay pauseOverlayController = null;
 
     private Dictionary<string, GameObject> loadedPlayerModels = new Dictionary<string, GameObject>();
     private InstinctPlayerManager[] playerManagers = null;
+
+    private List<GameObject> roundClearingList = new List<GameObject>();
+    private List<GameObject> matchClearingList = new List<GameObject>();
 
     private Dictionary<int, DeathSignature> playerDeaths = new Dictionary<int, DeathSignature>();
 
@@ -68,6 +76,8 @@ public class InstinctManager : MonoBehaviour, IGameMode
         this.NumPlayers = numPlayers;
         this.MaxRounds = levelConfig.GetMaxRounds();
 
+        this.playerDeaths.Clear();
+
         gameState = new StateInitializing(this);
         gameState.OnEnterState();
     }
@@ -91,6 +101,16 @@ public class InstinctManager : MonoBehaviour, IGameMode
     public void Reset()
     {
         Setup(NumPlayers, levelConfig);
+    }
+
+    public void ClearOnRoundChange(params GameObject[] toClear)
+    {
+        roundClearingList.AddRange(toClear);
+    }
+
+    public void ClearOnMatchChange(params GameObject[] toClear)
+    {
+        matchClearingList.AddRange(toClear);
     }
 
     //================================================Unity Callback Methods
@@ -176,7 +196,7 @@ public class InstinctManager : MonoBehaviour, IGameMode
             manager.playerManagers = new InstinctPlayerManager[manager.NumPlayers];
             for (int i = 0; i < manager.NumPlayers; i++)
             {
-                manager.playerManagers[i] = new InstinctPlayerManager(18, 1, i);
+                manager.playerManagers[i] = new InstinctPlayerManager(i, manager.projectilesPerRound, manager.equipmentPerRound);
                 manager.playerManagers[i].PlayerKilledListener = manager.OnPlayerKilled;
             }
         }
@@ -199,6 +219,13 @@ public class InstinctManager : MonoBehaviour, IGameMode
 
         internal override void OnEnterState()
         {
+            foreach (GameObject toDestroy in manager.roundClearingList)
+                if (toDestroy != null) Destroy(toDestroy);
+            manager.roundClearingList.Clear();
+
+            foreach (InstinctPlayerManager player in manager.playerManagers)
+                player.Step(0);
+
             manager.RoundNumber++;
             manager.LoadNewPlayers();
 
@@ -207,12 +234,13 @@ public class InstinctManager : MonoBehaviour, IGameMode
             foreach (InstinctPlayerManager manager in manager.playerManagers)
                 manager.ResetAll();
 
-            //TODO when we have a hud controller for this
-            //if (manager.hudController == null)
-            //    manager.LoadHUD();
-            //else
-            //    manager.hudController.ReloadAll();
-            //manager.hudController.gameObject.SetActive(true);
+            manager.LoadPauseOverlay();
+
+            if (manager.hudController == null)
+                manager.LoadHUD();
+            else
+                manager.hudController.ReloadAll();
+            manager.hudController.gameObject.SetActive(true);
 
             PlayerController[] mainPlayers = new PlayerController[manager.NumPlayers];
             for (int i = 0; i < mainPlayers.Length; i++)
@@ -227,6 +255,13 @@ public class InstinctManager : MonoBehaviour, IGameMode
 
             if (manager.cameraController != null)
                 manager.cameraController.Setup(manager, mainPlayers);
+
+            manager.cameraController?.gameObject.SetActive(true);
+        }
+
+        internal override void OnLeaveState()
+        {
+            manager.PlayAnnouncerRound();
         }
 
         public override bool TimeAdvancing { get => true; }
@@ -241,16 +276,9 @@ public class InstinctManager : MonoBehaviour, IGameMode
 
         public StateSpawned(InstinctManager manager) : base(manager) { MaxSteps = STATE_LENGTH; }
 
-        internal override void OnEnterState()
-        {
-            //TODO when we have sounds implemented 
-            //manager.PlayAnnouncerRound();
-        }
-
         internal override void OnLeaveState()
         {
-            //TODO when we have sounds implemented 
-            //manager.PlayAnnouncerFight();
+            manager.PlayAnnouncerFight();
         }
 
         private protected override InstinctGameState NextState { get => new StatePlaying(manager); }
@@ -280,7 +308,7 @@ public class InstinctManager : MonoBehaviour, IGameMode
             foreach (InstinctPlayerManager player in manager.playerManagers)
             {
                 player.FinishSequence();
-                player.Step(0); //frontloads first frame of recorded data. Cuts down on visual glitches
+                //player.Step(0); //frontloads first frame of recorded data. Cuts down on visual glitches
             }
         }
 
@@ -288,7 +316,7 @@ public class InstinctManager : MonoBehaviour, IGameMode
         {
             get
             {
-                if (manager.NumPlayers - manager.playerDeaths.Count <= 1)
+                if (manager.NumPlayers - manager.playerDeaths.Count <= 1 || manager.RoundNumber >= manager.levelConfig.GetMaxRounds()-1)
                     return new StateFinished(manager);
                 else
                     return new StateSpawning(manager);
@@ -312,8 +340,16 @@ public class InstinctManager : MonoBehaviour, IGameMode
 
         internal override void OnEnterState()
         {
-            //manager.hudController.gameObject.SetActive(false);
-            //manager.LoadScoreScreen();
+            foreach (GameObject toDestroy in manager.roundClearingList)
+                if (toDestroy != null) Destroy(toDestroy);
+            manager.roundClearingList.Clear();
+
+            foreach (GameObject toDestroy in manager.matchClearingList)
+                if (toDestroy != null) Destroy(toDestroy);
+            manager.matchClearingList.Clear();
+
+            manager.hudController.gameObject.SetActive(false);
+            manager.LoadScoreScreen();
         }
 
         private protected override InstinctGameState NextState { get => new StateInitializing(manager); }
@@ -356,11 +392,91 @@ public class InstinctManager : MonoBehaviour, IGameMode
 
     private void LoadHUD()
     {
-        //TODO implement this
+        if (hudController != null)
+            Destroy(hudController.gameObject);
+
+        string canvasPath = "Prefabs/HUD/HUDFrame";
+        GameObject loaded = Resources.Load(canvasPath) as GameObject;
+        if (loaded == null)
+            throw new System.Exception("Unable to find HUDFrame component. Have you renamed/moved it?");
+        loaded = Instantiate(loaded);
+        hudController = loaded.GetComponent<InstinctHUDController>();
+        hudController.Setup(this);
     }
 
     private void OnPlayerKilled(int playerNum)
     {
-        playerDeaths.Add(playerNum, new DeathSignature(RoundNumber, GameState.StepNumber));
+        if(!playerDeaths.ContainsKey(playerNum))
+            playerDeaths.Add(playerNum, new DeathSignature(RoundNumber, GameState.StepNumber));
+    }
+
+    private void LoadScoreScreen()
+    {
+        string[] scoreKeyOrder = { "Time Alive" };
+        int[] scores = new int[NumPlayers];
+        Dictionary<string, int>[] listings = new Dictionary<string, int>[NumPlayers];
+
+        for (int i = 0; i < NumPlayers; i++)
+        {
+            int timeAlive = RoundLength;
+            if (playerDeaths.ContainsKey(i))
+                timeAlive = playerDeaths[i].StepNum;
+
+            Dictionary<string, int> stats = new Dictionary<string, int>();
+            stats["Time Alive"] = timeAlive;
+
+            int total = 0;
+            foreach (int value in stats.Values)
+                total += value;
+
+            scores[i] = total;
+            listings[i] = stats;
+        }
+
+        ScoreOverlay.ScoreList scoreListings = new ScoreOverlay.ScoreList(scores, listings, scoreKeyOrder);
+        string canvasPath = "Prefabs/Overlay/ScoreOverlay";
+        GameObject loaded = Resources.Load(canvasPath) as GameObject;
+        if (loaded == null)
+            throw new System.Exception("Unable to find ScoreOverlay component. Have you renamed/moved it?");
+        loaded = Instantiate(loaded);
+        loaded.GetComponent<ScoreOverlay>().Setup(scoreListings, this);
+    }
+
+    private void LoadPauseOverlay()
+    {
+        if (pauseOverlayController != null)
+            Destroy(pauseOverlayController.gameObject);
+
+        string pauseOverlayPrefabPath = "Prefabs/Overlay/PauseOverlay";
+        GameObject load = Resources.Load(pauseOverlayPrefabPath) as GameObject;
+        if (load == null)
+            throw new System.Exception("Unable to find PauseOverlay prefab");
+        load = Instantiate(load);
+        pauseOverlayController = load.GetComponent<PauseOverlay>();
+        pauseOverlayController.Setup(this);
+    }
+
+    private void PlayAnnouncerRound()
+    {
+        if (audioManager == null)
+            audioManager = FindObjectOfType<AudioManager>();
+
+        if (RoundNumber != MaxRounds)
+        {
+            audioManager.PlayVoice("AnnouncerRound");
+            Invoke("PlayRoundNumber", audioManager.GetClipLength("AnnouncerRound"));
+        }
+        else
+            audioManager.PlayVoice("AnnouncerFinalRound");
+    }
+
+    private void PlayAnnouncerFight()
+    {
+        audioManager.PlayVoice("AnnouncerFight");
+    }
+
+    private void PlayRoundNumber()
+    {
+        audioManager.PlayVoice("Announcer" + (RoundNumber + 1));
     }
 }

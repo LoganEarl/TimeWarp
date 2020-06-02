@@ -9,6 +9,7 @@ public class PlayerHealth : MonoBehaviour
     public delegate void OnHealthChange(int newHealth, int maxHealth, GameObject player);
 
     private List<OnHealthChange> healthListeners = new List<OnHealthChange>();
+    private PlayerController playerController;
 
     private int health = 3;
     private bool dead = false;
@@ -33,21 +34,35 @@ public class PlayerHealth : MonoBehaviour
         }
         private set {
             dead = value;
-            gameObject.SetActive(!dead);
         }
     }
 
-    private void FixedUpdate()
+    private void LateUpdate()
     {
         TimeAlive++;
     }
 
     public void DoDamage(int damage)
     {
-        if (damage > 0)
+        if (Health - damage > 0)
         {
-            Health -= damage;
+            Health -= damage < 0 ? 0 : damage;
             FindObjectOfType<AudioManager>().PlayVoice(hurtSound.GetClip());
+        }
+        else if (!Dead)
+        {
+            GameObject deadBody = Instantiate(deadPlayer, transform.position, transform.rotation);
+            Material pMaterial =
+                gameObject.GetComponentsInChildren<SkinnedMeshRenderer>()[1].material;
+
+            PlayerDeath corpse = deadBody.GetComponent<PlayerDeath>();
+            PlayerController playerController = GetComponent<PlayerController>();
+
+            corpse.PlayerMaterial = pMaterial;
+            corpse.SetHeldWeapon(playerController.Weapon.WeaponName);
+            playerController.GameMode.ClearOnRoundChange(deadBody);
+
+            Health -= damage < 0 ? 0 : damage;
         }
     }
 
