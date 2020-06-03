@@ -520,8 +520,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1ffef570ad09ab419e7d6d3649ce7fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lobbyDriver: {fileID: 683105504}
-  neonAnimator: {fileID: 573908756}
+  lobbyDriver: {fileID: 0}
+  neonAnimator: {fileID: 0}
   gameModeDescDisplay: {fileID: 1013535900}
   gameMode: 
 --- !u!224 &153695408 stripped
