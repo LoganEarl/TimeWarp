@@ -579,7 +579,12 @@ PrefabInstance:
     - target: {fileID: 7058409687327364148, guid: b2a11edd8e06d864e8fe6112ee8bf7b4,
         type: 3}
       propertyPath: roundLengthSeconds
-      value: 1
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7058409687327364148, guid: b2a11edd8e06d864e8fe6112ee8bf7b4,
+        type: 3}
+      propertyPath: FriendlyFire
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7058409687327364150, guid: b2a11edd8e06d864e8fe6112ee8bf7b4,
         type: 3}
