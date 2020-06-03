@@ -520,8 +520,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1ffef570ad09ab419e7d6d3649ce7fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lobbyDriver: {fileID: 0}
-  neonAnimator: {fileID: 0}
+  lobbyDriver: {fileID: 683105504}
+  neonAnimator: {fileID: 573908756}
   gameModeDescDisplay: {fileID: 1013535900}
   gameMode: 
 --- !u!224 &153695408 stripped
@@ -1961,6 +1961,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6270674174d0f449890c8e9f935ec76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  projectilesPerRound: 5
+  equipmentPerRound: 1
   spawnerController: {fileID: 461737643}
   roundLengthSeconds: 20
 --- !u!1 &473445803
