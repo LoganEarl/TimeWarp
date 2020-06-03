@@ -56,6 +56,9 @@ public class PauseOverlay : MonoBehaviour {
     {
         if (Input.GetButtonDown("Submit0"))
             FindObjectOfType<AudioManager>().PlaySFX("OnButtonClick");
+        CheckEventSystem();
+        if (this.selectButton == null)
+            this.selectButton = es.firstSelectedGameObject.GetComponent<Button>();
         this.selectButton.GetComponent<Animator>().Play("Normal");
         es.SetSelectedGameObject(null);
         yield return null;
@@ -95,11 +98,16 @@ public class PauseOverlay : MonoBehaviour {
 
     IEnumerator HighlightButton()
     {
-        if(es == null)
-            es = GameObject.Find("EventSystem").GetComponent<EventSystem>();
+        CheckEventSystem();
         es.SetSelectedGameObject(null);
         yield return null;
         selectButton = es.firstSelectedGameObject.GetComponent<Button>();
         selectButton.Select();
+    }
+
+    private void CheckEventSystem()
+    {
+        if (es == null)
+            es = GameObject.Find("EventSystem").GetComponent<EventSystem>();
     }
 }
