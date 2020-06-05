@@ -11,7 +11,7 @@ public class PlayerSnapshot
     public bool IsIdle { get; }             //if they are not doing anything
     public bool Changing { get; }           //if triggered the change weapon button this frame
     public string WeaponName { get; }       //string of the weapon currently held
-    public bool Firing { get; }             //if triggered the fire button this frame
+    public int Firing { get; }             //if triggered the fire button this frame
     public bool UsingEquipment { get; }     //if triggered the equipment button this frame
     public bool UsedEquipment { get; }      //if released the equipment button this frame
 
@@ -23,7 +23,7 @@ public class PlayerSnapshot
         Vector3 moveDirection,
         bool changing,
         string weaponName,
-        bool firing, 
+        int firing, 
         bool usingEquipment, 
         bool usedEquipment,
         bool isIdle

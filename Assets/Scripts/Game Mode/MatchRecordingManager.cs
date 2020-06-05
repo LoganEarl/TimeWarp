@@ -13,7 +13,7 @@ public class MatchRecordingManager
     private bool recordingComplete = false;         //set to true when the recording is finalized and ready for replay
     private PlayerController playerController;      //the attached player controller
     private List<PlayerSnapshot> snapshots = new List<PlayerSnapshot>();    //Player snapshots indexed by frame number
-    private List<int> fireEvents = new List<int>();         //frame index cache of all the times the fire button was pressed
+    private Dictionary<int, int> fireEvents = new Dictionary<int, int>();         //frame index cache of all the times the fire button was pressed
     private List<int> equipmentEvents = new List<int>();    //frame index cache of all the times the equipment button was pressed
 
     internal MatchRecordingManager(PlayerController playerController)
@@ -27,9 +27,9 @@ public class MatchRecordingManager
         if (!recordingComplete)
             return 0;
         int total = 0;
-        foreach(int fireIndex in fireEvents)
-            if (fireIndex > stepNum)
-                total++;
+        foreach(int fireIndex in fireEvents.Keys)
+            if (fireIndex >= stepNum)
+                total+= fireEvents[fireIndex];
         
         return total;
     }
@@ -40,7 +40,7 @@ public class MatchRecordingManager
             return 0;
         int total = 0;
         foreach (int equipmentIndex in equipmentEvents)
-            if (equipmentIndex > stepNum)
+            if (equipmentIndex >= stepNum)
                 total++;
 
         return total;
@@ -52,8 +52,8 @@ public class MatchRecordingManager
         {
             PlayerSnapshot snapshot = playerController.GetSnapshot();
             snapshots.Add(snapshot);
-            if (snapshot.Firing)
-                fireEvents.Add(snapshotIndex);
+            if (snapshot.Firing != 0)
+                fireEvents[snapshotIndex] = snapshot.Firing;
             if (snapshot.UsingEquipment)
                 equipmentEvents.Add(snapshotIndex);
         }

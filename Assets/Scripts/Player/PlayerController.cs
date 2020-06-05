@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour, IRecordable
     #region equipment
     private bool changingGun = false;
     private string newWeapon = "Pistol";
-    public bool FiringGun { get; private set; } = false;
+    public int FiringGun { get; private set; } = 0;
     private bool fired = false;
     public bool UsingEquipment { get; private set; } = false;
     private bool placingEquipment = false;
@@ -111,7 +111,7 @@ public class PlayerController : MonoBehaviour, IRecordable
         animator.SetInteger("WeaponType", Weapon.WeaponType);
     }
 
-    private void LateUpdate()
+    private void FixedUpdate()
     {
         IsVisible = GameMode.GameState.GetPlayerVisible(PlayerNumber, RoundNumber) && !health.Dead;
 
@@ -184,10 +184,10 @@ public class PlayerController : MonoBehaviour, IRecordable
                 ChangeWeapon(newWeapon);
 
             if (!GameMode.GameState.GetPlayerFireLocked(PlayerNumber, RoundNumber) &&
-                FiringGun &&
+                FiringGun != 0 &&
                 (FireCallback?.Invoke(Weapon.CostToFire) ?? true))
                 Shoot();
-            else FiringGun = false;
+            else FiringGun = 0;
 
             if (!GameMode.GameState.GetPlayerFireLocked(PlayerNumber, RoundNumber) &&
                 UsingEquipment &&
@@ -258,11 +258,11 @@ public class PlayerController : MonoBehaviour, IRecordable
         float fireActivity = Input.GetAxis("Fire" + PlayerNumber);
         float equipmentActivity = Input.GetAxis("Equipment" + PlayerNumber);
 
-        FiringGun = false;
+        FiringGun = 0;
         if (!fired && fireActivity > 0) //this works becuase of the masssive deadzone setting
         {
             fired = true;
-            FiringGun = true;
+            FiringGun = Weapon.CostToFire;
             Invoke("FiringReset", Weapon.FireRate);
         }
 

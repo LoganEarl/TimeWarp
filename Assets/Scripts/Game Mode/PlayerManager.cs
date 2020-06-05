@@ -28,11 +28,11 @@ public abstract class PlayerManager
     }
     internal virtual int GetProjectedProjectilesRemaining(int roundNumber, int asOfStepNumber)
     {
-        int usage = GetMaxProjectiles(roundNumber) - GetAvailableProjectiles(roundNumber);               //what we already used
-        foreach (MatchRecordingManager recording in playerRecordings)   //what we are going to use in the future
+        int usage = GetMaxProjectiles(roundNumber) - GetAvailableProjectiles(roundNumber);              //what we already used
+        foreach (MatchRecordingManager recording in playerRecordings)                                   //what we are going to use in the future
             usage += recording.RecordedFireEventsAfter(asOfStepNumber);
 
-        usage = GetMaxProjectiles(roundNumber) - usage;                                 //what we have overall
+        usage = GetMaxProjectiles(roundNumber) - usage;                                                 //what we have overall
 
         if (usage < 0)
             usage = 0;
@@ -42,7 +42,7 @@ public abstract class PlayerManager
     internal virtual int GetProjectedProjectilesRemaining(int asOfStepNumber)
     {
         int usage = GetMaxProjectiles() - GetAvailableProjectiles();               //what we already used
-        foreach (MatchRecordingManager recording in playerRecordings)   //what we are going to use in the future
+        foreach (MatchRecordingManager recording in playerRecordings)           //what we are going to use in the future
             usage += recording.RecordedFireEventsAfter(asOfStepNumber);
 
         usage = GetMaxProjectiles() - usage;                                 //what we have overall

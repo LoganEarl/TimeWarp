@@ -37,7 +37,7 @@ public class TrailRecorder : MonoBehaviour
 
             if (active)
             {
-                if (controller.FiringGun)
+                if (controller.FiringGun != 0)
                     PlaceProjectileIndicator();
                 if (controller.UsingEquipment)
                     PlaceEquipmentIndicator();
