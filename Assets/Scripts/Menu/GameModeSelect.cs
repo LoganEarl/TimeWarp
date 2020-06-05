@@ -76,9 +76,9 @@ public class GameModeSelect : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     }
 
     private string ThePlanDescription() {
-        return "A gamemode that leverages the time travel feature to allow players to plan " +
-               "out their turn in relative safety, protect their past selves, and attempt " +
-               "to eliminate the enemy player’s past selves.";
+        return "A gamemode that leverages the time travel feature to you to plan " +
+               "out your turns in relative safety.  Ultimately, your intricately layered plans " +
+               "will need to lead your pasts to demonstrate their superiority in the final round.";
     }
 
     private string LineageDescription() {
@@ -88,7 +88,7 @@ public class GameModeSelect : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     }
 
     private string InstinctDescription() {
-        return "Only your current self, and that of your enemy matter. Say alive as you " +
+        return "Only your current self, and that of your enemy matter. Stay alive as you " +
                 "both gain more and more iterations, and the field grows thick with the " +
                 "projectiles of your past selves.";
     }
