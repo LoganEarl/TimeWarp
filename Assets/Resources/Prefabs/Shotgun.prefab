@@ -54,7 +54,7 @@ MonoBehaviour:
   firingSound: WeaponLaserShot1
   fireRate: 0.7
   projectileSpread: 0.5
-  targetingCursor: {fileID: 2579834537092386791, guid: 10f0c664998b9db4e81674f2533c26be,
+  targetingCursor: {fileID: 8425450157001774646, guid: 74cbfeea9e880204da35f02a7ebb18d4,
     type: 3}
   iconPrefab: {fileID: 2016226561292264483, guid: d4b5ead9b1f44c54e8c50d66c9f77de7,
     type: 3}
