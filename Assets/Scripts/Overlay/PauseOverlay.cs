@@ -110,4 +110,9 @@ public class PauseOverlay : MonoBehaviour {
         if (es == null)
             es = GameObject.Find("EventSystem").GetComponent<EventSystem>();
     }
+
+    public static void SetPauseState(bool state)
+    {
+        GameIsPaused = state;
+    }
 }

@@ -235,6 +235,9 @@ public class PlanManager : MonoBehaviour, IGameMode
 
             manager.LoadPauseOverlay();
 
+            PauseOverlay.SetPauseState(false);
+            Time.timeScale = 1f;
+
             if (manager.hudController == null)
                 manager.LoadHUD();
             else
@@ -344,7 +347,7 @@ public class PlanManager : MonoBehaviour, IGameMode
                 if (toDestroy != null) Destroy(toDestroy);
             manager.matchClearingList.Clear();
 
-            manager.hudController.gameObject.SetActive(false);
+            //manager.hudController.gameObject.SetActive(false);
             manager.LoadScoreScreen();
         }
 
