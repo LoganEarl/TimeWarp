@@ -7,12 +7,20 @@ public class PlayerCursor : MonoBehaviour
     public PlayerController Player { private get; set; }
 
     private static readonly float WEAPON_HEIGHT = 0.75f;
+    private bool isInitialized = false;
 
     void FixedUpdate()
     {
-        transform.position =
-            Player.GetComponent<Rigidbody>().position +
-            Player.LookDirection +
-            new Vector3(0, WEAPON_HEIGHT, 0);
+        if (Player == null && isInitialized)
+            Destroy(this);
+        else if (Player != null && !isInitialized)
+            isInitialized = true;
+
+        if (Player != null) { 
+            transform.position =
+                Player.GetComponent<Rigidbody>().position +
+                Player.LookDirection +
+                new Vector3(0, WEAPON_HEIGHT, 0);
+        }
     }
 }
