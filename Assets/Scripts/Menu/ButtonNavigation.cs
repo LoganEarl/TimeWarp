@@ -37,8 +37,6 @@ public class ButtonNavigation : MonoBehaviour {
     {
         if (isNavigatable)
         {
-            //CurrentButtonStaySelected();
-
             if (!cooldown)
             {
                 CheckUpAxis();
@@ -176,13 +174,6 @@ public class ButtonNavigation : MonoBehaviour {
     {
         this.previousSelectedBeforeOptions = prevButton;
     }
-
-    private void CurrentButtonStaySelected()
-    {
-        this.selectedButton = panels[currentPanel].GetButton(currentSelection);
-        this.selectedButton.Select();
-    }
-
     public void OnOptions()
     {
         Button prevButton = panels[currentPanel].GetButton(currentSelection);
