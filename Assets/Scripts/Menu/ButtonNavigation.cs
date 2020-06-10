@@ -14,14 +14,10 @@ public class ButtonNavigation : MonoBehaviour {
     Button firstButtonSelected;
     [SerializeField]
     private int currentSelection = 0;
-    [SerializeField]
-    private bool isLobbyMenu;
 
     private int currentPanel = 0;
     private Button previousSelectedBeforeOptions;
     private Button selectedButton;
-    private Button levelButton;
-    private Button gameModeButton;
 
     private bool isNavigatable;
     private bool cooldown = false;
@@ -41,7 +37,7 @@ public class ButtonNavigation : MonoBehaviour {
     {
         if (isNavigatable)
         {
-            CurrentButtonStaySelected();
+            //CurrentButtonStaySelected();
 
             if (!cooldown)
             {
@@ -54,15 +50,6 @@ public class ButtonNavigation : MonoBehaviour {
             if (Input.GetButtonDown("Submit0"))
                 FindObjectOfType<AudioManager>().PlaySFX("OnButtonClick");
         }
-
-        if (isLobbyMenu)
-        {
-            this.selectedButton.onClick.AddListener(SetLevelButton);
-            DisplayLevelImage();
-            DisplayGameModeDescription();
-        }
-
-
     }
 
     private void StartFirstSelect()
@@ -70,14 +57,13 @@ public class ButtonNavigation : MonoBehaviour {
         FindObjectOfType<AudioManager>().PlaySFX("OnButtonHover");
         firstButtonSelected.Select();
         this.selectedButton = firstButtonSelected;
-        CheckButtonSelectAnimation();
     }
-    
+
     #region CheckAxis
     private void CheckUpAxis()
     {
         if (Input.GetAxisRaw("Vertical0") >= POSITIVE_AXIS)
-        { 
+        {
             NavigateUp();
             StartCoroutine(InputCooldown());
         }
@@ -121,13 +107,12 @@ public class ButtonNavigation : MonoBehaviour {
             temp = panels[currentPanel].GetButton(this.currentSelection);
         }
         this.selectedButton = temp;
-        CheckButtonSelectAnimation();
+        selectedButton.Select();
     }
 
     private void NavigateDown()
     {
         int buttonArraySize = panels[currentPanel].size();
-        CheckButtonExitAnimation();
         this.currentSelection = (this.currentSelection + 1) % buttonArraySize;
         FindObjectOfType<AudioManager>().PlaySFX("OnButtonHover");
         Navigate();
@@ -136,7 +121,6 @@ public class ButtonNavigation : MonoBehaviour {
     private void NavigateUp()
     {
         int buttonArraySize = panels[currentPanel].size();
-        CheckButtonExitAnimation();
         this.currentSelection = (this.currentSelection - 1);
         if (this.currentSelection < 0)
         {
@@ -147,7 +131,7 @@ public class ButtonNavigation : MonoBehaviour {
                 this.currentSelection = buttonArraySize - i;
                 i++;
             }
-        }
+        } 
         else
             this.currentSelection = this.currentSelection % buttonArraySize;
         FindObjectOfType<AudioManager>().PlaySFX("OnButtonHover");
@@ -164,8 +148,6 @@ public class ButtonNavigation : MonoBehaviour {
             FindObjectOfType<AudioManager>().PlaySFX("OnButtonHover");
             this.currentSelection = 0;
         }
-        CheckButtonSelectAnimation();
-        ResetAnimations();
         Navigate();
     }
 
@@ -194,6 +176,7 @@ public class ButtonNavigation : MonoBehaviour {
     {
         this.previousSelectedBeforeOptions = prevButton;
     }
+
     private void CurrentButtonStaySelected()
     {
         this.selectedButton = panels[currentPanel].GetButton(currentSelection);
@@ -225,113 +208,5 @@ public class ButtonNavigation : MonoBehaviour {
     public void DisableNavigation()
     {
         this.isNavigatable = false;
-    }
-
-    #region ButtonAnimation
-    private void CheckButtonSelectAnimation()
-    {
-        if (isLobbyMenu)
-            if (this.selectedButton == GameObject.Find("BounceButton").GetComponent<Button>() && levelButton != selectedButton)
-                selectedButton.GetComponent<LevelSelect>().GetComponent<Animator>().Play("Prehighlight");
-            else if (this.selectedButton == GameObject.Find("HexButton").GetComponent<Button>() && levelButton != selectedButton)
-                selectedButton.GetComponent<LevelSelect>().GetComponent<Animator>().Play("Prehighlight");
-            else if (this.selectedButton == GameObject.Find("LavaButton").GetComponent<Button>() && levelButton != selectedButton)
-                selectedButton.GetComponent<LevelSelect>().GetComponent<Animator>().Play("Prehighlight");
-            else if (this.selectedButton == GameObject.Find("PlanButton").GetComponent<Button>() && gameModeButton != selectedButton)
-                selectedButton.GetComponent<GameModeSelect>().GetComponent<Animator>().Play("Prehighlight");
-            else if (this.selectedButton == GameObject.Find("InstinctButton").GetComponent<Button>() && gameModeButton != selectedButton)
-                selectedButton.GetComponent<GameModeSelect>().GetComponent<Animator>().Play("Prehighlight");
-    }
-
-    private void CheckButtonClickAnimation()
-    {
-        if (isLobbyMenu)
-            if (this.selectedButton == GameObject.Find("BounceButton").GetComponent<Button>())
-                selectedButton.GetComponent<LevelSelect>().GetComponent<Animator>().Play("Selected");
-            else if (this.selectedButton == GameObject.Find("HexButton").GetComponent<Button>())
-                selectedButton.GetComponent<LevelSelect>().GetComponent<Animator>().Play("Selected");
-            else if (this.selectedButton == GameObject.Find("LavaButton").GetComponent<Button>())
-                selectedButton.GetComponent<LevelSelect>().GetComponent<Animator>().Play("Selected");
-            else if (this.selectedButton == GameObject.Find("PlanButton").GetComponent<Button>())
-                selectedButton.GetComponent<GameModeSelect>().GetComponent<Animator>().Play("Selected");
-            else if (this.selectedButton == GameObject.Find("InstinctButton").GetComponent<Button>())
-                selectedButton.GetComponent<GameModeSelect>().GetComponent<Animator>().Play("Selected");
-    }
-
-    private void CheckButtonExitAnimation()
-    {
-        if (isLobbyMenu)
-            if (this.selectedButton == GameObject.Find("BounceButton").GetComponent<Button>() && levelButton != selectedButton)
-                selectedButton.GetComponent<LevelSelect>().GetComponent<Animator>().Play("Normal");
-            else if (this.selectedButton == GameObject.Find("HexButton").GetComponent<Button>() && levelButton != selectedButton)
-                selectedButton.GetComponent<LevelSelect>().GetComponent<Animator>().Play("Normal");
-            else if (this.selectedButton == GameObject.Find("LavaButton").GetComponent<Button>() && levelButton != selectedButton)
-                selectedButton.GetComponent<LevelSelect>().GetComponent<Animator>().Play("Normal");
-            else if (this.selectedButton == GameObject.Find("PlanButton").GetComponent<Button>() && gameModeButton != selectedButton)
-                selectedButton.GetComponent<GameModeSelect>().GetComponent<Animator>().Play("Normal");
-            else if (this.selectedButton == GameObject.Find("InstinctButton").GetComponent<Button>() && gameModeButton != selectedButton)
-                selectedButton.GetComponent<GameModeSelect>().GetComponent<Animator>().Play("Normal");
-    }
-    #endregion
-
-    private void SetLevelButton()
-    {
-        if (isLobbyMenu)
-        {
-            if (this.selectedButton == GameObject.Find("BounceButton").GetComponent<Button>() ||
-                this.selectedButton == GameObject.Find("HexButton").GetComponent<Button>() ||
-                this.selectedButton == GameObject.Find("LavaButton").GetComponent<Button>())
-                this.levelButton = this.selectedButton;
-
-            if (this.selectedButton == GameObject.Find("PlanButton").GetComponent<Button>() ||
-                this.selectedButton == GameObject.Find("InstinctButton").GetComponent<Button>())
-                this.gameModeButton = this.selectedButton;
-        }
-        ResetAnimations();
-    }
-
-    private void ResetAnimations()
-    {
-        Button temp;
-        if (isLobbyMenu)
-        {
-            for (int i = 0; i < 3; i++)
-            {
-                temp = this.panels[0].GetButton(i);
-                if (this.levelButton != temp)
-                    temp.GetComponent<LevelSelect>().GetComponent<Animator>().Play("Normal");
-            }
-            
-            for (int i = 3 ; i < 5; i++)
-            {
-                temp = this.panels[0].GetButton(i);
-                if (this.gameModeButton != temp)
-                    temp.GetComponent<GameModeSelect>().GetComponent<Animator>().Play("Normal");
-            }
-        }
-    }
-
-    private void DisplayLevelImage()
-    {
-        if(isLobbyMenu && this.levelButton != null)
-        {
-            if (this.levelButton == GameObject.Find("BounceButton").GetComponent<Button>())
-                GameObject.Find("LevelImage").GetComponent<LevelImageController>().DisplayImage(0);
-            else if (this.levelButton == GameObject.Find("HexButton").GetComponent<Button>())
-                GameObject.Find("LevelImage").GetComponent<LevelImageController>().DisplayImage(1);
-            else if (this.levelButton == GameObject.Find("LavaButton").GetComponent<Button>())
-                GameObject.Find("LevelImage").GetComponent<LevelImageController>().DisplayImage(2);
-        }
-    }
-
-    private void DisplayGameModeDescription()
-    {
-        if (isLobbyMenu && this.gameModeButton != null)
-        {
-            if (this.gameModeButton == GameObject.Find("PlanButton").GetComponent<Button>())
-                this.gameModeButton.GetComponent<GameModeSelect>().SetGameDescription("Plan");
-            else if (this.gameModeButton == GameObject.Find("InstinctButton").GetComponent<Button>())
-                this.gameModeButton.GetComponent<GameModeSelect>().SetGameDescription("Instinct");
-        }
     }
 }

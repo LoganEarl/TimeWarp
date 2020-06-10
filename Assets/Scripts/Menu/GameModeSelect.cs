@@ -5,22 +5,33 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class GameModeSelect : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler {
+public class GameModeSelect : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ISelectHandler, IDeselectHandler {
     [SerializeField] private LobbyDriver lobbyDriver;
     [SerializeField] private Animator neonAnimator;
     [SerializeField] private Text gameModeDescDisplay;
     [SerializeField] private string gameMode;
 
     private static GameModeSelect selected;
-   
+
+    private Button button;
     private Animator buttonAnimator;
 
     void Start() {
-        buttonAnimator = GetComponent<Animator>();
+        button = (Button)gameObject.GetComponent("Button");
+        buttonAnimator = (Animator)gameObject.GetComponent("Animator");
         gameModeDescDisplay.text = "";
+        button.onClick.AddListener(OnClick);
     }
 
     public void OnPointerEnter(PointerEventData eventData) {
+        OnSelect(eventData);
+    }
+
+    public void OnPointerExit(PointerEventData eventData) {
+        OnDeselect(eventData);
+    }
+
+    public void OnSelect(BaseEventData eventData) {
         if (selected != this) {
             neonAnimator.Update(0);
             buttonAnimator.Play("Prehighlight");
@@ -32,7 +43,7 @@ public class GameModeSelect : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         }
     }
 
-    public void OnPointerExit(PointerEventData eventData) {
+    public void OnDeselect(BaseEventData eventData) {
         if (selected != this) {
             neonAnimator.Update(0);
             buttonAnimator.Play("Normal");
@@ -40,13 +51,13 @@ public class GameModeSelect : MonoBehaviour, IPointerEnterHandler, IPointerExitH
             SetGameDescription("");
             if (selected != null) {
                 SetGameDescription(selected.gameMode);
-                selected.buttonAnimator.Play("Selected");              
+                selected.buttonAnimator.Play("Selected");
                 neonAnimator.Play("Selected");
             }
         }
     }
 
-    public void OnPointerClick(PointerEventData eventData) {
+    public void OnClick() {
         if (selected == this) {
             selected = null;
             buttonAnimator.Play("Highlighted");

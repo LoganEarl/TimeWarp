@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class LevelSelect : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler {
+public class LevelSelect : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ISelectHandler, IDeselectHandler {
     [SerializeField] private LobbyDriver lobbyDriver;
     [SerializeField] private Animator neonAnimator;
     [SerializeField] private Image levelImageDisplay;
@@ -13,15 +13,26 @@ public class LevelSelect : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     [SerializeField] private string levelName;
 
     private static LevelSelect selected;
-   
+
+    private Button button;
     private Animator buttonAnimator;
 
     void Start() {
+        button = (Button)gameObject.GetComponent("Button");
         buttonAnimator = (Animator)gameObject.GetComponent("Animator");
         levelImageDisplay.enabled = false;
+        button.onClick.AddListener(OnClick);
     }
 
     public void OnPointerEnter(PointerEventData eventData) {
+        OnSelect(eventData);
+    }
+
+    public void OnPointerExit(PointerEventData eventData) {
+        OnDeselect(eventData);
+    }
+
+    public void OnSelect(BaseEventData eventData) {
         if (selected != this) {
             neonAnimator.Update(0);
             buttonAnimator.Play("Prehighlight");
@@ -34,7 +45,7 @@ public class LevelSelect : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         }
     }
 
-    public void OnPointerExit(PointerEventData eventData) {
+    public void OnDeselect(BaseEventData eventData) {
         if (selected != this) {
             neonAnimator.Update(0);
             buttonAnimator.Play("Normal");
@@ -43,13 +54,13 @@ public class LevelSelect : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             if (selected != null) {
                 levelImageDisplay.GetComponent<Image>().enabled = true;
                 levelImageDisplay.sprite = selected.levelImage;
-                selected.buttonAnimator.Play("Selected");              
+                selected.buttonAnimator.Play("Selected");
                 neonAnimator.Play("Selected");
             }
         }
     }
 
-    public void OnPointerClick(PointerEventData eventData) {
+    public void OnClick() {
         if (selected == this) {
             selected = null;
             buttonAnimator.Play("Highlighted");
