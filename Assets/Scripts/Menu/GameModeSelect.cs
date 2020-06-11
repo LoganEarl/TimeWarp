@@ -17,8 +17,8 @@ public class GameModeSelect : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     private Animator buttonAnimator;
 
     void Start() {
-        button = (Button)gameObject.GetComponent("Button");
-        buttonAnimator = (Animator)gameObject.GetComponent("Animator");
+        button = gameObject.GetComponent<Button>();
+        buttonAnimator = gameObject.GetComponent<Animator>();
         gameModeDescDisplay.text = "";
         button.onClick.AddListener(OnClick);
     }

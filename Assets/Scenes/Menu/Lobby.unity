@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -480,7 +480,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 139102643}
-  - component: {fileID: 139102644}
   m_Layer: 0
   m_Name: Game Mode Description
   m_TagString: Untagged
@@ -508,22 +507,6 @@ RectTransform:
   m_AnchoredPosition: {x: 25, y: -220}
   m_SizeDelta: {x: 1300, y: 620}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &139102644
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 139102642}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1ffef570ad09ab419e7d6d3649ce7fc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lobbyDriver: {fileID: 683105504}
-  neonAnimator: {fileID: 573908756}
-  gameModeDescDisplay: {fileID: 1013535900}
-  gameMode: 
 --- !u!224 &153695408 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 719506020592350140, guid: 1ec385b3876f0c94fa1783af4f06ba6d,
